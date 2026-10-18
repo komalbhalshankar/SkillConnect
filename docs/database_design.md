@@ -264,5 +264,32 @@ Stores post-session peer evaluations and feedback.
   - **Peer Review Breakdown:** Horizontal bar chart visualizing the frequency of 5-star, 4-star, 3-star, 2-star, and 1-star reviews.
   - **Defensive Rendering:** If any dataset total is 0, the UI suppresses empty axes and renders an informative empty-state card instead.
 
+---
+
+## 5. Database Initialization, Migration & Seeding CLI
+
+SkillConnect provides safe, idempotent CLI tools for all database administrative tasks:
+
+1. **`python run.py init-db`**
+   - Calls `db.create_all()`.
+   - Creates any missing tables and indexes without altering or deleting existing data records.
+   - Fully safe to execute against active development databases.
+
+2. **`python run.py seed-skills`**
+   - Populates standard university academic categories (Programming, Database, Web Development, Design, Communication, Other).
+   - Seeds standard baseline skills.
+   - Idempotent: checks for existing names before creating records.
+
+3. **`python run.py seed-demo`**
+   - Provisions a complete, multi-user demonstration environment.
+   - Creates an administrative user (`admin@college.edu`).
+   - Creates 4 student accounts with complementary skill portfolios (`aarav@college.edu`, `priya@college.edu`, `rohan@college.edu`, `ananya@college.edu`).
+   - Generates realistic reciprocal and one-way matches.
+   - Seeds an accepted proposal, scheduled upcoming session, completed past session, and bilateral 5-star ratings and written reviews.
+   - Completely idempotent: running multiple times never creates duplicate accounts or proposals.
+
+4. **`python run.py create-admin`**
+   - Interactive prompt to securely provision an administrative user with custom credentials.
+
 
 

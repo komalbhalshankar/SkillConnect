@@ -62,7 +62,8 @@ Python_Mini_Project_Sem l/
 │   ├── test_skills.py          # Skill CRUD, custom skills, ownership tests (19 tests)
 │   ├── test_matching.py        # Rule-based matching engine & discovery tests (12 tests)
 │   ├── test_exchanges.py       # Exchange requests, sessions, state machine tests (23 tests)
-│   └── test_ratings.py         # Ratings, feedback, dashboard & charts tests (17 tests)
+│   ├── test_ratings.py         # Ratings, feedback, dashboard & charts tests (17 tests)
+│   └── test_e2e_flow.py        # End-to-end integration workflows for students & admin (2 tests)
 ├── .env.example                # Environment variables template
 ├── .gitignore                  # Git ignore rules
 ├── requirements.txt            # Python dependencies
@@ -71,70 +72,120 @@ Python_Mini_Project_Sem l/
 
 ---
 
-## 4. Setup & Installation
+## 4. Visual Studio Code Quick Start Guide
+
+Follow these verified steps to run the complete SkillConnect application locally with zero prior configuration:
 
 ### Prerequisites
-- Python 3.10+ (tested on Python 3.14)
-- Git
+- **Python:** Version 3.10 to 3.14 (tested and verified on Python 3.14.7)
+- **Editor:** Visual Studio Code (recommended: [Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python))
+- **Terminal:** Windows PowerShell or bash/zsh on Linux/macOS
 
-### Quickstart
+### 10-Step Setup Workflow
 
-1. **Activate virtual environment:**
-   ```bash
+1. **Open Project in VS Code:**
+   Open the cloned folder in VS Code (`File > Open Folder...`).
+
+2. **Open Terminal:**
+   Press `` Ctrl + ` `` to open an integrated terminal.
+
+3. **Create Python Virtual Environment:**
+   ```powershell
+   # Windows PowerShell:
+   python -m venv .venv
+   ```
+   *(On Linux/macOS: `python3 -m venv .venv`)*
+
+4. **Activate the Virtual Environment:**
+   ```powershell
    # Windows PowerShell:
    .\.venv\Scripts\Activate.ps1
-   # Linux / macOS:
-   source .venv/bin/activate
    ```
+   *(If PowerShell displays an execution policy restriction, run: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` and re-run the activation script)*  
+   *(On Linux/macOS: `source .venv/bin/activate`)*
 
-2. **Install dependencies:**
-   ```bash
+5. **Install Project Dependencies:**
+   ```powershell
    pip install -r requirements.txt
    ```
 
-3. **Configure environment:**
-   ```bash
-   # Create .env from template if not present
-   copy .env.example .env
+6. **Configure Environment File:**
+   ```powershell
+   # Windows PowerShell:
+   Copy-Item .env.example .env
    ```
+   *(On Linux/macOS: `cp .env.example .env`)*
 
-4. **Initialize SQLite Database (Safe, non-destructive):**
-   ```bash
+7. **Initialize SQLite Database (Safe & Non-Destructive):**
+   ```powershell
    python run.py init-db
    ```
-   *Note: This creates all tables in `instance/skillconnect.db` without deleting or resetting any existing data.*
+   *Creates schema tables in `instance/skillconnect.db` safely without wiping or corrupting existing data.*
 
-5. **Seed Standard Academic Skills & Categories (Idempotent):**
-   ```bash
-   python run.py seed-skills
+8. **Seed Demonstration Data (Idempotent):**
+   ```powershell
+   python run.py seed-demo
    ```
-   *Seeds standard curriculum categories (Programming, Database, Web Development, Design, Communication, Other) and standard baseline skills.*
+   *Populates academic taxonomy, complementary student profiles, reciprocal and one-way matches, active/accepted proposals, scheduled/completed sessions, and bilateral review ratings.*
 
-6. **Create an Initial Administrator (CLI):**
-   ```bash
-   python run.py create-admin
-   ```
-   *Follow the interactive prompt to set admin name, email, and password securely.*
-
-7. **Run the Application:**
-   ```bash
+9. **Start Local Flask Development Server:**
+   ```powershell
    python run.py
    ```
-   Open your browser and navigate to: [http://127.0.0.1:5000](http://127.0.0.1:5000)
 
-*(Note: You can also use `flask --app run.py <command>` or `python -m flask --app run.py <command>`).*
+10. **Open in Browser:**
+    Navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+*To stop the local server at any time, press `Ctrl + C` in the terminal.*
 
 ---
 
-## 5. Running Automated Tests
+## 5. Demonstration Accounts & Login Credentials
 
-All functionality across Phases 1, 2, 3, 4, and 5 is covered by automated unit and integration tests using `pytest` and Flask's test client running against an isolated in-memory SQLite database (`sqlite:///:memory:`):
+When using `python run.py seed-demo`, the platform is instantly provisioned with realistic, interconnected student peers and an administrator:
+
+| Role | Account Name | Email | Password | Primary Skills & Purpose |
+| :--- | :--- | :--- | :--- | :--- |
+| **Admin** | Prof. Sharma (Admin) | `admin@college.edu` | `Admin@123` | Platform governance, Category & Standard Skill creation |
+| **Student** | Aarav Sharma | `aarav@college.edu` | `Student@123` | **Teaches:** Python, Data Structures <br>**Learns:** UI/UX Design, Docker <br>*100% Reciprocal Match with Priya* |
+| **Student** | Priya Patel | `priya@college.edu` | `Student@123` | **Teaches:** UI/UX Design, Web Development <br>**Learns:** Python, Cloud Computing <br>*Has completed session & 5-star rating with Aarav* |
+| **Student** | Rohan Gupta | `rohan@college.edu` | `Student@123` | **Teaches:** SQL & Database Design, Machine Learning <br>**Learns:** Python, Data Structures <br>*One-way match with Aarav; accepted/scheduled proposal* |
+| **Student** | Ananya Iyer | `ananya@college.edu` | `Student@123` | **Teaches:** HTML5 & CSS3 <br>**Learns:** Python, Data Structures <br>*Newer student profile with pending proposal for Aarav* |
+
+> [!NOTE]
+> Demo passwords use secure Argon2/Werkzeug hashes stored in SQLite. For production deployments, change secrets in `.env` and assign strong custom passwords.
+
+---
+
+## 6. End-to-End Workflow Testing Guide
+
+To test the entire 5-module flow manually in 3 minutes:
+
+1. **Student A Login:** Log in as `aarav@college.edu` (Password: `Student@123`).
+2. **Review Dashboard:** Navigate to [Dashboard](http://127.0.0.1:5000/dashboard) to view live statistics and Chart.js skill distributions.
+3. **Discover & Match:** Go to [Matches](http://127.0.0.1:5000/matching/) to see a 100% Reciprocal match card for Priya Patel with full score explanations.
+4. **Propose Exchange:** Click **Send Exchange Request** to propose a skill exchange (e.g. Python for UI/UX Design).
+5. **Student B Login:** Log out and log in as `priya@college.edu`. View the incoming proposal in [Exchange Proposals](http://127.0.0.1:5000/exchanges/?tab=incoming) and click **Accept**.
+6. **Schedule Learning Session:** Click **Schedule Session**, pick an upcoming date/time, and provide meeting link details.
+7. **Complete & Rate:** Mark the session as **Completed**, then click **Rate Partner** to submit star ratings (1–5) and written feedback.
+8. **Verify Updated Profile & Dashboard:** View Aarav's updated average rating, review count, and dynamic Chart.js stats.
+9. **Admin Governance:** Log in as `admin@college.edu` (Password: `Admin@123`), visit [Admin Portal](http://127.0.0.1:5000/admin), and create a new skill category.
+
+---
+
+## 7. Running Automated Test Suite
+
+All 5 modules plus administrative governance and multi-user integration flows are verified using `pytest`:
 
 ```bash
 python -m pytest -v
 ```
 
-### Verified Test Suite (89/89 Passing — 100% Pass Rate):
+### Verified Test Suite Summary (91/91 Passing — 100% Pass Rate):
+
+- **End-to-End Integration Flows (`tests/test_e2e_flow.py` — 2 tests):**
+  - Multi-user student lifecycle: registration, profile completion, skill listing, discovery, 100% reciprocal matching, proposal creation, acceptance, session scheduling, completion, bilateral ratings, and dashboard verification.
+  - Full admin governance: category/skill creation, standard taxonomy listing, and student permission rejection.
 - **Authentication & RBAC (`tests/test_auth.py` — 10 tests):**
   - Registration, duplicate email rejection, Werkzeug password hashing.
   - Successful login, failed login (bad password / unknown email), logout.
@@ -216,7 +267,35 @@ python -m pytest -v
 
 ---
 
-## 6. Implementation Progress
+## 8. Common Troubleshooting & Quick Fixes
+
+- **PowerShell Script Execution Error:**
+  - *Symptom:* `Activate.ps1 cannot be loaded because running scripts is disabled on this system.`
+  - *Fix:* Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` in your PowerShell terminal, then re-run `.\.venv\Scripts\Activate.ps1`.
+- **Port 5000 Already in Use:**
+  - *Symptom:* `OSError: [Errno 98] Address already in use` or Windows equivalent.
+  - *Fix:* Specify an alternative port: `flask --app run.py run --port 5001` or set `PORT=5001` in `.env`.
+- **Missing `.env` File:**
+  - *Symptom:* Warning that `.env` was not found.
+  - *Fix:* Run `Copy-Item .env.example .env` (PowerShell) or `cp .env.example .env` (bash).
+
+---
+
+## 9. Limitations & Future Roadmap
+
+### Honest Project Limitations
+- **Rule-Based Matching:** Matching is governed by an explicit deterministic algorithm (40/40/10/10 formula) rather than probabilistic Machine Learning models.
+- **Video Conferencing:** Meeting links (e.g. Google Meet, Zoom, Microsoft Teams) are coordinated via URLs rather than built-in WebRTC video streaming.
+- **Single Institutional Scope:** Designed for college campus peer learning rather than multi-tenant enterprise deployment.
+
+### Future Enhancements
+- Automated calendar invite integration (.ics calendar attachments).
+- Real-time in-app peer messaging and session chat notifications.
+- Skill endorsement badges based on cumulative ratings threshold.
+
+---
+
+## 10. Implementation Progress
 
 | Phase | Description | Status |
 | :--- | :--- | :--- |
@@ -225,3 +304,4 @@ python -m pytest -v
 | **Phase 3** | Skill Management (Module 2) & Skill Discovery and Matching (Module 3) | **Completed & Verified** (49/49 Tests Passed) |
 | **Phase 4** | Skill Exchange and Session Management (Module 4) | **Completed & Verified** (72/72 Tests Passed) |
 | **Phase 5** | Rating, Feedback and Dashboard (Module 5) | **Completed & Verified** (89/89 Tests Passed) |
+| **Phase 6** | Final Verification, E2E Integration, Demo Seeding & Release Readiness | **Completed & Verified** (91/91 Tests Passed) |

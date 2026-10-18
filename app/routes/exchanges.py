@@ -50,7 +50,7 @@ def request_detail(request_id: int):
 @login_required
 def new_request():
     """Form to initiate a new skill exchange proposal."""
-    receiver_id = request.args.get('receiver_id', type=int)
+    receiver_id = request.args.get('receiver_id', type=int) or (request.form.get('receiver_id', type=int) if request.form else None)
     pre_offered_id = request.args.get('offered_id', type=int)
     pre_requested_id = request.args.get('requested_id', type=int)
 
