@@ -212,14 +212,24 @@ Stores post-session peer evaluations and feedback.
 - Safe initialization: Running `flask --app run.py init-db` invokes `db.create_all()` within application context.
 - **Non-Destructive Guarantee:** Existing database files are never dropped, reset, or truncated on startup or initialization.
 
-### 4.2 Phase 2 Implemented Schema
-- Tables active in Phase 2:
-  1. `users` (Full schema active with authentication and profile fields)
-  2. `skill_categories` (Established to enforce relational taxonomy)
-  3. `skills` (Established with foreign key to `skill_categories.id`)
+### 4.2 Phase 3 Implemented & Active Schema
+- Tables active and verified in Phase 3:
+  1. `users` (Full schema active with authentication, profile fields, and role-based permissions)
+  2. `skill_categories` (Predefined categories: Programming, Database, Web Development, Design, Communication, Other)
+  3. `skills` (Standardized skills catalogue linked to categories)
+  4. `user_skills` (Active student skill portfolio associations with `skill_type`, `proficiency`, `notes`, and timestamps)
 
-### 4.3 Safe Schema Upgrade Strategy for Future Phases
-- As development progresses into Phase 3 (UserSkill), Phase 4 (ExchangeRequest & ExchangeSession), and Phase 5 (Rating):
-  1. The existing `users` table already defines foreign key targets and cascading rules so no breaking changes or data loss will occur on the `users` table.
-  2. Future tables can be added incrementally via `db.create_all()` (which creates new tables while leaving existing tables untouched).
-  3. For production deployments with altering existing columns, Flask-Migrate (Alembic) can be introduced to manage versioned migration scripts without manual SQL edits.
+### 4.3 Custom Skill Addition & Deduplication Strategy
+- When a student adds an unlisted skill using the custom skill name input:
+  1. The server performs a case-insensitive check against `skills.name`.
+  2. If a matching skill already exists, that existing `skill_id` is reused, avoiding redundant records.
+  3. If no matching skill exists, a new `Skill` record is inserted with the user-selected `category_id`.
+  4. The `user_skills` association is created with the resolved `skill_id`.
+  5. The table-level unique constraint `UNIQUE(user_id, skill_id, skill_type)` permits a student to associate the same skill in both `teach` and `learn` (e.g., teaching foundational concepts while seeking advanced mentorship), but strictly prevents duplicate records under the same skill type.
+
+### 4.4 Safe Schema Upgrade Strategy for Future Phases
+- As development progresses into Phase 4 (ExchangeRequest & ExchangeSession) and Phase 5 (Rating):
+  1. The existing tables (`users`, `skills`, `user_skills`) already define foreign key targets so no breaking changes or data loss will occur.
+  2. Tables are added incrementally via `db.create_all()` (which creates new tables while preserving existing tables and data untouched).
+  3. No existing user or skill data is dropped, reset, or recreated.
+

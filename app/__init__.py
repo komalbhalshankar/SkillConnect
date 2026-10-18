@@ -32,11 +32,13 @@ def create_app(config_name: str = None) -> Flask:
     from app.routes.main import main_bp
     from app.routes.admin import admin_bp
     from app.routes.skills import skills_bp
+    from app.routes.matching import matching_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp)
     app.register_blueprint(admin_bp)
     app.register_blueprint(skills_bp)
+    app.register_blueprint(matching_bp)
 
     # Register CLI Commands
     from app.cli import register_cli_commands

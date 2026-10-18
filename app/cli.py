@@ -55,16 +55,26 @@ def register_cli_commands(app):
 
         sample_data = [
             {
-                "category": "Programming Languages",
+                "category": "Programming",
                 "icon": "bi-code-slash",
-                "description": "Core software development and scripting languages.",
+                "description": "Core programming languages, algorithms, and software development.",
                 "skills": [
                     ("Python", "General-purpose programming, scripting, and backend development."),
                     ("Java", "Enterprise application and Android development."),
                     ("C++", "Systems programming, game development, and high-performance computing."),
                     ("JavaScript", "Client and server-side web application programming."),
-                    ("TypeScript", "Typed superset of JavaScript for scalable applications."),
-                    ("C#", ".NET ecosystem and game development.")
+                    ("Data Structures & Algorithms", "Arrays, trees, graphs, sorting, and algorithmic complexity.")
+                ]
+            },
+            {
+                "category": "Database",
+                "icon": "bi-database",
+                "description": "Relational databases, SQL optimization, and data modeling.",
+                "skills": [
+                    ("SQL & Relational Databases", "Relational querying, schema design, and ACID transactions."),
+                    ("PostgreSQL", "Advanced open-source relational database management."),
+                    ("MongoDB", "Document-oriented NoSQL database for unstructured data."),
+                    ("Database Design & Normalization", "ER diagrams, normal forms (1NF to BCNF), and indexing.")
                 ]
             },
             {
@@ -80,42 +90,31 @@ def register_cli_commands(app):
                 ]
             },
             {
-                "category": "Data Science & AI",
-                "icon": "bi-cpu",
-                "description": "Data analysis, machine learning algorithms, and intelligent systems.",
-                "skills": [
-                    ("Machine Learning", "Supervised, unsupervised algorithms and predictive modeling."),
-                    ("Data Analysis with Pandas", "Data cleaning, manipulation, and exploratory data analysis."),
-                    ("SQL & Databases", "Relational database querying, optimization, and normalization."),
-                    ("Deep Learning", "Neural networks, PyTorch, and computer vision / NLP fundamentals.")
-                ]
-            },
-            {
-                "category": "CS Foundations",
-                "icon": "bi-diagram-3",
-                "description": "Essential theoretical computer science and software architecture.",
-                "skills": [
-                    ("Data Structures & Algorithms", "Arrays, trees, graphs, sorting, searching, and algorithmic complexity."),
-                    ("Operating Systems", "Process management, concurrency, memory allocation, and file systems."),
-                    ("Computer Networks", "TCP/IP, HTTP/HTTPS, routing protocols, and network architecture.")
-                ]
-            },
-            {
-                "category": "Design & Multimedia",
+                "category": "Design",
                 "icon": "bi-palette",
-                "description": "User experience, visual interfaces, and media creation.",
+                "description": "UI/UX design, visual prototyping, and graphic design.",
                 "skills": [
                     ("UI/UX Design with Figma", "Wireframing, interactive prototyping, and design systems."),
                     ("Graphic Design", "Vector illustration, brand identity, and typography.")
                 ]
             },
             {
-                "category": "Communication & Professional",
+                "category": "Communication",
                 "icon": "bi-chat-dots",
-                "description": "Interpersonal skills, technical writing, and leadership.",
+                "description": "Interpersonal skills, technical writing, and presentation.",
                 "skills": [
                     ("Technical Writing", "Documentation, project reports, and API specifications."),
                     ("Public Speaking", "Presentations, elevator pitches, and seminar delivery.")
+                ]
+            },
+            {
+                "category": "Other",
+                "icon": "bi-tags",
+                "description": "General academic subjects and miscellaneous skills.",
+                "skills": [
+                    ("Machine Learning", "Supervised, unsupervised algorithms and predictive modeling."),
+                    ("Operating Systems", "Process management, concurrency, memory allocation, and file systems."),
+                    ("Computer Networks", "TCP/IP, HTTP/HTTPS, routing protocols, and network architecture.")
                 ]
             }
         ]

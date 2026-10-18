@@ -1,0 +1,164 @@
+{% extends "base.html" %}
+
+{% block title %}Skill Matching Recommendations — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Header Banner -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center bg-white p-4 rounded-3 shadow-sm border mb-4 gap-3">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h2 class="fw-bold mb-0">Matching Recommendations</h2>
+        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 badge-role">
+          Rule-Based Matching
+        </span>
+      </div>
+      <p class="text-muted mb-0 small">
+        Deterministic recommendations matching what you <strong>want to learn</strong> with what peers <strong>can teach</strong>.
+      </p>
+    </div>
+    
+    <!-- Filter Toggle -->
+    <div class="d-flex align-items-center gap-2">
+      <div class="btn-group btn-group-sm" role="group">
+        <a href="{{ url_for('matching.index') }}" class="btn btn-{% if not filter_reciprocal %}primary text-white{% else %}outline-secondary{% endif %}">
+          All Compatible ({{ total_matches }})
+        </a>
+        <a href="{{ url_for('matching.index', reciprocal=1) }}" class="btn btn-{% if filter_reciprocal %}primary text-white{% else %}outline-secondary{% endif %}">
+          <i class="bi bi-arrow-left-right me-1"></i> Reciprocal Only
+        </a>
+      </div>
+    </div>
+  </div>
+
+  {% if matches %}
+    <div class="row g-4">
+      {% for m in matches %}
+        <div class="col-lg-6">
+          <div class="card h-100 border-0 shadow-sm rounded-3">
+            <!-- Card Header with Score and Type -->
+            <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+              <div>
+                <h5 class="fw-bold mb-0 text-dark">{{ m.candidate.name }}</h5>
+                <span class="text-muted small">
+                  <i class="bi bi-mortarboard me-1"></i>{{ m.candidate.college or 'Institution not specified' }}
+                </span>
+              </div>
+              <div class="text-end">
+                <span class="badge bg-{{ m.badge_class }} bg-opacity-10 text-{{ m.badge_class }} border border-{{ m.badge_class }} border-opacity-25 fs-6 px-3 py-2 fw-bold">
+                  {{ m.score }}% Match
+                </span>
+                <div class="small fw-semibold text-{{ m.badge_class }} mt-1">
+                  {% if m.is_reciprocal %}
+                    <i class="bi bi-arrow-left-right me-1"></i> Two-Way Reciprocal
+                  {% else %}
+                    <i class="bi bi-arrow-right me-1"></i> One-Way
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+
+            <div class="card-body p-4">
+              {% if m.candidate.bio %}
+                <p class="text-secondary small mb-3 fst-italic bg-light p-2 rounded-2 border">
+                  "{{ m.candidate.bio }}"
+                </p>
+              {% endif %}
+
+              <!-- Matched Skills Columns -->
+              <div class="row g-3 mb-3">
+                <!-- Forward Match: You Learn from Candidate -->
+                <div class="col-12 col-md-6">
+                  <div class="p-3 rounded-3 bg-success bg-opacity-10 border border-success border-opacity-25 h-100">
+                    <h6 class="fw-bold text-success small mb-2 d-flex align-items-center gap-1">
+                      <i class="bi bi-check-circle-fill"></i> You Learn From {{ m.candidate.name }}:
+                    </h6>
+                    {% if m.fwd_skills %}
+                      <ul class="list-unstyled mb-0 small">
+                        {% for s in m.fwd_skills %}
+                          <li class="mb-1 d-flex justify-content-between align-items-center">
+                            <strong>{{ s.skill_name }}</strong>
+                            <span class="badge bg-success text-white" style="font-size: 0.7rem;">{{ s.teacher_level|capitalize }}</span>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      <span class="text-muted small fst-italic">None matched in this direction</span>
+                    {% endif %}
+                  </div>
+                </div>
+
+                <!-- Reverse Match: Candidate Learns from You -->
+                <div class="col-12 col-md-6">
+                  <div class="p-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25 h-100">
+                    <h6 class="fw-bold text-primary small mb-2 d-flex align-items-center gap-1">
+                      <i class="bi bi-arrow-left-circle-fill"></i> {{ m.candidate.name }} Learns From You:
+                    </h6>
+                    {% if m.rev_skills %}
+                      <ul class="list-unstyled mb-0 small">
+                        {% for s in m.rev_skills %}
+                          <li class="mb-1 d-flex justify-content-between align-items-center">
+                            <strong>{{ s.skill_name }}</strong>
+                            <span class="badge bg-primary text-white" style="font-size: 0.7rem;">{{ s.teacher_level|capitalize }}</span>
+                          </li>
+                        {% endfor %}
+                      </ul>
+                    {% else %}
+                      <span class="text-muted small fst-italic">None matched in this direction</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+
+              <!-- Score Explanation Accordion / List -->
+              <div class="bg-light p-3 rounded-3 border mb-3">
+                <span class="fw-bold text-dark small d-block mb-1">
+                  <i class="bi bi-calculator text-primary me-1"></i> Score Justification:
+                </span>
+                <ul class="list-unstyled mb-0" style="font-size: 0.8rem;">
+                  {% for expl in m.score_breakdown %}
+                    <li class="text-muted"><i class="bi bi-check2 text-success me-1"></i>{{ expl }}</li>
+                  {% endfor %}
+                </ul>
+              </div>
+
+              <!-- Action Footer -->
+              <div class="d-flex justify-content-between align-items-center pt-2 border-top">
+                <a href="{{ url_for('matching.student_detail', user_id=m.candidate.id) }}" class="btn btn-outline-primary btn-sm px-3">
+                  <i class="bi bi-person me-1"></i> View Full Profile
+                </a>
+                
+                <!-- Disabled Proposal Action until Phase 4 -->
+                <button type="button" class="btn btn-secondary btn-sm px-3" disabled title="Proposals available in Phase 4">
+                  <i class="bi bi-send me-1"></i> Exchange Request
+                  <span class="badge bg-light text-dark ms-1" style="font-size: 0.65rem;">Phase 4</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-5 bg-white rounded-3 border shadow-sm">
+      <i class="bi bi-people text-muted fs-1 mb-2 d-block"></i>
+      <h5 class="fw-bold text-dark mb-1">No Matching Candidates Found</h5>
+      <p class="text-muted small mx-auto mb-3" style="max-width: 500px;">
+        {% if filter_reciprocal %}
+          No two-way reciprocal matches found at this moment. You can switch to "All Compatible" or browse all students.
+        {% else %}
+          You don't have any matching peers yet. Ensure you have added skills you can teach and skills you want to learn to your portfolio.
+        {% endif %}
+      </p>
+      <div class="d-flex justify-content-center gap-2">
+        <a href="{{ url_for('skills.index') }}" class="btn btn-primary btn-sm text-white px-3">
+          <i class="bi bi-mortarboard me-1"></i> Manage My Skills
+        </a>
+        <a href="{{ url_for('matching.discover') }}" class="btn btn-outline-secondary btn-sm px-3">
+          <i class="bi bi-people me-1"></i> Discover Students
+        </a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

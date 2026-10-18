@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Discover Students — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Banner -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center bg-white p-4 rounded-3 shadow-sm border mb-4 gap-3">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h2 class="fw-bold mb-0">Discover Fellow Students</h2>
+        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 badge-role">
+          Community Directory
+        </span>
+      </div>
+      <p class="text-muted mb-0 small">
+        Explore student profiles across disciplines, search by specific technical skills, and discover peer mentors.
+      </p>
+    </div>
+    <div>
+      <a href="{{ url_for('matching.index') }}" class="btn btn-outline-primary btn-sm px-3">
+        <i class="bi bi-arrow-left-right me-1"></i> View Compatible Matches
+      </a>
+    </div>
+  </div>
+
+  <!-- Search and Filters Form -->
+  <div class="card border-0 shadow-sm rounded-3 mb-4 bg-white">
+    <div class="card-body p-4">
+      <form method="GET" action="{{ url_for('matching.discover') }}" class="row g-3">
+        <!-- Search by skill name -->
+        <div class="col-md-4">
+          <label class="form-label small fw-semibold text-secondary">Skill Name</label>
+          <div class="input-group">
+            <span class="input-group-text bg-white"><i class="bi bi-search text-muted"></i></span>
+            <input type="text" name="q" class="form-control" placeholder="e.g. Python, React, SQL..." value="{{ query }}">
+          </div>
+        </div>
+
+        <!-- Filter by Category -->
+        <div class="col-md-3">
+          <label class="form-label small fw-semibold text-secondary">Category</label>
+          <select name="category_id" class="form-select">
+            <option value="0">All Categories</option>
+            {% for cat in categories %}
+              <option value="{{ cat.id }}" {% if selected_category == cat.id %}selected{% endif %}>
+                {{ cat.name }}
+              </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <!-- Filter by Proficiency -->
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold text-secondary">Proficiency</label>
+          <select name="proficiency" class="form-select">
+            <option value="" {% if not selected_proficiency %}selected{% endif %}>All Levels</option>
+            <option value="beginner" {% if selected_proficiency == 'beginner' %}selected{% endif %}>Beginner</option>
+            <option value="intermediate" {% if selected_proficiency == 'intermediate' %}selected{% endif %}>Intermediate</option>
+            <option value="advanced" {% if selected_proficiency == 'advanced' %}selected{% endif %}>Advanced</option>
+          </select>
+        </div>
+
+        <!-- Filter by Intent -->
+        <div class="col-md-2">
+          <label class="form-label small fw-semibold text-secondary">Student Intent</label>
+          <select name="intent" class="form-select">
+            <option value="all" {% if selected_intent == 'all' %}selected{% endif %}>Either Intent</option>
+            <option value="teach" {% if selected_intent == 'teach' %}selected{% endif %}>Can Teach</option>
+            <option value="learn" {% if selected_intent == 'learn' %}selected{% endif %}>Wants to Learn</option>
+          </select>
+        </div>
+
+        <!-- Submit and Reset Buttons -->
+        <div class="col-md-1 d-flex align-items-end gap-1">
+          <button type="submit" class="btn btn-primary w-100 text-white" title="Search">
+            <i class="bi bi-filter"></i>
+          </button>
+          {% if query or selected_category or selected_proficiency or selected_intent != 'all' %}
+            <a href="{{ url_for('matching.discover') }}" class="btn btn-outline-secondary" title="Reset Filters">
+              <i class="bi bi-x-lg"></i>
+            </a>
+          {% endif %}
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Students Grid -->
+  {% if students %}
+    <div class="row g-4">
+      {% for s in students %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 border-0 shadow-sm rounded-3">
+            <div class="card-body p-4 d-flex flex-column">
+              <div class="d-flex align-items-center gap-3 mb-3">
+                <div class="rounded-circle bg-primary bg-opacity-10 text-primary d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 48px; height: 48px;">
+                  {{ s.name[:1]|upper }}
+                </div>
+                <div>
+                  <h6 class="fw-bold mb-0 text-dark">{{ s.name }}</h6>
+                  <span class="text-muted small">
+                    <i class="bi bi-mortarboard me-1"></i>{{ s.college or 'Institution not set' }}
+                  </span>
+                </div>
+              </div>
+
+              {% if s.bio %}
+                <p class="text-secondary small mb-3 flex-grow-0" style="min-height: 40px;">
+                  {{ s.bio[:120] }}{% if s.bio|length > 120 %}...{% endif %}
+                </p>
+              {% else %}
+                <p class="text-muted small mb-3 fst-italic" style="min-height: 40px;">
+                  No personal bio provided.
+                </p>
+              {% endif %}
+
+              <!-- Skills Offered (Teach) -->
+              <div class="mb-2">
+                <span class="fw-semibold text-success small d-block mb-1">
+                  <i class="bi bi-mortarboard me-1"></i> Teaches:
+                </span>
+                <div class="d-flex flex-wrap gap-1">
+                  {% if s.teach_skills %}
+                    {% for us in s.teach_skills %}
+                      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25" style="font-size: 0.75rem;">
+                        {{ us.skill.name }} ({{ us.proficiency|capitalize }})
+                      </span>
+                    {% endfor %}
+                  {% else %}
+                    <span class="text-muted small fst-italic">None listed</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <!-- Skills Desired (Learn) -->
+              <div class="mb-3">
+                <span class="fw-semibold text-primary small d-block mb-1">
+                  <i class="bi bi-lightbulb me-1"></i> Wants to Learn:
+                </span>
+                <div class="d-flex flex-wrap gap-1">
+                  {% if s.learn_skills %}
+                    {% for us in s.learn_skills %}
+                      <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25" style="font-size: 0.75rem;">
+                        {{ us.skill.name }}
+                      </span>
+                    {% endfor %}
+                  {% else %}
+                    <span class="text-muted small fst-italic">None listed</span>
+                  {% endif %}
+                </div>
+              </div>
+
+              <div class="mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                <span class="text-muted small">
+                  <i class="bi bi-clock me-1"></i>{{ s.availability or 'Flexible' }}
+                </span>
+                <a href="{{ url_for('matching.student_detail', user_id=s.id) }}" class="btn btn-outline-primary btn-sm px-3">
+                  View Profile &rarr;
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-5 bg-white rounded-3 border shadow-sm">
+      <i class="bi bi-search text-muted fs-1 mb-2 d-block"></i>
+      <h5 class="fw-bold text-dark mb-1">No Students Match Your Filters</h5>
+      <p class="text-muted small mx-auto mb-3" style="max-width: 450px;">
+        Try clearing your search terms or expanding category and proficiency filter options to find more peers.
+      </p>
+      <a href="{{ url_for('matching.discover') }}" class="btn btn-outline-primary btn-sm px-3">
+        Clear All Filters
+      </a>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -46,6 +46,16 @@
               </a>
             </li>
             <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'matching.index' %}active{% endif %}" href="{{ url_for('matching.index') }}">
+                <i class="bi bi-arrow-left-right me-1"></i> Find Matches
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'matching.discover' %}active{% endif %}" href="{{ url_for('matching.discover') }}">
+                <i class="bi bi-people me-1"></i> Discover Students
+              </a>
+            </li>
+            <li class="nav-item">
               <a class="nav-link {% if request.endpoint == 'skills.explore' %}active{% endif %}" href="{{ url_for('skills.explore') }}">
                 <i class="bi bi-compass me-1"></i> Explore Skills
               </a>

@@ -6,11 +6,11 @@ SkillConnect is a web-based peer-to-peer student skill exchange platform built w
 
 ## 1. Core Modules
 
-1. **User Authentication and Profile:** Student & Administrator registration, secure password hashing, session management, and academic profile configuration.
-2. **Skill Management:** Categorized skill taxonomy, Teach/Learn portfolios, proficiency ratings, and ownership validation.
-3. **Skill Discovery and Matching:** Deterministic, rule-based two-way compatibility matching engine with scoring breakdown.
-4. **Skill Exchange and Session Management:** Proposal negotiation, state machine transitions, and session scheduling.
-5. **Rating, Feedback and Dashboard:** Post-session reviews, peer reputation ratings, and Chart.js analytics dashboards.
+1. **User Authentication and Profile (Phase 2):** Student & Administrator registration, secure password hashing, session management, and academic profile configuration.
+2. **Skill Management (Phase 3):** Categorized skill taxonomy, separate Teach/Learn portfolios, proficiency ratings, custom unlisted skill addition with duplicate avoidance, and strict ownership validation.
+3. **Skill Discovery and Matching (Phase 3):** Database-backed student search and filtering, deterministic rule-based reciprocal compatibility engine (40/40/10/10 formula), transparent score explanations, and profile inspection.
+4. **Skill Exchange and Session Management (Phase 4):** Proposal negotiation, state machine transitions, and session scheduling.
+5. **Rating, Feedback and Dashboard (Phase 5):** Post-session reviews, peer reputation ratings, and Chart.js analytics dashboards.
 
 ---
 
@@ -32,10 +32,10 @@ Python_Mini_Project_Sem l/
 │   ├── __init__.py             # Application factory (create_app)
 │   ├── config.py               # Development, testing, and production configs
 │   ├── extensions.py           # Database, LoginManager, CSRF extensions
-│   ├── forms/                  # WTForms definitions
-│   ├── models/                 # SQLAlchemy relational data models
-│   ├── routes/                 # Blueprint controllers (auth, main, skills, matching, exchanges, admin)
-│   ├── services/               # Service layer business logic
+│   ├── forms/                  # WTForms definitions (auth, skills, matching)
+│   ├── models/                 # SQLAlchemy relational data models (User, SkillCategory, Skill, UserSkill)
+│   ├── routes/                 # Blueprint controllers (auth, main, skills, matching, admin)
+│   ├── services/               # Service layer business logic (AuthService, SkillService, MatchingService)
 │   ├── static/                 # CSS stylesheets, JavaScript files
 │   └── templates/              # Jinja2 presentation templates
 ├── docs/                       # Project documentation & diagrams
@@ -49,10 +49,16 @@ Python_Mini_Project_Sem l/
 │   ├── matching_algorithm.md   # Mathematical specification of the matching engine
 │   └── test_plan.md            # Comprehensive QA test plan
 ├── tests/                      # Automated test suites (pytest)
+│   ├── conftest.py             # Fixtures and test client
+│   ├── test_auth.py            # Authentication, hashing, access control tests (10 tests)
+│   ├── test_database.py        # Model constraints and CLI tests (4 tests)
+│   ├── test_profile.py         # Profile update and ownership tests (4 tests)
+│   ├── test_skills.py          # Skill CRUD, custom skills, ownership tests (19 tests)
+│   └── test_matching.py        # Rule-based matching engine & discovery tests (12 tests)
 ├── .env.example                # Environment variables template
 ├── .gitignore                  # Git ignore rules
 ├── requirements.txt            # Python dependencies
-└── run.py                      # Flask entry point
+└── run.py                      # Flask entry point and CLI commands
 ```
 
 ---
@@ -94,7 +100,7 @@ Python_Mini_Project_Sem l/
    ```bash
    python run.py seed-skills
    ```
-   *Seeds standard curriculum categories (Programming, Web Dev, Data Science, CS Core, Design, Communication) and 22+ baseline skills.*
+   *Seeds standard curriculum categories (Programming, Database, Web Development, Design, Communication, Other) and standard baseline skills.*
 
 6. **Create an Initial Administrator (CLI):**
    ```bash
@@ -117,10 +123,10 @@ Python_Mini_Project_Sem l/
 All functionality across Phase 2 and Phase 3 is covered by automated unit and integration tests using `pytest` and Flask's test client running against an isolated in-memory SQLite database (`sqlite:///:memory:`):
 
 ```bash
-pytest -v
+python -m pytest -v
 ```
 
-### Verified Test Suite (33/33 Passing):
+### Verified Test Suite (49/49 Passing — 100% Pass Rate):
 - **Authentication & RBAC (`tests/test_auth.py` — 10 tests):**
   - Registration, duplicate email rejection, Werkzeug password hashing.
   - Successful login, failed login (bad password / unknown email), logout.
@@ -132,17 +138,32 @@ pytest -v
   - Unique email database constraints.
   - `SkillCategory` and `Skill` model relationships.
   - Safe database initialization CLI (`flask init-db`) and administrator creation CLI (`flask create-admin`).
-- **Skill Taxonomy & Portfolios (`tests/test_skills.py` — 15 tests):**
+- **Skill Management (`tests/test_skills.py` — 19 tests):**
   - Adding skills to Teach and Learn portfolios with proficiency and notes.
-  - Mutual exclusivity enforcement (cannot add same skill to both Teach and Learn).
-  - Duplicate prevention in the same skill list.
-  - Updating proficiency and notes.
+  - Associating same skill in both Teach and Learn lists.
+  - Preventing duplicate skill addition under the same skill type.
+  - Adding custom unlisted skills with category assignment.
+  - Deduplicating custom skills case-insensitively.
+  - Updating skill type, proficiency, and notes.
   - Deleting skills from portfolio.
   - Cross-user ownership protection (HTTP 403 Forbidden on unauthorized edit/delete).
   - Admin category and skill creation via portal.
   - Student RBAC restrictions on admin skill routes (HTTP 403 Forbidden).
   - CLI skill seeding command (`flask seed-skills`).
   - Public skill catalog browser (`/skills/explore`).
+- **Skill Discovery & Matching (`tests/test_matching.py` — 12 tests):**
+  - Full reciprocal matching score (100% score calculation with forward and reverse breakdowns).
+  - One-way matching score (directional calculation).
+  - Disjoint skills return zero match (omitted from recommendations).
+  - Self-matching prevention (current user excluded from recommendations and discovery).
+  - Score bounds strictly verified within $[0, 100]$.
+  - Deterministic ranking: reciprocal matches first, score descending, matched skills count descending, candidate ID ascending.
+  - Discovery student search by skill name.
+  - Discovery filtering by academic category and proficiency level.
+  - Handling empty search results gracefully with helpful user prompts.
+  - Matching recommendations page rendering with score cards, badges, and breakdown lists.
+  - Student profile inspection (`/matching/student/<id>`) displaying peer profile and bilateral compatibility card.
+  - Route protection redirecting unauthenticated visitors to login.
 
 ---
 
@@ -152,8 +173,6 @@ pytest -v
 | :--- | :--- | :--- |
 | **Phase 1** | Requirements, UML Use Case, Architecture & Skeleton | **Completed** |
 | **Phase 2** | Database Foundation, Authentication & Student Profile | **Completed & Verified** |
-| **Phase 3** | Skill Taxonomy, Categories & Student Skill Portfolios | **Completed & Verified** |
-| **Phase 4** | Two-Way Reciprocal Matching Engine & Compatibility Scoring | *Next Milestone (Pending Approval)* |
-| **Phase 5** | Exchange Requests, Sessions, Feedback & Analytics | *Planned* |
-
-
+| **Phase 3** | Skill Management (Module 2) & Skill Discovery and Matching (Module 3) | **Completed & Verified** (49/49 Tests Passed) |
+| **Phase 4** | Skill Exchange and Session Management (Module 4) | *Next Milestone (Pending Approval)* |
+| **Phase 5** | Rating, Feedback and Dashboard (Module 5) | *Planned* |

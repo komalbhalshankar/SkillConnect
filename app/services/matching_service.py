@@ -1,6 +1,6 @@
 """
-MatchingService: Deterministic, rule-based two-way skill exchange matching engine.
-Transparent, auditable, and strictly bounded between 0% and 100%.
+MatchingService: Rule-based reciprocal matching engine for SkillConnect.
+Calculates transparent compatibility scores (0–100%) and returns detailed breakdowns.
 """
 from typing import List, Dict, Any, Optional
 from app.models.user import User
@@ -12,26 +12,33 @@ class MatchingService:
     def calculate_compatibility(cls, user_a: User, user_b: User) -> Optional[Dict[str, Any]]:
         """
         Evaluate compatibility between Student A (current user) and Student B (candidate).
-        Returns match dictionary or None if zero match exists.
+        Returns match dictionary or None if zero complementary skills exist.
+        
+        Formula (Max: 100 points):
+        - 40 points: My LEARN skill matches Candidate's TEACH skill.
+        - 40 points: Candidate's LEARN skill matches My TEACH skill.
+        - 10 points: Category alignment compatibility bonus.
+        - 10 points: Proficiency level compatibility bonus (Teacher level >= Learner level).
         """
         if user_a.id == user_b.id:
             return None
 
-        # Build skill lookups: skill_id -> UserSkill
+        # Build lookups: skill_id -> list of UserSkill
         a_teach = {us.skill_id: us for us in user_a.user_skills if us.skill_type == 'teach'}
         a_learn = {us.skill_id: us for us in user_a.user_skills if us.skill_type == 'learn'}
         b_teach = {us.skill_id: us for us in user_b.user_skills if us.skill_type == 'teach'}
         b_learn = {us.skill_id: us for us in user_b.user_skills if us.skill_type == 'learn'}
 
-        # Forward Matches: A wants to learn, B can teach
+        # Forward matches (Direction 1: User A learns, Candidate B teaches)
         fwd_ids = set(a_learn.keys()).intersection(set(b_teach.keys()))
         fwd_skills = []
-        for sid in fwd_ids:
+        for sid in sorted(fwd_ids):
             learner_skill = a_learn[sid]
             teacher_skill = b_teach[sid]
             fwd_skills.append({
                 'skill_id': sid,
                 'skill_name': teacher_skill.skill.name,
+                'category_id': teacher_skill.skill.category_id,
                 'category_name': teacher_skill.skill.category.name,
                 'teacher_level': teacher_skill.proficiency,
                 'learner_level': learner_skill.proficiency,
@@ -39,15 +46,16 @@ class MatchingService:
                 'learner_weight': learner_skill.proficiency_weight
             })
 
-        # Reverse Matches: B wants to learn, A can teach
+        # Reverse matches (Direction 2: User A teaches, Candidate B learns)
         rev_ids = set(a_teach.keys()).intersection(set(b_learn.keys()))
         rev_skills = []
-        for sid in rev_ids:
+        for sid in sorted(rev_ids):
             learner_skill = b_learn[sid]
             teacher_skill = a_teach[sid]
             rev_skills.append({
                 'skill_id': sid,
                 'skill_name': teacher_skill.skill.name,
+                'category_id': teacher_skill.skill.category_id,
                 'category_name': teacher_skill.skill.category.name,
                 'teacher_level': teacher_skill.proficiency,
                 'learner_level': learner_skill.proficiency,
@@ -55,49 +63,54 @@ class MatchingService:
                 'learner_weight': learner_skill.proficiency_weight
             })
 
-        # If zero matches in both directions, return None
+        # If zero matches in both directions, exclude candidate from match recommendations
         if not fwd_skills and not rev_skills:
             return None
 
-        is_reciprocal = len(fwd_skills) > 0 and len(rev_skills) > 0
+        has_fwd = len(fwd_skills) > 0
+        has_rev = len(rev_skills) > 0
+        is_reciprocal = has_fwd and has_rev
 
-        if is_reciprocal:
-            # Reciprocal Match Scoring
-            base_score = 60
-            # Volume bonus: up to 20 points
-            total_matched_count = len(fwd_skills) + len(rev_skills)
-            volume_bonus = min(20, max(0, (total_matched_count - 2) * 5))
+        score = 0
+        score_breakdown = []
 
-            # Proficiency alignment: up to 10 points
-            prof_bonus = 0
-            if any(f['teacher_weight'] >= f['learner_weight'] for f in fwd_skills):
-                prof_bonus += 5
-            if any(r['teacher_weight'] >= r['learner_weight'] for r in rev_skills):
-                prof_bonus += 5
+        # 1. Directional Points (40 pts each)
+        if has_fwd:
+            score += 40
+            fwd_names = ", ".join(s['skill_name'] for s in fwd_skills)
+            score_breakdown.append(f"+40 pts: You learn {fwd_names} from {user_b.name}")
 
-            # Category synergy bonus: up to 10 points
-            categories_fwd = {f['category_name'] for f in fwd_skills}
-            categories_rev = {r['category_name'] for r in rev_skills}
-            cat_bonus = 10 if len(categories_fwd.union(categories_rev)) >= 2 else 5
+        if has_rev:
+            score += 40
+            rev_names = ", ".join(s['skill_name'] for s in rev_skills)
+            score_breakdown.append(f"+40 pts: {user_b.name} learns {rev_names} from you")
 
-            raw_score = base_score + volume_bonus + prof_bonus + cat_bonus
-            final_score = min(100, max(60, raw_score))
-            match_type = 'Reciprocal'
-            badge_class = 'success'
-        else:
-            # One-Way Match Scoring
-            base_score = 30
-            active_skills = fwd_skills if fwd_skills else rev_skills
-            volume_bonus = min(15, (len(active_skills) - 1) * 5)
-            
-            # Proficiency bonus for teacher competence
-            max_teacher_level = max(s['teacher_weight'] for s in active_skills)
-            prof_bonus = 10 if max_teacher_level >= 3 else (5 if max_teacher_level >= 2 else 0)
+        # 2. Category Compatibility Bonus (10 pts)
+        # Awarded when matched skills span aligned/shared categories
+        fwd_cats = {s['category_id'] for s in fwd_skills}
+        rev_cats = {s['category_id'] for s in rev_skills}
+        # If reciprocal, or if matched skills belong to established categories
+        if is_reciprocal or (fwd_cats or rev_cats):
+            score += 10
+            score_breakdown.append("+10 pts: Skill category alignment")
 
-            raw_score = base_score + volume_bonus + prof_bonus
-            final_score = min(55, max(30, raw_score))
-            match_type = 'One-Way'
-            badge_class = 'info'
+        # 3. Proficiency Compatibility Bonus (10 pts)
+        # Awarded if teacher's proficiency meets or exceeds learner's target proficiency
+        prof_compatible = False
+        if any(f['teacher_weight'] >= f['learner_weight'] for f in fwd_skills):
+            prof_compatible = True
+        elif any(r['teacher_weight'] >= r['learner_weight'] for r in rev_skills):
+            prof_compatible = True
+
+        if prof_compatible:
+            score += 10
+            score_breakdown.append("+10 pts: Proficiency level compatibility (teacher meets/exceeds learner need)")
+
+        # Ensure strict bounds [0, 100]
+        final_score = min(100, max(0, score))
+
+        match_type = 'Reciprocal' if is_reciprocal else 'One-Way'
+        badge_class = 'success' if is_reciprocal else 'primary'
 
         return {
             'candidate': user_b,
@@ -108,16 +121,20 @@ class MatchingService:
             'fwd_skills': fwd_skills,  # Candidate teaches, Current user learns
             'rev_skills': rev_skills,  # Current user teaches, Candidate learns
             'fwd_count': len(fwd_skills),
-            'rev_count': len(rev_skills)
+            'rev_count': len(rev_skills),
+            'score_breakdown': score_breakdown
         }
 
     @classmethod
     def get_matches_for_user(cls, user: User, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """
         Find all compatible peer matches for the specified student.
-        Sorted by Score (desc), Reciprocal first, Average Rating (desc), Name (asc).
+        Ranked deterministically:
+        1. Reciprocal matches preferred (is_reciprocal True before False)
+        2. Score descending
+        3. Total matched skills count descending
+        4. Candidate ID ascending (stable deterministic tie-breaker)
         """
-        # Fetch candidate students excluding the current user
         candidates = User.query.filter(User.role == 'student', User.id != user.id).all()
         matches = []
 
@@ -126,17 +143,13 @@ class MatchingService:
             if match_data:
                 matches.append(match_data)
 
-        # Sorting logic:
-        # 1. Score descending
-        # 2. is_reciprocal True first
-        # 3. Average rating descending
-        # 4. Name ascending
+        # Deterministic ranking
         matches.sort(
             key=lambda m: (
-                m['score'],
                 1 if m['is_reciprocal'] else 0,
-                m['candidate'].average_rating,
-                -ord(m['candidate'].name[0].lower()) if m['candidate'].name else 0
+                m['score'],
+                m['fwd_count'] + m['rev_count'],
+                -m['candidate'].id
             ),
             reverse=True
         )

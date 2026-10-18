@@ -167,22 +167,34 @@ The modular architecture guarantees that future modules (e.g., Real-time Chat, V
   - `flask init-db`: Non-destructive table initialization.
   - `flask create-admin`: Secure administrator provisioning without hardcoded credentials.
 
-### Phase 3: Skill Taxonomy, Categories & Student Skill Portfolios (Completed)
+### Phase 3: Skill Management, Discovery & Matching (Completed & Verified)
 - **Active Blueprints & Controllers:**
   - `skills_bp` (`/skills`):
-    - `GET /skills/`: Personal skill portfolio view displaying Teach and Learn lists with proficiency badges and notes.
-    - `POST /skills/add`: Add skill to Teach or Learn portfolio.
-    - `POST /skills/edit/<int:user_skill_id>`: Edit proficiency and notes with strict ownership validation.
+    - `GET /skills/`: Personal skill portfolio view displaying separate Teach and Learn lists with proficiency badges and notes.
+    - `POST /skills/add`: Add skill to Teach or Learn portfolio. Supports selecting existing skills or adding custom unlisted skills with automatic category assignment and duplicate avoidance.
+    - `POST /skills/edit/<int:user_skill_id>`: Edit skill type, proficiency, and notes with strict ownership validation.
     - `POST /skills/delete/<int:user_skill_id>`: Remove skill from portfolio with strict ownership validation.
     - `GET /skills/explore`: Public/student categorized skill catalog browser.
+  - `matching_bp` (`/matching`):
+    - `GET /matching/`: Matching recommendations view with transparent compatibility scores (0–100%), directional matched skill breakdowns, and score justifications. Supports reciprocal filter toggle (`?reciprocal=1`).
+    - `GET /matching/discover`: Student directory with live database-backed search by skill name and filters for category, proficiency, and intent (`teach`, `learn`, or `all`).
+    - `GET /matching/student/<int:user_id>`: Student profile inspection view showing peer bio, college, availability, skills offered/desired, and bilateral compatibility overview.
   - `admin_bp` (`/admin`):
     - `POST /admin/categories/add`: Admin category creation.
     - `POST /admin/skills/add`: Admin standardized skill creation under a category.
-- **Domain Service Layer (`SkillService`):**
-  - Business rules: Mutual exclusivity ensuring a student cannot register the same skill to both Teach and Learn simultaneously.
-  - Duplicate prevention on identical skill types.
-  - Ownership enforcement returning HTTP 403 Forbidden for unauthorized cross-student mutations.
+- **Domain Service Layer:**
+  - `SkillService`:
+    - Handles addition of standard or custom unlisted skills (reusing existing skills case-insensitively).
+    - Permits a student to associate the same skill in both Teach and Learn (e.g. basic instructor vs advanced learner), while preventing duplicate entries under the same `skill_type`.
+    - Enforces ownership checks on mutations.
+    - Implements database-backed student search and filtering excluding the current user.
+  - `MatchingService`:
+    - Implements deterministic rule-based matching formula: 40 pts (forward match) + 40 pts (reverse match) + 10 pts (category bonus) + 10 pts (proficiency bonus).
+    - Strictly bounds scores between 0% and 100%.
+    - Provides deterministic ranking: reciprocal first, score descending, matched skills count descending, candidate ID ascending.
+    - Excludes students with zero complementary skills.
 - **CLI Seeding:**
-  - `flask seed-skills`: Idempotently seeds standard academic categories and skills across 6 domains (Programming, Web Dev, Data Science, CS Foundations, Design, Communication).
+  - `flask seed-skills`: Idempotently seeds standard academic categories (Programming, Database, Web Development, Design, Communication, Other) and standard skill sets.
+
 
 
