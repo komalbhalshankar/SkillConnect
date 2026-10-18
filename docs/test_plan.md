@@ -1,5 +1,5 @@
 # SkillConnect — Comprehensive Test Plan & Verification Report
-**Version:** 3.0 (Phase 4 Verified Baseline)  
+**Version:** 4.0 (Phase 5 Verified Baseline)  
 **Test Framework:** `pytest` (v9+) & Flask Test Client  
 **Database Isolation:** In-Memory SQLite (`sqlite:///:memory:`)  
 
@@ -12,12 +12,12 @@
 
 ---
 
-## 2. Phase 4 Verified Test Execution Report
+## 2. Phase 5 Verified Test Execution Report
 
 **Test Run Date:** October 18, 2026  
 **Environment:** Python 3.14.7 / pytest 9.1.1 / Flask Test Client  
 **Execution Command:** `python -m pytest -v`  
-**Overall Result:** **72 Passed, 0 Failed, 0 Errors (100% Pass Rate)**
+**Overall Result:** **89 Passed, 0 Failed, 0 Errors (100% Pass Rate)**
 
 | Test Suite File | Test Function | Verified Behavior | Status |
 | :--- | :--- | :--- | :---: |
@@ -93,16 +93,35 @@
 | `tests/test_exchanges.py` | `test_reschedule_cancelled_session_policy` | Cancelled session can be rescheduled with a new date and reset status | **PASSED** |
 | `tests/test_exchanges.py` | `test_session_history_separation` | Categorizes into upcoming (scheduled) and past (completed/cancelled) | **PASSED** |
 | `tests/test_exchanges.py` | `test_unauthenticated_redirected_from_exchange_and_session_routes` | Protected endpoints redirect guests to login | **PASSED** |
+| `tests/test_ratings.py` | `test_valid_rating_submission_after_completion` | Participant submits 5-star rating and review after session completed | **PASSED** |
+| `tests/test_ratings.py` | `test_rejection_of_ratings_before_completion` | Rating attempt on scheduled session is rejected | **PASSED** |
+| `tests/test_ratings.py` | `test_rejection_of_ratings_for_cancelled_sessions` | Rating attempt on cancelled session is rejected | **PASSED** |
+| `tests/test_ratings.py` | `test_rejection_of_invalid_rating_values` | Scores outside 1–5 (0, 6, -1, non-int) rejected | **PASSED** |
+| `tests/test_ratings.py` | `test_prevention_of_ratings_by_unrelated_users` | Non-participant student rating attempt is blocked | **PASSED** |
+| `tests/test_ratings.py` | `test_prevention_of_duplicate_ratings` | Reviewer submitting second rating for same session is blocked | **PASSED** |
+| `tests/test_ratings.py` | `test_independent_bilateral_ratings` | Both participants independently rate each other for same session | **PASSED** |
+| `tests/test_ratings.py` | `test_average_rating_and_rounding` | Correct arithmetic average and 1-decimal rounding across reviews | **PASSED** |
+| `tests/test_ratings.py` | `test_feedback_length_validation` | Comments exceeding 500 characters rejected | **PASSED** |
+| `tests/test_ratings.py` | `test_nonexistent_session_rating` | Missing session ID safely handled | **PASSED** |
+| `tests/test_ratings.py` | `test_dashboard_stats_for_active_student` | Dashboard metrics match real database records | **PASSED** |
+| `tests/test_ratings.py` | `test_dashboard_empty_state_for_new_user` | Brand new user with zero records gets safe defaults & empty lists | **PASSED** |
+| `tests/test_ratings.py` | `test_dashboard_cross_user_isolation` | User A's private activity is invisible in User C's dashboard | **PASSED** |
+| `tests/test_ratings.py` | `test_rating_route_workflow` | HTTP GET /rate renders form; POST submits and flashes message | **PASSED** |
+| `tests/test_ratings.py` | `test_dashboard_route_view` | `/dashboard` renders dynamic metric cards and Chart.js canvases | **PASSED** |
+| `tests/test_ratings.py` | `test_profile_reviews_section_view` | `/profile` displays received peer reviews section | **PASSED** |
+| `tests/test_ratings.py` | `test_student_detail_reviews_view` | Peer profile displays star rating and reviews received | **PASSED** |
 
 ---
 
-## 3. Future Phases Test Matrix (Scheduled)
+## 3. Test Coverage Summary
 
-### Suite 5: Rating, Feedback & Dashboard (`tests/test_ratings.py`) — Phase 5
-| Test ID | Objective | Expected Result |
-| :--- | :--- | :--- |
-| `test_rate_completed_session` | Participant rates finished session (1–5) | Rating record created, average updated |
-| `test_prevent_rating_uncompleted_session` | Attempt to rate scheduled/cancelled session | Blocked |
-| `test_prevent_duplicate_rating` | Same reviewer rates same session twice | Blocked by unique constraint |
-| `test_student_dashboard_metrics` | Calculate dashboard counters | Accurate counts for skills, sessions, matches |
-| `test_admin_dashboard_metrics` | Platform-wide aggregation | Total students, skills, exchanges, sessions |
+- **Total Test Cases:** 89
+- **Passing Rate:** 100% (89/89)
+- **Regressions Introduced:** 0
+- **Modules Covered:**
+  - Module 1: User Authentication and Profile (14 tests)
+  - Module 2: Skill Management (19 tests)
+  - Module 3: Skill Discovery and Matching (12 tests)
+  - Module 4: Skill Exchange and Session Management (23 tests)
+  - Module 5: Rating, Feedback and Dashboard (17 tests)
+  - Database & Platform Administration (4 tests)

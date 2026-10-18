@@ -6,6 +6,8 @@ from flask_login import login_required, current_user
 from app.forms.auth_forms import ProfileForm
 from app.models.user import User
 from app.services.auth_service import AuthService
+from app.services.stats_service import StatsService
+from app.services.rating_service import RatingService
 
 main_bp = Blueprint('main', __name__)
 
@@ -19,13 +21,21 @@ def index():
 @main_bp.route('/dashboard')
 @login_required
 def dashboard():
-    """Personalized student dashboard placeholder for Phase 2."""
-    return render_template('main/dashboard.html')
+    """
+    Personalized student dashboard backed by real SQLite database statistics
+    and Chart.js visualizations.
+    """
+    stats = StatsService.get_student_dashboard_stats(current_user)
+    return render_template(
+        'main/dashboard.html',
+        stats=stats,
+        chart_data=stats['chart_data']
+    )
 
 @main_bp.route('/profile', methods=['GET', 'POST'])
 @login_required
 def profile():
-    """View and update logged-in user's profile."""
+    """View and update logged-in user's profile and inspect received peer reviews."""
     form = ProfileForm(obj=current_user)
     if form.validate_on_submit():
         success, error = AuthService.update_profile(
@@ -41,4 +51,10 @@ def profile():
         else:
             flash(error or 'Failed to update profile.', 'danger')
 
-    return render_template('main/profile.html', form=form, user=current_user)
+    reviews = RatingService.get_user_received_ratings(current_user.id)
+    return render_template(
+        'main/profile.html',
+        form=form,
+        user=current_user,
+        reviews=reviews
+    )

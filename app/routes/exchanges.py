@@ -6,10 +6,12 @@ from flask import Blueprint, render_template, redirect, url_for, flash, request,
 from flask_login import login_required, current_user
 from app.extensions import db
 from app.forms.exchange_forms import CreateExchangeRequestForm, ScheduleSessionForm
+from app.forms.review_forms import RatingForm
 from app.models.user import User
 from app.models.skill import Skill
 from app.models.exchange import ExchangeRequest, ExchangeSession
 from app.services.exchange_service import ExchangeService
+from app.services.rating_service import RatingService
 
 exchanges_bp = Blueprint('exchanges', __name__, url_prefix='/exchanges')
 
@@ -220,10 +222,15 @@ def session_detail(session_id: int):
         abort(404)
 
     partner = sess.partner(current_user.id)
+    my_rating = sess.get_user_rating(current_user.id)
+    partner_rating = sess.get_partner_rating(current_user.id)
+
     return render_template(
         'exchanges/session_detail.html',
         session=sess,
-        partner=partner
+        partner=partner,
+        my_rating=my_rating,
+        partner_rating=partner_rating
     )
 
 @exchanges_bp.route('/sessions/<int:session_id>/complete', methods=['POST'])
@@ -255,3 +262,43 @@ def cancel_session(session_id: int):
         flash(error or 'Failed to cancel session.', 'danger')
 
     return redirect(url_for('exchanges.session_detail', session_id=session_id))
+
+@exchanges_bp.route('/sessions/<int:session_id>/rate', methods=['GET', 'POST'])
+@login_required
+def rate_session(session_id: int):
+    """Submit post-session rating and qualitative feedback."""
+    sess = db.session.get(ExchangeSession, session_id)
+    if not sess or not sess.is_participant(current_user.id):
+        abort(404)
+
+    if not sess.is_completed:
+        flash("You can only rate a session that has been marked as Completed.", "warning")
+        return redirect(url_for('exchanges.session_detail', session_id=sess.id))
+
+    if sess.has_user_rated(current_user.id):
+        flash("You have already submitted your rating and review for this session.", "info")
+        return redirect(url_for('exchanges.session_detail', session_id=sess.id))
+
+    partner = sess.partner(current_user.id)
+    form = RatingForm()
+
+    if form.validate_on_submit():
+        rating, error = RatingService.submit_rating(
+            session_id=sess.id,
+            reviewer_id=current_user.id,
+            score=form.score.data,
+            feedback=form.feedback.data
+        )
+        if error:
+            flash(error, 'danger')
+        else:
+            flash(f"Thank you! Your rating and feedback for {partner.name} have been submitted.", 'success')
+            return redirect(url_for('exchanges.session_detail', session_id=sess.id))
+
+    return render_template(
+        'exchanges/rate_session.html',
+        form=form,
+        session=sess,
+        partner=partner
+    )
+

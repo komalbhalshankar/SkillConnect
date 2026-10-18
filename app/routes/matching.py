@@ -7,6 +7,7 @@ from app.models.user import User
 from app.models.skill import SkillCategory, Skill
 from app.services.matching_service import MatchingService
 from app.services.skill_service import SkillService
+from app.services.rating_service import RatingService
 
 matching_bp = Blueprint('matching', __name__, url_prefix='/matching')
 
@@ -69,8 +70,11 @@ def student_detail(user_id: int):
     if student.id != current_user.id:
         match_data = MatchingService.calculate_compatibility(current_user, student)
 
+    reviews = RatingService.get_user_received_ratings(student.id)
+
     return render_template(
         'matching/student_detail.html',
         student=student,
-        match=match_data
+        match=match_data,
+        reviews=reviews
     )

@@ -222,7 +222,33 @@ The modular architecture guarantees that future modules (e.g., Real-time Chat, V
     - Rescheduling Policy: Cancelled sessions can be rescheduled by participants, updating meeting logistics and resetting status to `scheduled`.
   - **Authorization & Anti-IDOR:**
     - Strict participant validation ensures only authorized students can view, respond, cancel, or modify requests and sessions.
-- **Verification:** 72 total unit and integration tests passing across all active modules.
+- **Verification:** 89 total unit and integration tests passing across all active modules.
+
+### Phase 5: Rating, Feedback & Dashboard (Completed & Verified)
+- **Active Blueprints & Controllers:**
+  - `exchanges_bp` (`/exchanges`):
+    - `GET, POST /exchanges/sessions/<int:session_id>/rate`: Submit 1–5 star rating and qualitative feedback for completed sessions. Validates participant authorization, completed status, self-rating rejection, and single-review constraint.
+    - `GET /exchanges/sessions/<int:session_id>`: Updated with interactive peer review cards, submitted review display, and partner rating status.
+  - `main_bp` (`/`):
+    - `GET /dashboard`: Personalized student dashboard backed by real SQLite database statistics (portfolio counts, compatible matches, request distributions, session states, peer reputation) and responsive Chart.js visual distributions.
+    - `GET, POST /profile`: Updated with "Peer Ratings & Reviews Received" section displaying arithmetic average rating, review count, star breakdown, and written feedback with clear empty states.
+  - `matching_bp` (`/matching`):
+    - `GET /matching/student/<int:user_id>`: Public peer profile view augmented with the peer's average rating badge, review count, and received reviews list.
+- **Domain Service Layer:**
+  - `RatingService`:
+    - `submit_rating(session_id, reviewer_id, score, feedback)`: Enforces session completion, participant authorization, prevents self-rating, validates 1–5 score bounds, validates max 500 characters feedback, and prevents duplicate submissions via composite unique database constraint (`uq_session_reviewer`) and transaction rollback safety.
+    - `get_user_received_ratings(user_id)`: Fetches peer reviews in descending chronological order.
+    - `get_session_rating_by_reviewer(session_id, reviewer_id)`: Retrieves a specific participant's review.
+    - `get_user_ratings_summary(user_id)`: Computes review count, arithmetic average score, and star score distribution (5 stars down to 1 star).
+  - `StatsService`:
+    - `get_student_dashboard_stats(user)`: Derives all metrics from active database records (no fabricated numbers or mock values). Aggregates teach/learn skills, matching engine results, incoming/outgoing request counts, upcoming/completed/cancelled session counts, pending feedback callouts, and safely structured Chart.js datasets.
+    - `get_admin_stats()`: Global platform reporting metrics for administrative portal.
+- **Frontend & Visualization Architecture:**
+  - Chart.js 4.4.1 integration in `base.html`.
+  - Responsive charts: Session Status Distribution (Doughnut), Exchange Requests Overview (Bar), Peer Review Star Breakdown (Horizontal Bar).
+  - Defensive rendering: Clean, friendly empty-state placeholders rendered when datasets have zero records, completely avoiding divide-by-zero or misleading empty axes.
+- **Verification:** 89 total unit and integration tests passing across all 5 modules (100% pass rate).
+
 
 
 

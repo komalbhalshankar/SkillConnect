@@ -212,14 +212,15 @@ Stores post-session peer evaluations and feedback.
 - Safe initialization: Running `flask --app run.py init-db` invokes `db.create_all()` within application context.
 - **Non-Destructive Guarantee:** Existing database files are never dropped, reset, or truncated on startup or initialization.
 
-### 4.2 Phase 4 Implemented & Active Schema
-- Tables active and verified in Phase 4:
-  1. `users` (Full schema active with authentication, profile fields, and role-based permissions)
+### 4.2 Active & Verified Database Schema (All 5 Modules)
+- All 7 core relational tables are active and verified across 89 automated tests:
+  1. `users` (Authentication, profile fields, role-based access control, dynamic rating relationships)
   2. `skill_categories` (Predefined categories: Programming, Database, Web Development, Design, Communication, Other)
   3. `skills` (Standardized skills catalogue linked to categories)
   4. `user_skills` (Student skill portfolio associations with `skill_type`, `proficiency`, `notes`, and timestamps)
   5. `exchange_requests` (Bilateral proposals with `sender_id`, `receiver_id`, `offered_skill_id`, `requested_skill_id`, `status`, `message`, and timestamps)
   6. `exchange_sessions` (Scheduled learning meetings with `request_id`, `scheduled_at`, `duration_minutes`, `mode`, `meeting_details`, `notes`, `status`, and timestamps)
+  7. `ratings` (Post-session evaluations with `session_id`, `reviewer_id`, `reviewee_id`, `score`, `feedback`, and composite unique constraint)
 
 ### 4.3 Custom Skill Addition & Deduplication Strategy
 - When a student adds an unlisted skill using the custom skill name input:
@@ -236,9 +237,32 @@ Stores post-session peer evaluations and feedback.
   3. If a session is cancelled, participants can reschedule under the same exchange agreement by updating `scheduled_at`, `duration_minutes`, `mode`, and `meeting_details`, which resets `status` to `'scheduled'`.
   4. Attempting to schedule a session when an active `scheduled` session already exists is blocked by both service-level logic and the database-level uniqueness constraint.
 
-### 4.5 Safe Schema Upgrade Strategy for Future Phases
-- As development progresses into Phase 5 (Rating):
-  1. The `ratings` table already defines foreign key links to `exchange_sessions` and `users`.
-  2. Tables are verified incrementally via `db.create_all()` without dropping or wiping existing tables or user data.
+### 4.5 Rating Eligibility, Constraints & Duplicate Prevention
+- **Eligibility Rules:**
+  1. **Completed Sessions Only:** A rating can strictly be submitted only when `exchange_sessions.status == 'completed'`. Scheduled or cancelled sessions cannot be evaluated.
+  2. **Participant Authorization:** Reviewer must be an actual participant (`sender_id` or `receiver_id`) in the underlying exchange.
+  3. **Self-Rating Prevention:** Reviewee is automatically resolved to the other participant. A participant cannot rate themselves (`reviewer_id != reviewee_id`).
+  4. **Score Bounds:** Rating value must be an integer between 1 and 5 (enforced by `CHECK(score >= 1 AND score <= 5)` and WTForms validation).
+  5. **Feedback Sanitization:** Optional feedback text is limited to 500 characters and stripped of harmful whitespace.
+  6. **Duplicate Prevention:** The composite database constraint `UNIQUE(session_id, reviewer_id)` guarantees each participant can submit at most one rating per completed session. Both participants can submit independent reviews for the same session. Race conditions are handled with safe database rollback handling.
+
+### 4.6 Metric Definitions & Chart.js Data Sources
+- **Personalized Student Dashboard Metrics:**
+  - `total_skills`: Sum of current user's records in `user_skills`.
+  - `teach_count` / `learn_count`: Filtered by `skill_type == 'teach'` or `'learn'`.
+  - `compatible_matches_count`: Number of compatible peer students evaluated dynamically by `MatchingService.get_matches_for_user(user)` based on reciprocal skill overlap.
+  - `pending_received` / `pending_sent`: Count of `exchange_requests` where `status == 'pending'` and user is receiver or sender.
+  - `upcoming_sessions_count`: Count of `exchange_sessions` where `status == 'scheduled'` involving the user's exchange requests.
+  - `completed_sessions_count`: Count of `exchange_sessions` where `status == 'completed'`.
+  - `cancelled_sessions_count`: Count of `exchange_sessions` where `status == 'cancelled'`.
+  - `average_rating`: Arithmetic mean $\frac{\sum \text{score}}{N}$ of all records in `ratings` where `reviewee_id == user.id`, rounded to 1 decimal place (defaults safely to `0.0` when $N = 0$).
+  - `review_count`: Total number of records in `ratings` where `reviewee_id == user.id`.
+  - `rating_distribution`: Count of reviews received for each score from 5 down to 1.
+- **Chart.js Datasets:**
+  - **Sessions Distribution:** Doughnut chart visualizing counts of `Scheduled`, `Completed`, and `Cancelled` sessions.
+  - **Requests Overview:** Bar chart visualizing counts of `Incoming Pending`, `Outgoing Pending`, `Accepted`, `Rejected`, and `Cancelled` requests.
+  - **Peer Review Breakdown:** Horizontal bar chart visualizing the frequency of 5-star, 4-star, 3-star, 2-star, and 1-star reviews.
+  - **Defensive Rendering:** If any dataset total is 0, the UI suppresses empty axes and renders an informative empty-state card instead.
+
 
 

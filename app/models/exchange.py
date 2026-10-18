@@ -124,5 +124,19 @@ class ExchangeSession(db.Model):
         """Check if user has already submitted a rating for this session."""
         return any(r.reviewer_id == user_id for r in self.ratings)
 
+    def get_user_rating(self, user_id: int):
+        """Retrieve the rating submitted by a specific user for this session, if any."""
+        for r in self.ratings:
+            if r.reviewer_id == user_id:
+                return r
+        return None
+
+    def get_partner_rating(self, current_user_id: int):
+        """Retrieve the rating submitted by the session partner, if any."""
+        for r in self.ratings:
+            if r.reviewer_id != current_user_id:
+                return r
+        return None
+
     def __repr__(self) -> str:
         return f"<ExchangeSession id={self.id} request_id={self.request_id} status='{self.status}'>"

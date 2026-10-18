@@ -1,5 +1,5 @@
 # SkillConnect — System Requirements Specification (SRS)
-**Version:** 3.0 (Phase 4 Verified Baseline)  
+**Version:** 4.0 (Phase 5 Verified Baseline)  
 **Project:** SkillConnect — Student Skill Exchange Platform  
 **Target Environment:** Python 3.14 / Flask / SQLite / Bootstrap 5 / Vanilla JS / Chart.js  
 
@@ -8,7 +8,7 @@
 ## 1. Executive Summary & Purpose
 **SkillConnect** is a web-based peer-to-peer student skill exchange platform designed to enable college students to teach skills they possess and learn skills they wish to acquire. The platform fosters collaborative learning without financial barriers by facilitating mutual knowledge exchange.
 
-The initial Version 1.0 release is structured into five cohesive modules:
+All five core modules for Version 1.0 are fully implemented, verified, and operational:
 1. **User Authentication & Profile**
 2. **Skill Management**
 3. **Skill Discovery & Matching**
@@ -26,12 +26,14 @@ The initial Version 1.0 release is structured into five cohesive modules:
 - Views rule-based matching recommendations with transparent compatibility scores and explanations.
 - Sends, receives, accepts, rejects, and cancels skill exchange proposals.
 - Schedules, reschedules, tracks, and completes peer learning sessions.
-- *(Future Phase 5)*: Rates completed peer exchanges and views dashboard analytics.
+- Submits 1–5 star ratings and qualitative written feedback for completed sessions.
+- Views student profile with real peer reviews, average ratings, and review counts.
+- Accesses a personalized dashboard with live database-backed statistics and interactive Chart.js visualizations.
 
 ### 2.2 Administrator Actor
 - Elevated privileges user with administrative credentials.
 - Accesses a protected admin portal (`/admin`).
-- Views global system statistics (user counts, skills, categories).
+- Views global system statistics (user counts, skills, categories, exchanges, sessions, ratings).
 - Manages skill categories (create, edit, view) and system-wide standardized skill sets.
 
 ---
@@ -41,14 +43,14 @@ The initial Version 1.0 release is structured into five cohesive modules:
 | Module | Core Features | Target Phase | Implementation Status | Test Coverage |
 | :--- | :--- | :---: | :---: | :---: |
 | **Module 1: User Auth & Profile** | Registration, Login, Logout, RBAC, Profile View/Edit | Phase 2 | **Implemented & Verified** | 100% (Unit & Integration) |
-| **Database Foundation** | SQLite schema, User, SkillCategory, Skill, UserSkill models | Phase 2 | **Implemented & Verified** | 100% (Model constraints & CLI) |
+| **Database Foundation** | SQLite schema, User, SkillCategory, Skill, UserSkill, ExchangeRequest, ExchangeSession, Rating models | Phase 2–5 | **Implemented & Verified** | 100% (Model constraints & CLI) |
 | **Module 2: Skill Management** | Add/Edit/Delete Teach & Learn Skills, Taxonomy, Admin Curation | Phase 3 | **Implemented & Verified** | 100% (19 Unit & Integration tests) |
 | **Module 3: Discovery & Matching** | Deterministic two-way matching engine, Directory, Profiles | Phase 3 | **Implemented & Verified** | 100% (12 Unit & Integration tests) |
 | **Module 4: Exchange & Session** | Exchange proposals, State machine, Session scheduling & lifecycle | Phase 4 | **Implemented & Verified** | 100% (23 Unit & Integration tests) |
-| **Module 5: Rating & Dashboard** | Post-session reviews, Star ratings, Chart.js feeds | Phase 5 | *Planned* | Scheduled for Phase 5 |
+| **Module 5: Rating & Dashboard** | Post-session reviews, Star ratings, Dynamic Dashboard, Chart.js feeds | Phase 5 | **Implemented & Verified** | 100% (17 Unit & Integration tests) |
 | **Administration** | Safe CLI admin creation (`create-admin`), `@admin_required`, Category/Skill CRUD | Phase 2 & 3 | **Implemented & Verified** | 100% (CLI & RBAC) |
 
-**Total Verified Tests:** 72 tests passing (100% pass rate).
+**Total Verified Tests:** 89 tests passing (100% pass rate).
 
 ---
 
@@ -76,7 +78,7 @@ The initial Version 1.0 release is structured into five cohesive modules:
 
 ### Module 3: Skill Discovery and Matching
 - **FR-3.1 Search & Filter:** Students can search peers by skill name, and filter by skill category, proficiency level, and intent (`teach`, `learn`, or `all`). *(Status: Implemented & Tested)*
-- **FR-3.2 Student Profile Inspection:** Students can view peer profiles displaying their college, bio, availability, teach skills, learn skills, and bilateral compatibility overview. *(Status: Implemented & Tested)*
+- **FR-3.2 Student Profile Inspection:** Students can view peer profiles displaying their college, bio, availability, teach skills, learn skills, average rating, and bilateral compatibility overview. *(Status: Implemented & Tested)*
 - **FR-3.3 Deterministic Rule-Based Two-Way Matching:**
   - Evaluates reciprocal synergy: Current Student's Learn skills $\cap$ Target Student's Teach skills (40 pts), AND Current Student's Teach skills $\cap$ Target Student's Learn skills (40 pts).
   - Relevant category compatibility bonus (+10 pts).
@@ -108,16 +110,30 @@ The initial Version 1.0 release is structured into five cohesive modules:
   - Cancelled sessions can be rescheduled by participants, updating logistics and resetting status to `scheduled`. *(Status: Implemented & Tested)*
 - **FR-4.5 Authorization Guardrails:** Unrelated third-party users cannot view, modify, accept, cancel, or tamper with requests or sessions (HTTP 404/403 enforced). *(Status: Implemented & Tested)*
 
-### Module 5: Rating, Feedback and Dashboard (Phase 5 Planned)
+### Module 5: Rating, Feedback and Dashboard
 - **FR-5.1 Post-Session Ratings:**
-  - A participant can submit a rating (1 to 5 stars) and qualitative feedback text ONLY after a session is marked `completed`. *(Phase 5)*
-- **FR-5.2 Duplicate Prevention:** A user can submit only one rating per completed session exchange. *(Phase 5)*
-- **FR-5.3 Aggregate Reputation:** Computes and displays average star ratings and total review counts on student profiles. *(Phase 5)*
+  - Only authenticated participants in a session may submit ratings.
+  - A participant can submit a rating (1 to 5 stars) and qualitative feedback text ONLY after a session is marked `completed`.
+  - Participants rate the other participant, never themselves. *(Status: Implemented & Tested)*
+- **FR-5.2 Duplicate Prevention & Data Integrity:**
+  - One rating per reviewer per completed session.
+  - Both participants can independently submit evaluations for the same session.
+  - Enforced by composite database unique constraint (`uq_session_reviewer`) and server-side checks. *(Status: Implemented & Tested)*
+- **FR-5.3 Aggregate Reputation & Reviews:**
+  - Calculates arithmetic average star ratings and total review counts from real database records.
+  - Displays reviews and ratings on student profile and peer inspection view with clear empty states ("No ratings yet"). *(Status: Implemented & Tested)*
 - **FR-5.4 Personalized Student Dashboard:**
-  - Metrics: Total Skills, Compatible Matches, Pending Requests, Upcoming Sessions, Completed Exchanges, Average Rating.
-  - Interactive Chart.js visualizations for activity status distribution and skill portfolio breakdown. *(Phase 5)*
-- **FR-5.5 Admin Dashboard:**
-  - Platform-wide statistics: Total Registered Students, Total Skills Listed, Total Exchanges Initiated, Total Sessions Completed, Platform Average Rating. *(Phase 5)*
+  - Real-time DB metrics: Total skills offered/wanted, Compatible matches count, Pending incoming/outgoing requests, Upcoming scheduled sessions, Completed sessions, Cancelled sessions, Average rating, Total ratings received.
+  - Callout banner alerting students to pending unrated completed sessions.
+  - Upcoming sessions list and recent exchange request history.
+  - Recent feedback received list with star badges and reviewer names. *(Status: Implemented & Tested)*
+- **FR-5.5 Responsive Chart.js Visualizations:**
+  - Session status distribution (Scheduled, Completed, Cancelled).
+  - Exchange request status distribution (Incoming Pending, Outgoing Pending, Accepted, Rejected, Cancelled).
+  - Peer review star breakdown (5 stars down to 1 star).
+  - Zero fabricated data: Displays clean, friendly empty-state placeholders when counts are zero. *(Status: Implemented & Tested)*
+- **FR-5.6 Data Isolation & Security:**
+  - Strictly prevents cross-user leakage of private requests, sessions, or dashboard activity. *(Status: Implemented & Tested)*
 
 ---
 

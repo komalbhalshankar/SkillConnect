@@ -20,9 +20,22 @@
             {{ student.name[:1]|upper }}
           </div>
           <h4 class="fw-bold mb-1 text-dark">{{ student.name }}</h4>
-          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 mb-3">
+          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 mb-2">
             {{ student.role|capitalize }}
           </span>
+
+          <div class="mb-3">
+            {% if student.review_count > 0 %}
+              <div class="text-warning small mb-1">
+                {% for _ in range(student.average_rating|round|int) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                {% for _ in range(5 - (student.average_rating|round|int)) %}<i class="bi bi-star"></i>{% endfor %}
+                <span class="text-dark fw-bold ms-1">{{ student.average_rating }}</span>
+              </div>
+              <span class="text-muted small">({{ student.review_count }} review{{ 's' if student.review_count != 1 else '' }})</span>
+            {% else %}
+              <span class="text-muted small fst-italic"><i class="bi bi-star me-1"></i>No ratings yet</span>
+            {% endif %}
+          </div>
 
           <ul class="list-group list-group-flush text-start small border-top pt-2">
             <li class="list-group-item px-0 py-2 d-flex justify-content-between">
@@ -207,6 +220,56 @@
             </div>
           {% else %}
             <div class="text-muted small py-3 text-center">No learning wishlist skills listed yet.</div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Section: Peer Reviews & Written Feedback (Phase 5) -->
+      <div class="card border-0 shadow-sm rounded-3 mt-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h6 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-star-fill text-warning me-2"></i> Peer Reviews &amp; Evaluations
+          </h6>
+          {% if student.review_count > 0 %}
+            <span class="badge bg-warning bg-opacity-10 text-dark border border-warning border-opacity-25 fw-bold">
+              ★ {{ student.average_rating }} / 5.0 ({{ student.review_count }} review{{ 's' if student.review_count != 1 else '' }})
+            </span>
+          {% endif %}
+        </div>
+        <div class="card-body p-4">
+          {% if reviews %}
+            <div class="list-group list-group-flush">
+              {% for rev in reviews %}
+                <div class="list-group-item px-0 py-3 border-bottom">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <span class="fw-bold text-dark">{{ rev.reviewer.name }}</span>
+                    <span class="text-warning">
+                      {% for _ in range(rev.score) %}<i class="bi bi-star-fill"></i>{% endfor %}
+                      {% for _ in range(5 - rev.score) %}<i class="bi bi-star"></i>{% endfor %}
+                      <span class="text-dark small ms-1">({{ rev.score }}/5)</span>
+                    </span>
+                  </div>
+                  {% if rev.feedback %}
+                    <p class="text-secondary small fst-italic mb-1 bg-light p-3 rounded-2 border">
+                      "{{ rev.feedback }}"
+                    </p>
+                  {% else %}
+                    <p class="text-muted small mb-1 fst-italic">Review submitted without written comments.</p>
+                  {% endif %}
+                  <div class="text-muted small" style="font-size: 0.75rem;">
+                    <i class="bi bi-calendar-event me-1"></i>Reviewed on {{ rev.created_at.strftime('%B %d, %Y') }} &bull; Session #{{ rev.session_id }}
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-4 text-muted">
+              <i class="bi bi-star text-secondary opacity-50 fs-2 d-block mb-2"></i>
+              <strong class="text-dark d-block mb-1">No ratings yet.</strong>
+              <p class="small text-muted mb-0">
+                This student has not received any peer ratings yet. Complete an exchange session to be the first to leave a review!
+              </p>
+            </div>
           {% endif %}
         </div>
       </div>

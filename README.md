@@ -1,6 +1,6 @@
 # SkillConnect — Student Skill Exchange Platform
 
-SkillConnect is a web-based peer-to-peer student skill exchange platform built with Python and Flask. The platform enables students to teach skills they possess and learn new skills from their peers through structured, reciprocal skill exchanges, scheduled learning sessions, and transparent evaluations.
+SkillConnect is a web-based peer-to-peer student skill exchange platform built with Python and Flask. The platform enables students to teach skills they possess and learn new skills from their peers through structured, reciprocal skill exchanges, scheduled learning sessions, transparent peer evaluations, and live dashboard analytics.
 
 ---
 
@@ -10,7 +10,7 @@ SkillConnect is a web-based peer-to-peer student skill exchange platform built w
 2. **Skill Management (Phase 3):** Categorized skill taxonomy, separate Teach/Learn portfolios, proficiency ratings, custom unlisted skill addition with duplicate avoidance, and strict ownership validation.
 3. **Skill Discovery and Matching (Phase 3):** Database-backed student search and filtering, deterministic rule-based reciprocal compatibility engine (40/40/10/10 formula), transparent score explanations, and profile inspection.
 4. **Skill Exchange and Session Management (Phase 4):** Proposal initiation, reciprocal skill validation, request state machine (`pending`, `accepted`, `rejected`, `cancelled`), learning session scheduling, and in-place session rescheduling.
-5. **Rating, Feedback and Dashboard (Phase 5):** Post-session reviews, peer reputation ratings, and Chart.js analytics dashboards.
+5. **Rating, Feedback and Dashboard (Phase 5):** Post-session evaluations, peer reputation star ratings (1–5 stars), qualitative written feedback, personalized student dashboard, and responsive Chart.js visual activity distributions.
 
 ---
 
@@ -32,17 +32,17 @@ Python_Mini_Project_Sem l/
 │   ├── __init__.py             # Application factory (create_app)
 │   ├── config.py               # Development, testing, and production configs
 │   ├── extensions.py           # Database, LoginManager, CSRF extensions
-│   ├── forms/                  # WTForms definitions (auth, skills, exchange)
-│   ├── models/                 # SQLAlchemy relational data models (User, Skill, UserSkill, ExchangeRequest, ExchangeSession)
+│   ├── forms/                  # WTForms definitions (auth, skills, exchange, review)
+│   ├── models/                 # SQLAlchemy relational data models (User, Skill, UserSkill, ExchangeRequest, ExchangeSession, Rating)
 │   ├── routes/                 # Blueprint controllers (auth, main, skills, matching, exchanges, admin)
-│   ├── services/               # Service layer business logic (AuthService, SkillService, MatchingService, ExchangeService)
+│   ├── services/               # Service layer business logic (AuthService, SkillService, MatchingService, ExchangeService, RatingService, StatsService)
 │   ├── static/                 # CSS stylesheets, JavaScript files
 │   └── templates/              # Jinja2 presentation templates
 │       ├── auth/               # Login & registration views
 │       ├── main/               # Landing, dashboard, profile views
 │       ├── skills/             # Skill portfolio management views
 │       ├── matching/           # Student discovery & match recommendations
-│       ├── exchanges/          # Exchange requests, scheduling, session detail views
+│       ├── exchanges/          # Exchange requests, scheduling, session detail, rating views
 │       └── errors/             # Custom 403, 404, 500 error pages
 ├── docs/                       # Project documentation & diagrams
 │   ├── requirements.md         # System requirements specification (SRS)
@@ -61,7 +61,8 @@ Python_Mini_Project_Sem l/
 │   ├── test_profile.py         # Profile update and ownership tests (4 tests)
 │   ├── test_skills.py          # Skill CRUD, custom skills, ownership tests (19 tests)
 │   ├── test_matching.py        # Rule-based matching engine & discovery tests (12 tests)
-│   └── test_exchanges.py       # Exchange requests, sessions, state machine tests (23 tests)
+│   ├── test_exchanges.py       # Exchange requests, sessions, state machine tests (23 tests)
+│   └── test_ratings.py         # Ratings, feedback, dashboard & charts tests (17 tests)
 ├── .env.example                # Environment variables template
 ├── .gitignore                  # Git ignore rules
 ├── requirements.txt            # Python dependencies
@@ -127,13 +128,13 @@ Python_Mini_Project_Sem l/
 
 ## 5. Running Automated Tests
 
-All functionality across Phases 1, 2, 3, and 4 is covered by automated unit and integration tests using `pytest` and Flask's test client running against an isolated in-memory SQLite database (`sqlite:///:memory:`):
+All functionality across Phases 1, 2, 3, 4, and 5 is covered by automated unit and integration tests using `pytest` and Flask's test client running against an isolated in-memory SQLite database (`sqlite:///:memory:`):
 
 ```bash
 python -m pytest -v
 ```
 
-### Verified Test Suite (72/72 Passing — 100% Pass Rate):
+### Verified Test Suite (89/89 Passing — 100% Pass Rate):
 - **Authentication & RBAC (`tests/test_auth.py` — 10 tests):**
   - Registration, duplicate email rejection, Werkzeug password hashing.
   - Successful login, failed login (bad password / unknown email), logout.
@@ -193,6 +194,25 @@ python -m pytest -v
   - Documented in-place rescheduling policy for cancelled sessions.
   - Clean separation of sessions into upcoming and past history.
   - Route-level authentication enforcement.
+- **Rating, Feedback & Dashboard (`tests/test_ratings.py` — 17 tests):**
+  - Valid rating submission after completion (1–5 stars and feedback comments).
+  - Rejection of ratings before completion (e.g. Scheduled session).
+  - Rejection of ratings for cancelled sessions.
+  - Rejection of invalid rating scores (outside bounds 1–5 or non-integer).
+  - Prevention of self-rating.
+  - Prevention of ratings by unrelated third-party students.
+  - Prevention of duplicate ratings by same reviewer for same session.
+  - Independent bilateral ratings from both participants.
+  - Accurate arithmetic average rating and 1-decimal rounding.
+  - Review count and star distribution calculation.
+  - Validation of max 500 characters for written feedback.
+  - Safe handling of missing or invalid session IDs.
+  - Personalized dashboard statistics reflecting actual database records.
+  - Graceful handling of brand new students with zero activity (safe defaults and zero counts).
+  - Prevention of cross-user data leakage.
+  - Full HTTP GET/POST workflow for rating submission.
+  - Dashboard route view and Chart.js payload serialization.
+  - Profile and peer inspection views displaying received reviews and star ratings.
 
 ---
 
@@ -204,4 +224,4 @@ python -m pytest -v
 | **Phase 2** | Database Foundation, Authentication & Student Profile | **Completed & Verified** (18/18 Tests Passed) |
 | **Phase 3** | Skill Management (Module 2) & Skill Discovery and Matching (Module 3) | **Completed & Verified** (49/49 Tests Passed) |
 | **Phase 4** | Skill Exchange and Session Management (Module 4) | **Completed & Verified** (72/72 Tests Passed) |
-| **Phase 5** | Rating, Feedback and Dashboard (Module 5) | *Next Milestone (Pending Approval)* |
+| **Phase 5** | Rating, Feedback and Dashboard (Module 5) | **Completed & Verified** (89/89 Tests Passed) |
