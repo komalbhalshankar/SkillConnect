@@ -1,0 +1,82 @@
+flowchart LR
+    %% Actors
+    Student["fa:fa-user-graduate Student"]
+    Admin["fa:fa-user-shield Administrator"]
+
+    subgraph SkillConnect ["System Boundary: SkillConnect Platform"]
+        subgraph ModAuth ["Module 1: Authentication & Profile"]
+            UC_Reg(["Register"])
+            UC_Auth(["Log In / Log Out"])
+            UC_Prof(["View & Update Profile"])
+        end
+
+        subgraph ModSkills ["Module 2: Skill Management"]
+            UC_AddSkill(["Add Skill"])
+            UC_ManageSkill(["Edit / Remove Skill"])
+            UC_SetType(["Set Skill Type: Teach / Learn"])
+            UC_SetProf(["Set Proficiency Level"])
+        end
+
+        subgraph ModMatch ["Module 3: Discovery & Matching"]
+            UC_Search(["Search & Filter Students"])
+            UC_PeerProf(["View Student Profile"])
+            UC_Discover(["Discover Compatible Partners"])
+            UC_ViewScore(["View Compatibility Score & Matched Skills"])
+        end
+
+        subgraph ModExch ["Module 4: Exchange & Session"]
+            UC_SendReq(["Send Exchange Request"])
+            UC_RespReq(["Accept / Reject Incoming Request"])
+            UC_HistReq(["View Exchange Request History"])
+            UC_SchedSess(["Schedule Session"])
+            UC_ViewSess(["View Session Details"])
+            UC_CompCancSess(["Mark Session Completed / Cancel"])
+        end
+
+        subgraph ModDash ["Module 5: Rating, Feedback & Dashboard"]
+            UC_Rate(["Rate Completed Exchange"])
+            UC_Feedback(["Submit Written Feedback"])
+            UC_Dash(["View Dashboard & Activity Summaries"])
+        end
+
+        subgraph ModAdmin ["Administration"]
+            UC_AdminAuth(["Log In with Admin Account"])
+            UC_AdminPortal(["Access Protected Admin Area"])
+            UC_AdminStats(["View Platform Statistics"])
+            UC_AdminCats(["Manage Skill Categories & Skills"])
+        end
+    end
+
+    %% Student Connections
+    Student --> UC_Reg
+    Student --> UC_Auth
+    Student --> UC_Prof
+
+    Student --> UC_AddSkill
+    Student --> UC_ManageSkill
+    UC_AddSkill -.->|<<include>>| UC_SetType
+    UC_AddSkill -.->|<<include>>| UC_SetProf
+
+    Student --> UC_Search
+    Student --> UC_PeerProf
+    Student --> UC_Discover
+    UC_Discover -.->|<<include>>| UC_ViewScore
+
+    Student --> UC_SendReq
+    Student --> UC_RespReq
+    Student --> UC_HistReq
+    Student --> UC_SchedSess
+    Student --> UC_ViewSess
+    Student --> UC_CompCancSess
+
+    Student --> UC_Rate
+    UC_Rate -.->|<<include>>| UC_Feedback
+    UC_Rate -.->|<<extend>>| UC_CompCancSess
+    Student --> UC_Dash
+
+    %% Admin Connections
+    Admin --> UC_AdminAuth
+    Admin --> UC_AdminPortal
+    Admin --> UC_AdminStats
+    Admin --> UC_AdminCats
+    UC_AdminPortal -.->|<<include>>| UC_AdminAuth

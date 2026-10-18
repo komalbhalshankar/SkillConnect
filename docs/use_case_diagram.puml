@@ -1,0 +1,97 @@
+@startuml SkillConnect_UseCase_Diagram
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam actorStyle awesome
+left to right direction
+
+actor "Student" as student
+actor "Administrator" as admin
+
+rectangle "SkillConnect System" as SkillConnect {
+  package "User Authentication & Profile" {
+    usecase "Register Account" as UC_Register
+    usecase "Log In / Log Out" as UC_Login
+    usecase "View Profile" as UC_ViewProfile
+    usecase "Update Profile" as UC_UpdateProfile
+  }
+
+  package "Skill Portfolio Management" {
+    usecase "Add Skill" as UC_AddSkill
+    usecase "Edit Skill" as UC_EditSkill
+    usecase "Remove Skill" as UC_RemoveSkill
+    usecase "Set Skill Type (Teach / Learn)" as UC_SetType
+    usecase "Set Proficiency Level" as UC_SetProficiency
+  }
+
+  package "Discovery & Matching" {
+    usecase "Search & Filter Students" as UC_Search
+    usecase "View Student Profile" as UC_ViewPeerProfile
+    usecase "Discover Compatible Partners" as UC_Discover
+    usecase "View Compatibility Score & Matched Skills" as UC_ViewScore
+  }
+
+  package "Exchange & Session Management" {
+    usecase "Send Exchange Request" as UC_SendRequest
+    usecase "Accept / Reject Request" as UC_RespondRequest
+    usecase "View Exchange Request History" as UC_ViewHistory
+    usecase "Schedule Session" as UC_ScheduleSession
+    usecase "View Session Details" as UC_ViewSession
+    usecase "Mark Session Completed / Cancel" as UC_CompleteCancelSession
+  }
+
+  package "Rating, Feedback & Dashboard" {
+    usecase "Rate Completed Exchange" as UC_RateExchange
+    usecase "Submit Written Feedback" as UC_SubmitFeedback
+    usecase "View Student Dashboard & Summaries" as UC_ViewDashboard
+  }
+
+  package "Administration" {
+    usecase "Admin Log In" as UC_AdminLogin
+    usecase "Access Protected Admin Portal" as UC_AdminPortal
+    usecase "View Basic Platform Statistics" as UC_AdminStats
+    usecase "Manage Skill Categories & Skills" as UC_ManageCategories
+  }
+}
+
+' Student Relationships
+student --> UC_Register
+student --> UC_Login
+student --> UC_ViewProfile
+student --> UC_UpdateProfile
+
+student --> UC_AddSkill
+student --> UC_EditSkill
+student --> UC_RemoveSkill
+UC_AddSkill ..> UC_SetType : <<include>>
+UC_AddSkill ..> UC_SetProficiency : <<include>>
+UC_EditSkill ..> UC_SetProficiency : <<extend>>
+
+student --> UC_Search
+student --> UC_ViewPeerProfile
+student --> UC_Discover
+UC_Discover ..> UC_ViewScore : <<include>>
+
+student --> UC_SendRequest
+student --> UC_RespondRequest
+student --> UC_ViewHistory
+student --> UC_ScheduleSession
+student --> UC_ViewSession
+student --> UC_CompleteCancelSession
+UC_ScheduleSession ..> UC_RespondRequest : <<extend>> (upon Acceptance)
+
+student --> UC_RateExchange
+student --> UC_ViewDashboard
+UC_RateExchange ..> UC_SubmitFeedback : <<include>>
+UC_RateExchange ..> UC_CompleteCancelSession : <<extend>> (only for Completed)
+
+' Administrator Relationships
+admin --> UC_AdminLogin
+admin --> UC_AdminPortal
+admin --> UC_AdminStats
+admin --> UC_ManageCategories
+
+UC_AdminPortal ..> UC_AdminLogin : <<include>>
+UC_AdminStats ..> UC_AdminPortal : <<include>>
+UC_ManageCategories ..> UC_AdminPortal : <<include>>
+
+@enduml
