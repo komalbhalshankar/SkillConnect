@@ -86,19 +86,19 @@ Python_Mini_Project_Sem l/
 
 4. **Initialize SQLite Database (Safe, non-destructive):**
    ```bash
-   flask --app run.py init-db
+   python run.py init-db
    ```
    *Note: This creates all tables in `instance/skillconnect.db` without deleting or resetting any existing data.*
 
 5. **Seed Standard Academic Skills & Categories (Idempotent):**
    ```bash
-   flask --app run.py seed-skills
+   python run.py seed-skills
    ```
-   *Seeds standard curriculum categories (Programming, Web Dev, Data Science, CS Core, Design, Communication) and 24+ baseline skills.*
+   *Seeds standard curriculum categories (Programming, Web Dev, Data Science, CS Core, Design, Communication) and 22+ baseline skills.*
 
 6. **Create an Initial Administrator (CLI):**
    ```bash
-   flask --app run.py create-admin
+   python run.py create-admin
    ```
    *Follow the interactive prompt to set admin name, email, and password securely.*
 
@@ -107,6 +107,8 @@ Python_Mini_Project_Sem l/
    python run.py
    ```
    Open your browser and navigate to: [http://127.0.0.1:5000](http://127.0.0.1:5000)
+
+*(Note: You can also use `flask --app run.py <command>` or `python -m flask --app run.py <command>`).*
 
 ---
 
