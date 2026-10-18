@@ -9,7 +9,7 @@ SkillConnect is a web-based peer-to-peer student skill exchange platform built w
 1. **User Authentication and Profile (Phase 2):** Student & Administrator registration, secure password hashing, session management, and academic profile configuration.
 2. **Skill Management (Phase 3):** Categorized skill taxonomy, separate Teach/Learn portfolios, proficiency ratings, custom unlisted skill addition with duplicate avoidance, and strict ownership validation.
 3. **Skill Discovery and Matching (Phase 3):** Database-backed student search and filtering, deterministic rule-based reciprocal compatibility engine (40/40/10/10 formula), transparent score explanations, and profile inspection.
-4. **Skill Exchange and Session Management (Phase 4):** Proposal negotiation, state machine transitions, and session scheduling.
+4. **Skill Exchange and Session Management (Phase 4):** Proposal initiation, reciprocal skill validation, request state machine (`pending`, `accepted`, `rejected`, `cancelled`), learning session scheduling, and in-place session rescheduling.
 5. **Rating, Feedback and Dashboard (Phase 5):** Post-session reviews, peer reputation ratings, and Chart.js analytics dashboards.
 
 ---
@@ -32,12 +32,18 @@ Python_Mini_Project_Sem l/
 │   ├── __init__.py             # Application factory (create_app)
 │   ├── config.py               # Development, testing, and production configs
 │   ├── extensions.py           # Database, LoginManager, CSRF extensions
-│   ├── forms/                  # WTForms definitions (auth, skills, matching)
-│   ├── models/                 # SQLAlchemy relational data models (User, SkillCategory, Skill, UserSkill)
-│   ├── routes/                 # Blueprint controllers (auth, main, skills, matching, admin)
-│   ├── services/               # Service layer business logic (AuthService, SkillService, MatchingService)
+│   ├── forms/                  # WTForms definitions (auth, skills, exchange)
+│   ├── models/                 # SQLAlchemy relational data models (User, Skill, UserSkill, ExchangeRequest, ExchangeSession)
+│   ├── routes/                 # Blueprint controllers (auth, main, skills, matching, exchanges, admin)
+│   ├── services/               # Service layer business logic (AuthService, SkillService, MatchingService, ExchangeService)
 │   ├── static/                 # CSS stylesheets, JavaScript files
 │   └── templates/              # Jinja2 presentation templates
+│       ├── auth/               # Login & registration views
+│       ├── main/               # Landing, dashboard, profile views
+│       ├── skills/             # Skill portfolio management views
+│       ├── matching/           # Student discovery & match recommendations
+│       ├── exchanges/          # Exchange requests, scheduling, session detail views
+│       └── errors/             # Custom 403, 404, 500 error pages
 ├── docs/                       # Project documentation & diagrams
 │   ├── requirements.md         # System requirements specification (SRS)
 │   ├── use_case_diagram.md     # UML use case diagram documentation
@@ -54,7 +60,8 @@ Python_Mini_Project_Sem l/
 │   ├── test_database.py        # Model constraints and CLI tests (4 tests)
 │   ├── test_profile.py         # Profile update and ownership tests (4 tests)
 │   ├── test_skills.py          # Skill CRUD, custom skills, ownership tests (19 tests)
-│   └── test_matching.py        # Rule-based matching engine & discovery tests (12 tests)
+│   ├── test_matching.py        # Rule-based matching engine & discovery tests (12 tests)
+│   └── test_exchanges.py       # Exchange requests, sessions, state machine tests (23 tests)
 ├── .env.example                # Environment variables template
 ├── .gitignore                  # Git ignore rules
 ├── requirements.txt            # Python dependencies
@@ -120,13 +127,13 @@ Python_Mini_Project_Sem l/
 
 ## 5. Running Automated Tests
 
-All functionality across Phase 2 and Phase 3 is covered by automated unit and integration tests using `pytest` and Flask's test client running against an isolated in-memory SQLite database (`sqlite:///:memory:`):
+All functionality across Phases 1, 2, 3, and 4 is covered by automated unit and integration tests using `pytest` and Flask's test client running against an isolated in-memory SQLite database (`sqlite:///:memory:`):
 
 ```bash
 python -m pytest -v
 ```
 
-### Verified Test Suite (49/49 Passing — 100% Pass Rate):
+### Verified Test Suite (72/72 Passing — 100% Pass Rate):
 - **Authentication & RBAC (`tests/test_auth.py` — 10 tests):**
   - Registration, duplicate email rejection, Werkzeug password hashing.
   - Successful login, failed login (bad password / unknown email), logout.
@@ -162,8 +169,30 @@ python -m pytest -v
   - Discovery filtering by academic category and proficiency level.
   - Handling empty search results gracefully with helpful user prompts.
   - Matching recommendations page rendering with score cards, badges, and breakdown lists.
-  - Student profile inspection (`/matching/student/<id>`) displaying peer profile and bilateral compatibility card.
+  - Student profile inspection (`/matching/student/<id>`) displaying peer profile and active proposal button.
   - Route protection redirecting unauthenticated visitors to login.
+- **Skill Exchange & Session Management (`tests/test_exchanges.py` — 23 tests):**
+  - Valid proposal creation, pending status, correct skill associations.
+  - Rejection of self-proposals (`sender_id != receiver_id`).
+  - Rejection of offered skills not listed in sender's TEACH portfolio.
+  - Rejection of requested skills not listed in receiver's TEACH portfolio.
+  - Rejection of requested skills not listed in sender's LEARN wishlist.
+  - Duplicate active pending request prevention.
+  - Filtering incoming and outgoing requests for participating students.
+  - Proposal acceptance and decline transitions (`accepted`, `rejected`).
+  - Outgoing proposal cancellation by sender (`cancelled`).
+  - Prevention of invalid request transitions on finalized requests.
+  - Strict participant authorization checks on accept/reject/cancel operations.
+  - Anti-IDOR protection blocking non-participants from viewing exchange proposals (HTTP 404).
+  - Session scheduling after request acceptance.
+  - Blocking session scheduling for pending or rejected requests.
+  - Validation blocking scheduling sessions in the past.
+  - Authorized participant session detail access and non-participant blocking.
+  - Session completion and cancellation lifecycle.
+  - Prevention of invalid session state transitions.
+  - Documented in-place rescheduling policy for cancelled sessions.
+  - Clean separation of sessions into upcoming and past history.
+  - Route-level authentication enforcement.
 
 ---
 
@@ -172,7 +201,7 @@ python -m pytest -v
 | Phase | Description | Status |
 | :--- | :--- | :--- |
 | **Phase 1** | Requirements, UML Use Case, Architecture & Skeleton | **Completed** |
-| **Phase 2** | Database Foundation, Authentication & Student Profile | **Completed & Verified** |
+| **Phase 2** | Database Foundation, Authentication & Student Profile | **Completed & Verified** (18/18 Tests Passed) |
 | **Phase 3** | Skill Management (Module 2) & Skill Discovery and Matching (Module 3) | **Completed & Verified** (49/49 Tests Passed) |
-| **Phase 4** | Skill Exchange and Session Management (Module 4) | *Next Milestone (Pending Approval)* |
-| **Phase 5** | Rating, Feedback and Dashboard (Module 5) | *Planned* |
+| **Phase 4** | Skill Exchange and Session Management (Module 4) | **Completed & Verified** (72/72 Tests Passed) |
+| **Phase 5** | Rating, Feedback and Dashboard (Module 5) | *Next Milestone (Pending Approval)* |

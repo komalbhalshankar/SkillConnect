@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+
+{% block title %}Schedule Learning Session — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item"><a href="{{ url_for('exchanges.index') }}" class="text-decoration-none">Exchanges</a></li>
+          <li class="breadcrumb-item"><a href="{{ url_for('exchanges.request_detail', request_id=req.id) }}" class="text-decoration-none">Request #{{ req.id }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Schedule Session</li>
+        </ol>
+      </nav>
+
+      <!-- Exchange Summary Header -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4 overflow-hidden border-top border-4 border-success">
+        <div class="card-body p-4">
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+            <div>
+              <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 mb-1">
+                ACCEPTED AGREEMENT
+              </span>
+              <h5 class="fw-bold text-dark mb-1">Learning Session with {{ partner.name }}</h5>
+              <p class="text-secondary small mb-0">
+                Coordinating reciprocal peer exchange: <strong>{{ req.offered_skill.name }}</strong> &harr; <strong>{{ req.requested_skill.name }}</strong>
+              </p>
+            </div>
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4" style="width: 50px; height: 50px;">
+              {{ partner.name[:2]|upper }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Schedule Form Card -->
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3">
+          <h5 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-calendar-plus text-primary me-2"></i> Session Scheduling Details
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <form method="POST" action="{{ url_for('exchanges.schedule_session', request_id=req.id) }}">
+            {{ form.hidden_tag() }}
+
+            <!-- Date and Time Row -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="scheduled_date" class="form-label fw-semibold text-dark small">
+                  Session Date <span class="text-danger">*</span>
+                </label>
+                {{ form.scheduled_date(class="form-control" + (" is-invalid" if form.scheduled_date.errors else ""), type="date") }}
+                {% if form.scheduled_date.errors %}
+                  <div class="invalid-feedback">
+                    {{ form.scheduled_date.errors[0] }}
+                  </div>
+                {% endif %}
+              </div>
+
+              <div class="col-md-6">
+                <label for="scheduled_time" class="form-label fw-semibold text-dark small">
+                  Start Time <span class="text-danger">*</span>
+                </label>
+                {{ form.scheduled_time(class="form-control" + (" is-invalid" if form.scheduled_time.errors else ""), type="time") }}
+                {% if form.scheduled_time.errors %}
+                  <div class="invalid-feedback">
+                    {{ form.scheduled_time.errors[0] }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Duration and Mode Row -->
+            <div class="row g-3 mb-3">
+              <div class="col-md-6">
+                <label for="duration_minutes" class="form-label fw-semibold text-dark small">
+                  Duration (Minutes) <span class="text-danger">*</span>
+                </label>
+                {{ form.duration_minutes(class="form-control" + (" is-invalid" if form.duration_minutes.errors else ""), placeholder="60") }}
+                {% if form.duration_minutes.errors %}
+                  <div class="invalid-feedback">
+                    {{ form.duration_minutes.errors[0] }}
+                  </div>
+                {% endif %}
+                <div class="form-text small text-muted">Standard session duration is 60 minutes.</div>
+              </div>
+
+              <div class="col-md-6">
+                <label for="mode" class="form-label fw-semibold text-dark small">
+                  Learning Mode <span class="text-danger">*</span>
+                </label>
+                {{ form.mode(class="form-select" + (" is-invalid" if form.mode.errors else "")) }}
+                {% if form.mode.errors %}
+                  <div class="invalid-feedback">
+                    {{ form.mode.errors[0] }}
+                  </div>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Meeting Details / Location -->
+            <div class="mb-3">
+              <label for="meeting_details" class="form-label fw-semibold text-dark small">
+                Meeting Link or Campus Location
+              </label>
+              {{ form.meeting_details(class="form-control" + (" is-invalid" if form.meeting_details.errors else ""), placeholder="e.g., https://meet.google.com/xyz or Central Campus Library Room 302") }}
+              {% if form.meeting_details.errors %}
+                <div class="invalid-feedback">
+                  {{ form.meeting_details.errors[0] }}
+                </div>
+              {% endif %}
+              <div class="form-text small text-muted">Provide a video meeting URL or physical location for in-person learning.</div>
+            </div>
+
+            <!-- Notes / Agenda -->
+            <div class="mb-4">
+              <label for="notes" class="form-label fw-semibold text-dark small">
+                Session Agenda & Topics to Cover (Optional)
+              </label>
+              {{ form.notes(class="form-control" + (" is-invalid" if form.notes.errors else ""), rows=3, placeholder="Outline key topics you will practice together...") }}
+              {% if form.notes.errors %}
+                <div class="invalid-feedback">
+                  {{ form.notes.errors[0] }}
+                </div>
+              {% endif %}
+            </div>
+
+            <!-- Submit & Cancel -->
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+              <a href="{{ url_for('exchanges.request_detail', request_id=req.id) }}" class="btn btn-outline-secondary btn-sm px-3">
+                &larr; Cancel
+              </a>
+              <button type="submit" class="btn btn-success px-4 py-2 shadow-sm fw-semibold">
+                <i class="bi bi-calendar-check me-1"></i> Confirm & Schedule Session
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

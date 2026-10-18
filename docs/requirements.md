@@ -1,5 +1,5 @@
 # SkillConnect — System Requirements Specification (SRS)
-**Version:** 2.0 (Phase 3 Verified)  
+**Version:** 3.0 (Phase 4 Verified Baseline)  
 **Project:** SkillConnect — Student Skill Exchange Platform  
 **Target Environment:** Python 3.14 / Flask / SQLite / Bootstrap 5 / Vanilla JS / Chart.js  
 
@@ -24,8 +24,9 @@ The initial Version 1.0 release is structured into five cohesive modules:
 - Manages personal profile, Teach and Learn skill portfolios.
 - Discovers compatible peers via database-backed search and filters.
 - Views rule-based matching recommendations with transparent compatibility scores and explanations.
-- Inspects peer student profiles.
-- *(Future Phase 4 & 5)*: Sends, receives, accepts, rejects, and cancels skill exchange proposals; schedules sessions; rates exchanges and views dashboard analytics.
+- Sends, receives, accepts, rejects, and cancels skill exchange proposals.
+- Schedules, reschedules, tracks, and completes peer learning sessions.
+- *(Future Phase 5)*: Rates completed peer exchanges and views dashboard analytics.
 
 ### 2.2 Administrator Actor
 - Elevated privileges user with administrative credentials.
@@ -43,11 +44,11 @@ The initial Version 1.0 release is structured into five cohesive modules:
 | **Database Foundation** | SQLite schema, User, SkillCategory, Skill, UserSkill models | Phase 2 | **Implemented & Verified** | 100% (Model constraints & CLI) |
 | **Module 2: Skill Management** | Add/Edit/Delete Teach & Learn Skills, Taxonomy, Admin Curation | Phase 3 | **Implemented & Verified** | 100% (19 Unit & Integration tests) |
 | **Module 3: Discovery & Matching** | Deterministic two-way matching engine, Directory, Profiles | Phase 3 | **Implemented & Verified** | 100% (12 Unit & Integration tests) |
-| **Module 4: Exchange & Session** | Exchange proposals, State machine, Scheduling | Phase 4 | *Planned* | Scheduled for Phase 4 |
+| **Module 4: Exchange & Session** | Exchange proposals, State machine, Session scheduling & lifecycle | Phase 4 | **Implemented & Verified** | 100% (23 Unit & Integration tests) |
 | **Module 5: Rating & Dashboard** | Post-session reviews, Star ratings, Chart.js feeds | Phase 5 | *Planned* | Scheduled for Phase 5 |
 | **Administration** | Safe CLI admin creation (`create-admin`), `@admin_required`, Category/Skill CRUD | Phase 2 & 3 | **Implemented & Verified** | 100% (CLI & RBAC) |
 
-**Total Verified Tests:** 49 tests passing (100% pass rate).
+**Total Verified Tests:** 72 tests passing (100% pass rate).
 
 ---
 
@@ -86,25 +87,30 @@ The initial Version 1.0 release is structured into five cohesive modules:
 - **FR-3.5 Exclude Self:** The currently logged-in student is strictly excluded from matching recommendations and discovery directory. *(Status: Implemented & Tested)*
 - **FR-3.6 Graceful Empty States:** Handled cleanly with actionable prompts when a user has no skills or no matches exist. *(Status: Implemented & Tested)*
 
-### Module 4: Skill Exchange and Session Management (Phase 4 Planned)
+### Module 4: Skill Exchange and Session Management
 - **FR-4.1 Exchange Request Creation:**
-  - Sender initiates a request to a recipient specifying: Offered Skill, Requested Skill, and an optional introductory message.
-  - Enforces: Sender $\neq$ Recipient. Prevents duplicate active pending requests. *(Phase 4)*
+  - Sender initiates a proposal specifying Offered Skill (from sender's TEACH portfolio) and Requested Skill (from sender's LEARN portfolio and receiver's TEACH portfolio), with an optional introductory message.
+  - Validates reciprocal alignment: If receiver has specified learning wishlist skills, offered skill must belong to receiver's LEARN portfolio.
+  - Enforces: Sender $\neq$ Recipient. Prevents duplicate active pending or accepted requests between identical pairs for the same skills. *(Status: Implemented & Tested)*
 - **FR-4.2 Request States & Transitions:**
-  - Valid states: `Pending`, `Accepted`, `Rejected`, `Cancelled`.
-  - Recipient can `Accept` or `Reject` a `Pending` request.
-  - Sender can `Cancel` their own `Pending` request. *(Phase 4)*
+  - Valid states: `pending`, `accepted`, `rejected`, `cancelled`.
+  - Recipient can `accept` or `reject` a `pending` request.
+  - Sender can `cancel` their own `pending` request.
+  - State transitions are strictly validated and guarded against tampering. *(Status: Implemented & Tested)*
 - **FR-4.3 Session Scheduling:**
-  - Sessions can only be scheduled for requests with `Accepted` status.
-  - Stores: Date, Start Time, Duration/End Time, Mode (`Online`, `In-Person`, `Hybrid`), Meeting Link / Physical Location, Agenda/Notes. *(Phase 4)*
-- **FR-4.4 Session States & Lifecycle:**
-  - States: `Scheduled`, `Completed`, `Cancelled`.
-  - Eligible participants can mark a session as `Completed` or `Cancelled`. *(Phase 4)*
-- **FR-4.5 Authorization Guardrails:** Unrelated users cannot view, modify, accept, or cancel requests or sessions. *(Phase 4)*
+  - Sessions can only be scheduled for requests with `accepted` status.
+  - Captures: Date, Start Time, Duration (15–300 minutes), Mode (`online`, `in_person`, `hybrid`), Meeting URL or Campus Room Location, Agenda/Notes.
+  - Date validation: Prevents scheduling sessions in the past. *(Status: Implemented & Tested)*
+- **FR-4.4 Session States & Rescheduling Lifecycle:**
+  - States: `scheduled`, `completed`, `cancelled`.
+  - Either participant can view session details and agenda.
+  - Either participant can mark a `scheduled` session as `completed` once finished, or `cancelled`.
+  - Cancelled sessions can be rescheduled by participants, updating logistics and resetting status to `scheduled`. *(Status: Implemented & Tested)*
+- **FR-4.5 Authorization Guardrails:** Unrelated third-party users cannot view, modify, accept, cancel, or tamper with requests or sessions (HTTP 404/403 enforced). *(Status: Implemented & Tested)*
 
 ### Module 5: Rating, Feedback and Dashboard (Phase 5 Planned)
 - **FR-5.1 Post-Session Ratings:**
-  - A participant can submit a rating (1 to 5 stars) and qualitative feedback text ONLY after a session is marked `Completed`. *(Phase 5)*
+  - A participant can submit a rating (1 to 5 stars) and qualitative feedback text ONLY after a session is marked `completed`. *(Phase 5)*
 - **FR-5.2 Duplicate Prevention:** A user can submit only one rating per completed session exchange. *(Phase 5)*
 - **FR-5.3 Aggregate Reputation:** Computes and displays average star ratings and total review counts on student profiles. *(Phase 5)*
 - **FR-5.4 Personalized Student Dashboard:**
@@ -116,8 +122,8 @@ The initial Version 1.0 release is structured into five cohesive modules:
 ---
 
 ## 5. Non-Functional Requirements (NFR)
-- **NFR-1 Security:** CSRF tokens on all state-altering forms, hashed passwords, parameterized SQL queries via SQLAlchemy ORM, XSS escaping in Jinja2 templates, robust route-level permission decorators.
-- **NFR-2 Reliability:** ACID compliance with SQLite transactions; safe database migrations and idempotent initial seeding.
+- **NFR-1 Security:** CSRF tokens on all state-altering forms, hashed passwords, parameterized SQL queries via SQLAlchemy ORM, XSS escaping in Jinja2 templates, robust route-level permission decorators, participant ownership checks preventing IDOR.
+- **NFR-2 Reliability:** ACID compliance with SQLite transactions; safe database migrations and non-destructive initialization.
 - **NFR-3 Maintainability:** Modular blueprint structure, separation of concerns (Models, Views/Controllers, Services, Forms, Templates), PEP 8 compliance.
 - **NFR-4 Performance:** Lightweight pages loading in under 500ms on local environments, minimal external CSS/JS payload (Bootstrap 5 CDN, Chart.js CDN).
-- **NFR-5 Extensibility:** Clear service layer abstraction to allow adding exchange workflow, session scheduling, and analytics without modifying core models.
+- **NFR-5 Extensibility:** Clear service layer abstraction to allow adding notifications, messaging, or advanced scheduling in future releases without modifying core models.

@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+
+{% block title %}Propose Skill Exchange with {{ target_user.name }} — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      
+      <!-- Breadcrumb -->
+      <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb small">
+          <li class="breadcrumb-item"><a href="{{ url_for('matching.index') }}" class="text-decoration-none">Matches</a></li>
+          <li class="breadcrumb-item"><a href="{{ url_for('matching.student_detail', user_id=target_user.id) }}" class="text-decoration-none">{{ target_user.name }}</a></li>
+          <li class="breadcrumb-item active" aria-current="page">Propose Exchange</li>
+        </ol>
+      </nav>
+
+      <!-- Target Partner Preview Card -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4 overflow-hidden border-top border-4 border-primary">
+        <div class="card-body p-4">
+          <div class="d-flex align-items-center gap-3">
+            <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-4" style="width: 56px; height: 56px;">
+              {{ target_user.name[:2]|upper }}
+            </div>
+            <div>
+              <span class="badge bg-secondary-subtle text-secondary small mb-1">PROPOSED PARTNER</span>
+              <h5 class="fw-bold text-dark mb-0">{{ target_user.name }}</h5>
+              <span class="text-muted small">
+                <i class="bi bi-mortarboard me-1"></i>{{ target_user.college or 'Institution not set' }}
+              </span>
+            </div>
+          </div>
+          {% if target_user.bio %}
+            <p class="text-secondary small mt-3 mb-0 bg-light p-3 rounded-2 border">
+              "{{ target_user.bio }}"
+            </p>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Exchange Proposal Form Card -->
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white py-3">
+          <h5 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-send-fill text-primary me-2"></i> Configure Your Skill Exchange
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <form method="POST" action="{{ url_for('exchanges.new_request', receiver_id=target_user.id) }}">
+            {{ form.hidden_tag() }}
+
+            <!-- Skill Selection Grid -->
+            <div class="row g-3 mb-4">
+              <!-- Offered Skill (Sender Teaches) -->
+              <div class="col-md-6">
+                <div class="p-3 bg-success bg-opacity-10 border border-success border-opacity-25 rounded-3 h-100">
+                  <label for="offered_skill_id" class="form-label fw-bold text-success small mb-2 d-flex align-items-center gap-1">
+                    <i class="bi bi-mortarboard-fill"></i> Skill You Will Teach:
+                  </label>
+                  {{ form.offered_skill_id(class="form-select" + (" is-invalid" if form.offered_skill_id.errors else "")) }}
+                  {% if form.offered_skill_id.errors %}
+                    <div class="invalid-feedback">
+                      {{ form.offered_skill_id.errors[0] }}
+                    </div>
+                  {% endif %}
+                  <div class="form-text small text-muted mt-2">
+                    Select a skill from your 'Teach' portfolio that you will share.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Requested Skill (Receiver Teaches) -->
+              <div class="col-md-6">
+                <div class="p-3 bg-primary bg-opacity-10 border border-primary border-opacity-25 rounded-3 h-100">
+                  <label for="requested_skill_id" class="form-label fw-bold text-primary small mb-2 d-flex align-items-center gap-1">
+                    <i class="bi bi-lightbulb-fill"></i> Skill You Want to Learn:
+                  </label>
+                  {{ form.requested_skill_id(class="form-select" + (" is-invalid" if form.requested_skill_id.errors else "")) }}
+                  {% if form.requested_skill_id.errors %}
+                    <div class="invalid-feedback">
+                      {{ form.requested_skill_id.errors[0] }}
+                    </div>
+                  {% endif %}
+                  <div class="form-text small text-muted mt-2">
+                    Select a skill that {{ target_user.name }} offers to teach.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Introductory Message -->
+            <div class="mb-4">
+              <label for="message" class="form-label fw-semibold text-dark small">
+                Introductory Note & Exchange Expectations (Optional)
+              </label>
+              {{ form.message(class="form-control" + (" is-invalid" if form.message.errors else ""), rows=3, placeholder="Hi " + target_user.name + "! I saw your profile and would love to exchange skills. I can help you with...") }}
+              {% if form.message.errors %}
+                <div class="invalid-feedback">
+                  {{ form.message.errors[0] }}
+                </div>
+              {% endif %}
+              <div class="form-text small text-muted">
+                Keep it friendly! State what you hope to achieve and your preferred pace.
+              </div>
+            </div>
+
+            <!-- Reciprocal Exchange Note -->
+            <div class="alert alert-info border-0 rounded-3 small mb-4 d-flex align-items-start gap-2">
+              <i class="bi bi-info-circle-fill fs-5 flex-shrink-0 text-info"></i>
+              <div>
+                <strong>How Peer Exchange Works:</strong> Once sent, {{ target_user.name }} will review your proposal. If accepted, both of you can schedule a dedicated learning session.
+              </div>
+            </div>
+
+            <!-- Form Actions -->
+            <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+              <a href="{{ url_for('matching.student_detail', user_id=target_user.id) }}" class="btn btn-outline-secondary btn-sm px-3">
+                &larr; Cancel
+              </a>
+              <button type="submit" class="btn btn-primary px-4 py-2 shadow-sm fw-semibold">
+                <i class="bi bi-send-fill me-1"></i> Send Exchange Proposal
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

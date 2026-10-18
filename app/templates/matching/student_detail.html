@@ -53,10 +53,9 @@
       <!-- Action Card -->
       <div class="card border-0 shadow-sm rounded-3 mt-4">
         <div class="card-body p-3 text-center">
-          <button type="button" class="btn btn-secondary w-100 py-2" disabled title="Proposals available in Phase 4">
-            <i class="bi bi-send me-1"></i> Send Exchange Proposal
-            <div style="font-size: 0.7rem;">(Coming in Phase 4)</div>
-          </button>
+          <a href="{{ url_for('exchanges.new_request', receiver_id=student.id, offered_id=(match.rev_skills[0].skill_id if match and match.rev_skills else None), requested_id=(match.fwd_skills[0].skill_id if match and match.fwd_skills else None)) }}" class="btn btn-primary w-100 py-2 shadow-sm fw-semibold">
+            <i class="bi bi-send-fill me-1"></i> Send Exchange Proposal
+          </a>
         </div>
       </div>
     </div>

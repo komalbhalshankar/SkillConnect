@@ -46,13 +46,18 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if request.endpoint == 'matching.index' %}active{% endif %}" href="{{ url_for('matching.index') }}">
-                <i class="bi bi-arrow-left-right me-1"></i> Find Matches
+              <a class="nav-link {% if request.endpoint and request.endpoint.startswith('matching.') %}active{% endif %}" href="{{ url_for('matching.index') }}">
+                <i class="bi bi-arrow-left-right me-1"></i> Matches
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if request.endpoint == 'matching.discover' %}active{% endif %}" href="{{ url_for('matching.discover') }}">
-                <i class="bi bi-people me-1"></i> Discover Students
+              <a class="nav-link {% if request.endpoint and request.endpoint.startswith('exchanges.') and 'session' not in request.endpoint %}active{% endif %}" href="{{ url_for('exchanges.index') }}">
+                <i class="bi bi-inbox me-1"></i> Exchanges
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint and 'session' in request.endpoint %}active{% endif %}" href="{{ url_for('exchanges.sessions_list') }}">
+                <i class="bi bi-calendar-event me-1"></i> Sessions
               </a>
             </li>
             <li class="nav-item">

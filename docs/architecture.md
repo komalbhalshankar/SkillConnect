@@ -196,5 +196,34 @@ The modular architecture guarantees that future modules (e.g., Real-time Chat, V
 - **CLI Seeding:**
   - `flask seed-skills`: Idempotently seeds standard academic categories (Programming, Database, Web Development, Design, Communication, Other) and standard skill sets.
 
+### Phase 4: Skill Exchange & Session Management (Completed & Verified)
+- **Active Blueprints & Controllers:**
+  - `exchanges_bp` (`/exchanges`):
+    - `GET /exchanges/`: Exchange requests hub displaying incoming and outgoing proposals with status badges and filter tabs.
+    - `GET /exchanges/<int:request_id>`: Detailed view of an exchange proposal, participants, agreed skills, status timeline, and linked session.
+    - `GET, POST /exchanges/new`: Create and send skill exchange proposal with pre-populated matched skills.
+    - `POST /exchanges/respond/<int:request_id>/<action>`: Receiver accepts or rejects an incoming pending request.
+    - `POST /exchanges/cancel/<int:request_id>`: Sender cancels an outgoing pending request.
+    - `GET, POST /exchanges/schedule/<int:request_id>`: Schedule or reschedule learning session for an accepted exchange agreement.
+    - `GET /exchanges/sessions`: Sessions directory listing upcoming scheduled meetings and past/historical sessions.
+    - `GET /exchanges/sessions/<int:session_id>`: Detailed session view with meeting mode, link/room location, and agenda notes.
+    - `POST /exchanges/sessions/<int:session_id>/complete`: Participant marks a scheduled session as completed.
+    - `POST /exchanges/sessions/<int:session_id>/cancel`: Participant cancels a scheduled session.
+- **Domain Service Layer (`ExchangeService`):**
+  - **Proposal Validation:**
+    - Rejects self-proposals (`sender_id != receiver_id`).
+    - Validates that offered skill is in sender's TEACH portfolio.
+    - Validates that requested skill is in sender's LEARN portfolio and receiver's TEACH portfolio.
+    - Validates reciprocal alignment with receiver's wishlist.
+    - Enforces duplicate prevention against active pending or accepted agreements.
+  - **State Machine Transitions:**
+    - Request: `pending` $\to$ `accepted` | `rejected` | `cancelled`.
+    - Session: `scheduled` $\to$ `completed` | `cancelled`.
+    - Rescheduling Policy: Cancelled sessions can be rescheduled by participants, updating meeting logistics and resetting status to `scheduled`.
+  - **Authorization & Anti-IDOR:**
+    - Strict participant validation ensures only authorized students can view, respond, cancel, or modify requests and sessions.
+- **Verification:** 72 total unit and integration tests passing across all active modules.
+
+
 
 

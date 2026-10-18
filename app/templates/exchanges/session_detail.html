@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+{% block title %}Session #{{ session.id }} with {{ partner.name }} — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{{ url_for('exchanges.sessions_list') }}" class="text-decoration-none">Sessions</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Session #{{ session.id }}</li>
+    </ol>
+  </nav>
+
+  <!-- Session Header Card -->
+  <div class="card border-0 shadow-sm rounded-3 mb-4 overflow-hidden border-top border-4 border-{{ session.status_badge_class }}">
+    <div class="card-body p-4">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <h4 class="fw-bold text-dark mb-0">Learning Session</h4>
+            <span class="badge bg-{{ session.status_badge_class }} bg-opacity-10 text-{{ session.status_badge_class }} border border-{{ session.status_badge_class }} border-opacity-25 px-3 py-1 text-uppercase fw-semibold" style="font-size: 0.8rem;">
+              {{ session.status }}
+            </span>
+          </div>
+          <p class="text-secondary small mb-0">
+            Scheduled for <strong class="text-dark">{{ session.formatted_date }}</strong> at <strong class="text-dark">{{ session.formatted_time }}</strong> ({{ session.duration_minutes }} minutes)
+          </p>
+        </div>
+
+        <!-- Actions -->
+        <div class="d-flex gap-2">
+          {% if session.is_scheduled %}
+            <form method="POST" action="{{ url_for('exchanges.cancel_session', session_id=session.id) }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('Are you sure you want to cancel this scheduled session?');">
+                <i class="bi bi-x-circle me-1"></i> Cancel Session
+              </button>
+            </form>
+
+            <form method="POST" action="{{ url_for('exchanges.complete_session', session_id=session.id) }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-success btn-sm px-3" onclick="return confirm('Mark this learning session as completed?');">
+                <i class="bi bi-check-circle me-1"></i> Mark Completed
+              </button>
+            </form>
+          {% elif session.is_cancelled %}
+            <a href="{{ url_for('exchanges.schedule_session', request_id=session.request_id) }}" class="btn btn-primary btn-sm px-3 shadow-sm">
+              <i class="bi bi-arrow-repeat me-1"></i> Reschedule Session
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Meeting Logistics & Agenda -->
+    <div class="col-lg-8">
+      
+      <!-- Logistics Card -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-geo-alt text-primary me-2"></i> Session Meeting Information
+          </h6>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3 mb-3">
+            <div class="col-md-6">
+              <span class="text-muted small d-block mb-1">Learning Mode:</span>
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-light text-dark border fs-6 text-capitalize">
+                  <i class="bi bi-laptop me-1"></i>{{ session.mode.replace('_', ' ') }}
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <span class="text-muted small d-block mb-1">Duration:</span>
+              <div class="fw-bold text-dark fs-6">
+                <i class="bi bi-hourglass-split text-primary me-1"></i>{{ session.duration_minutes }} Minutes
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <span class="text-muted small d-block mb-1">Meeting Link or Location:</span>
+            {% if session.meeting_details %}
+              {% if session.meeting_details.startswith('http') %}
+                <div class="p-3 bg-light rounded-2 border">
+                  <a href="{{ session.meeting_details }}" target="_blank" rel="noopener noreferrer" class="fw-semibold text-primary text-break">
+                    <i class="bi bi-box-arrow-up-right me-1"></i>{{ session.meeting_details }}
+                  </a>
+                </div>
+              {% else %}
+                <div class="p-3 bg-light rounded-2 border text-dark fw-semibold">
+                  <i class="bi bi-geo-alt-fill text-danger me-1"></i>{{ session.meeting_details }}
+                </div>
+              {% endif %}
+            {% else %}
+              <div class="text-muted small fst-italic p-2 bg-light rounded-2 border">
+                No location or video meeting link specified.
+              </div>
+            {% endif %}
+          </div>
+
+          {% if session.notes %}
+            <div>
+              <span class="text-muted small d-block mb-1">Session Agenda & Topics:</span>
+              <div class="p-3 bg-light rounded-2 border text-secondary small">
+                {{ session.notes }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Underlying Exchange Agreement Reference -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h6 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-arrow-left-right text-primary me-2"></i> Related Exchange Agreement
+          </h6>
+          <a href="{{ url_for('exchanges.request_detail', request_id=session.request_id) }}" class="btn btn-outline-secondary btn-sm">
+            View Request #{{ session.request_id }} &rarr;
+          </a>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="p-3 rounded-2 bg-success bg-opacity-10 border border-success border-opacity-25">
+                <span class="text-success small fw-semibold d-block mb-1">Offered Skill:</span>
+                <strong>{{ session.request.offered_skill.name }}</strong>
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="p-3 rounded-2 bg-primary bg-opacity-10 border border-primary border-opacity-25">
+                <span class="text-primary small fw-semibold d-block mb-1">Requested Skill:</span>
+                <strong>{{ session.request.requested_skill.name }}</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rating Placeholder Notice (Phase 5) -->
+      {% if session.is_completed %}
+        <div class="alert alert-success border-0 rounded-3 p-3 d-flex align-items-center gap-2">
+          <i class="bi bi-check-circle-fill fs-4 text-success"></i>
+          <div>
+            <strong>Session Completed!</strong>
+            <div class="small text-muted">
+              Peer ratings, star evaluations, and feedback dashboards will be unlocked in Phase 5.
+            </div>
+          </div>
+        </div>
+      {% endif %}
+
+    </div>
+
+    <!-- Right Column: Learning Partner Details -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-person text-primary me-2"></i> Learning Partner
+          </h6>
+        </div>
+        <div class="card-body p-4 text-center">
+          <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-3 mx-auto mb-3" style="width: 64px; height: 64px;">
+            {{ partner.name[:2]|upper }}
+          </div>
+          <h5 class="fw-bold text-dark mb-1">
+            <a href="{{ url_for('matching.student_detail', user_id=partner.id) }}" class="text-decoration-none text-dark">
+              {{ partner.name }}
+            </a>
+          </h5>
+          <span class="text-muted small d-block mb-3">
+            <i class="bi bi-mortarboard me-1"></i>{{ partner.college or 'Institution not set' }}
+          </span>
+
+          {% if partner.bio %}
+            <p class="text-secondary small fst-italic mb-3 bg-light p-2 rounded-2 border text-start">
+              "{{ partner.bio }}"
+            </p>
+          {% endif %}
+
+          <a href="{{ url_for('matching.student_detail', user_id=partner.id) }}" class="btn btn-outline-primary btn-sm w-100">
+            View Partner Profile
+          </a>
+        </div>
+      </div>
+
+      <a href="{{ url_for('exchanges.sessions_list') }}" class="btn btn-outline-secondary btn-sm w-100 py-2">
+        &larr; Back to All Sessions
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

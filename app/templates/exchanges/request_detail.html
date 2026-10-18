@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}Exchange Request #{{ req.id }} — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Breadcrumb -->
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb small">
+      <li class="breadcrumb-item"><a href="{{ url_for('exchanges.index') }}" class="text-decoration-none">Exchanges</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Request #{{ req.id }}</li>
+    </ol>
+  </nav>
+
+  <!-- Header Card -->
+  <div class="card border-0 shadow-sm rounded-3 mb-4 overflow-hidden border-top border-4 border-{{ req.status_badge_class }}">
+    <div class="card-body p-4">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+          <div class="d-flex align-items-center gap-2 mb-1">
+            <h4 class="fw-bold text-dark mb-0">Skill Exchange Proposal</h4>
+            <span class="badge bg-{{ req.status_badge_class }} bg-opacity-10 text-{{ req.status_badge_class }} border border-{{ req.status_badge_class }} border-opacity-25 px-3 py-1 text-uppercase fw-semibold" style="font-size: 0.8rem;">
+              {{ req.status }}
+            </span>
+          </div>
+          <p class="text-secondary small mb-0">
+            Initiated by <strong class="text-dark">{{ req.sender.name }}</strong> on {{ req.created_at.strftime('%A, %b %d, %Y at %I:%M %p UTC') }}
+          </p>
+        </div>
+
+        <!-- Header Actions -->
+        <div class="d-flex gap-2">
+          {% if is_sender and req.is_pending %}
+            <form method="POST" action="{{ url_for('exchanges.cancel_request', request_id=req.id) }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('Cancel this exchange proposal?');">
+                <i class="bi bi-slash-circle me-1"></i> Cancel Proposal
+              </button>
+            </form>
+          {% elif not is_sender and req.is_pending %}
+            <form method="POST" action="{{ url_for('exchanges.respond_request', request_id=req.id, action='reject') }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('Decline this proposal?');">
+                <i class="bi bi-x-circle me-1"></i> Decline
+              </button>
+            </form>
+            <form method="POST" action="{{ url_for('exchanges.respond_request', request_id=req.id, action='accept') }}" class="d-inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button type="submit" class="btn btn-success btn-sm px-3">
+                <i class="bi bi-check-circle me-1"></i> Accept Exchange
+              </button>
+            </form>
+          {% elif req.is_accepted and not req.session %}
+            <a href="{{ url_for('exchanges.schedule_session', request_id=req.id) }}" class="btn btn-success btn-sm px-3 shadow-sm">
+              <i class="bi bi-calendar-plus me-1"></i> Schedule Session
+            </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Exchange Details & Skills -->
+    <div class="col-lg-8">
+      
+      <!-- Exchange Agreement Box -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-arrow-left-right text-primary me-2"></i> Agreed Skill Exchange Terms
+          </h6>
+        </div>
+        <div class="card-body p-4">
+          <div class="row g-3">
+            <div class="col-md-6">
+              <div class="p-3 rounded-3 bg-success bg-opacity-10 border border-success border-opacity-25 h-100">
+                <span class="text-success fw-semibold small d-block mb-1">
+                  <i class="bi bi-mortarboard-fill me-1"></i> Offered Skill (Taught by {{ req.sender.name }}):
+                </span>
+                <h5 class="fw-bold text-dark mb-1">{{ req.offered_skill.name }}</h5>
+                <span class="badge bg-light text-secondary border small">
+                  <i class="{{ req.offered_skill.category.icon }} me-1"></i>{{ req.offered_skill.category.name }}
+                </span>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="p-3 rounded-3 bg-primary bg-opacity-10 border border-primary border-opacity-25 h-100">
+                <span class="text-primary fw-semibold small d-block mb-1">
+                  <i class="bi bi-lightbulb-fill me-1"></i> Requested Skill (Taught by {{ req.receiver.name }}):
+                </span>
+                <h5 class="fw-bold text-dark mb-1">{{ req.requested_skill.name }}</h5>
+                <span class="badge bg-light text-secondary border small">
+                  <i class="{{ req.requested_skill.category.icon }} me-1"></i>{{ req.requested_skill.category.name }}
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {% if req.message %}
+            <div class="mt-3">
+              <label class="form-label small fw-semibold text-secondary">Introductory Message from Sender:</label>
+              <div class="p-3 bg-light rounded-2 border text-secondary small">
+                {{ req.message }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Associated Learning Session (if any) -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <h6 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-calendar-event text-primary me-2"></i> Learning Session Status
+          </h6>
+          {% if req.session %}
+            <span class="badge bg-{{ req.session.status_badge_class }} bg-opacity-10 text-{{ req.session.status_badge_class }} border border-{{ req.session.status_badge_class }} border-opacity-25 px-2 py-1 small">
+              {{ req.session.status|capitalize }}
+            </span>
+          {% endif %}
+        </div>
+        <div class="card-body p-4">
+          {% if req.session %}
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 bg-light p-3 rounded-3 border mb-3">
+              <div>
+                <h6 class="fw-bold text-dark mb-1">
+                  <i class="bi bi-calendar3 text-primary me-1"></i> {{ req.session.formatted_date }} at {{ req.session.formatted_time }}
+                </h6>
+                <div class="text-secondary small">
+                  <span class="me-3"><i class="bi bi-hourglass-split me-1"></i>{{ req.session.duration_minutes }} Minutes</span>
+                  <span class="me-3 text-capitalize"><i class="bi bi-laptop me-1"></i>{{ req.session.mode.replace('_', ' ') }}</span>
+                </div>
+              </div>
+              <a href="{{ url_for('exchanges.session_detail', session_id=req.session.id) }}" class="btn btn-outline-primary btn-sm px-3">
+                View Session &rarr;
+              </a>
+            </div>
+          {% elif req.is_accepted %}
+            <div class="text-center py-3">
+              <i class="bi bi-calendar-plus fs-2 text-primary d-block mb-2"></i>
+              <h6 class="fw-bold text-dark">No Session Scheduled Yet</h6>
+              <p class="text-secondary small mb-3">
+                This exchange request is accepted. Either participant can schedule the date and meeting format.
+              </p>
+              <a href="{{ url_for('exchanges.schedule_session', request_id=req.id) }}" class="btn btn-success btn-sm px-4">
+                <i class="bi bi-calendar-plus me-1"></i> Schedule Session Now
+              </a>
+            </div>
+          {% elif req.is_pending %}
+            <p class="text-muted small mb-0 fst-italic">
+              Sessions can be scheduled once the request is accepted by {{ req.receiver.name }}.
+            </p>
+          {% else %}
+            <p class="text-muted small mb-0 fst-italic">
+              No session can be scheduled for a {{ req.status }} request.
+            </p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Right Column: Participants Info -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white py-3">
+          <h6 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-people text-primary me-2"></i> Participants
+          </h6>
+        </div>
+        <div class="card-body p-3">
+          <!-- Sender Card -->
+          <div class="p-3 rounded-3 bg-light border mb-3">
+            <span class="badge bg-secondary text-white mb-2" style="font-size: 0.65rem;">SENDER</span>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold small" style="width: 36px; height: 36px;">
+                {{ req.sender.name[:2]|upper }}
+              </div>
+              <div>
+                <h6 class="fw-bold mb-0 text-dark">
+                  <a href="{{ url_for('matching.student_detail', user_id=req.sender.id) }}" class="text-decoration-none text-dark">
+                    {{ req.sender.name }}
+                  </a>
+                  {% if req.sender_id == current_user.id %}
+                    <span class="badge bg-primary-subtle text-primary ms-1" style="font-size: 0.65rem;">You</span>
+                  {% endif %}
+                </h6>
+                <span class="text-muted small">{{ req.sender.college or 'Institution not set' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Receiver Card -->
+          <div class="p-3 rounded-3 bg-light border">
+            <span class="badge bg-secondary text-white mb-2" style="font-size: 0.65rem;">RECEIVER</span>
+            <div class="d-flex align-items-center gap-2 mb-2">
+              <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold small" style="width: 36px; height: 36px;">
+                {{ req.receiver.name[:2]|upper }}
+              </div>
+              <div>
+                <h6 class="fw-bold mb-0 text-dark">
+                  <a href="{{ url_for('matching.student_detail', user_id=req.receiver.id) }}" class="text-decoration-none text-dark">
+                    {{ req.receiver.name }}
+                  </a>
+                  {% if req.receiver_id == current_user.id %}
+                    <span class="badge bg-primary-subtle text-primary ms-1" style="font-size: 0.65rem;">You</span>
+                  {% endif %}
+                </h6>
+                <span class="text-muted small">{{ req.receiver.college or 'Institution not set' }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Back Link -->
+      <a href="{{ url_for('exchanges.index') }}" class="btn btn-outline-secondary btn-sm w-100 py-2">
+        &larr; Back to All Exchanges
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}

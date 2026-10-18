@@ -1,5 +1,5 @@
 # SkillConnect — Comprehensive Test Plan & Verification Report
-**Version:** 2.0 (Phase 3 Verified Baseline)  
+**Version:** 3.0 (Phase 4 Verified Baseline)  
 **Test Framework:** `pytest` (v9+) & Flask Test Client  
 **Database Isolation:** In-Memory SQLite (`sqlite:///:memory:`)  
 
@@ -12,12 +12,12 @@
 
 ---
 
-## 2. Phase 3 Verified Test Execution Report
+## 2. Phase 4 Verified Test Execution Report
 
 **Test Run Date:** October 18, 2026  
 **Environment:** Python 3.14.7 / pytest 9.1.1 / Flask Test Client  
 **Execution Command:** `python -m pytest -v`  
-**Overall Result:** **49 Passed, 0 Failed, 0 Errors (100% Pass Rate)**
+**Overall Result:** **72 Passed, 0 Failed, 0 Errors (100% Pass Rate)**
 
 | Test Suite File | Test Function | Verified Behavior | Status |
 | :--- | :--- | :--- | :---: |
@@ -68,25 +68,35 @@
 | `tests/test_matching.py` | `test_discovery_filter_by_category_and_proficiency` | Filter directory by academic category and proficiency level | **PASSED** |
 | `tests/test_matching.py` | `test_discovery_empty_search_results` | Graceful empty states with helpful user guidance | **PASSED** |
 | `tests/test_matching.py` | `test_matching_recommendations_page` | `/matching/` displays cards, badges, and audit breakdown | **PASSED** |
-| `tests/test_matching.py` | `test_student_detail_profile_inspection` | `/matching/student/<id>` renders peer profile & compatibility card | **PASSED** |
+| `tests/test_matching.py` | `test_student_detail_profile_inspection` | `/matching/student/<id>` renders peer profile & active exchange proposal action | **PASSED** |
 | `tests/test_matching.py` | `test_unauthenticated_cannot_access_matching_or_discovery` | Protected routes redirect unauthenticated users | **PASSED** |
+| `tests/test_exchanges.py` | `test_create_exchange_request_success` | Valid proposal creation, pending status, correct skills | **PASSED** |
+| `tests/test_exchanges.py` | `test_reject_self_exchange_request` | Student cannot send exchange request to themselves | **PASSED** |
+| `tests/test_exchanges.py` | `test_reject_unrelated_offered_skill` | Sender cannot offer a skill not listed in their TEACH portfolio | **PASSED** |
+| `tests/test_exchanges.py` | `test_reject_unrelated_requested_skill_not_in_receiver_teach` | Sender cannot request a skill peer does not offer to teach | **PASSED** |
+| `tests/test_exchanges.py` | `test_reject_requested_skill_not_in_sender_learn` | Sender cannot request a skill not in their own LEARN wishlist | **PASSED** |
+| `tests/test_exchanges.py` | `test_prevent_duplicate_active_pending_request` | Prevents duplicate pending request between same pair and skills | **PASSED** |
+| `tests/test_exchanges.py` | `test_incoming_and_outgoing_request_filtering` | Separates requests into incoming and outgoing views | **PASSED** |
+| `tests/test_exchanges.py` | `test_accept_exchange_request` | Recipient accepts proposal, status transitions to `accepted` | **PASSED** |
+| `tests/test_exchanges.py` | `test_reject_exchange_request` | Recipient declines proposal, status transitions to `rejected` | **PASSED** |
+| `tests/test_exchanges.py` | `test_cancel_exchange_request_by_sender` | Sender cancels pending proposal, status transitions to `cancelled` | **PASSED** |
+| `tests/test_exchanges.py` | `test_invalid_status_transitions_on_request` | Rejects modifications to already accepted/rejected/cancelled requests | **PASSED** |
+| `tests/test_exchanges.py` | `test_unauthorized_user_cannot_respond_or_cancel_request` | Sender cannot accept; recipient cannot cancel; 3rd party blocked | **PASSED** |
+| `tests/test_exchanges.py` | `test_unauthorized_access_to_request_details` | Non-participant accessing proposal details receives HTTP 404 | **PASSED** |
+| `tests/test_exchanges.py` | `test_schedule_session_success_after_acceptance` | Participant schedules learning meeting for accepted request | **PASSED** |
+| `tests/test_exchanges.py` | `test_prevent_scheduling_for_pending_or_rejected_request` | Rejects scheduling attempts when proposal is pending or rejected | **PASSED** |
+| `tests/test_exchanges.py` | `test_prevent_past_date_session_scheduling` | Server-side validation blocks scheduling sessions in the past | **PASSED** |
+| `tests/test_exchanges.py` | `test_authorized_participants_can_view_session` | Participants access session details; 3rd party blocked | **PASSED** |
+| `tests/test_exchanges.py` | `test_complete_scheduled_session` | Participant completes session, status transitions to `completed` | **PASSED** |
+| `tests/test_exchanges.py` | `test_cancel_scheduled_session` | Participant cancels session, status transitions to `cancelled` | **PASSED** |
+| `tests/test_exchanges.py` | `test_invalid_session_state_transitions` | Completed session cannot be cancelled; cancelled session cannot be completed directly | **PASSED** |
+| `tests/test_exchanges.py` | `test_reschedule_cancelled_session_policy` | Cancelled session can be rescheduled with a new date and reset status | **PASSED** |
+| `tests/test_exchanges.py` | `test_session_history_separation` | Categorizes into upcoming (scheduled) and past (completed/cancelled) | **PASSED** |
+| `tests/test_exchanges.py` | `test_unauthenticated_redirected_from_exchange_and_session_routes` | Protected endpoints redirect guests to login | **PASSED** |
 
 ---
 
 ## 3. Future Phases Test Matrix (Scheduled)
-
-### Suite 4: Exchange Requests & Sessions (`tests/test_exchanges.py`) — Phase 4
-| Test ID | Objective | Expected Result |
-| :--- | :--- | :--- |
-| `test_create_exchange_request` | Send proposal with offered & requested skill | Record created with status `Pending` |
-| `test_prevent_self_exchange_request` | Attempt to send request to oneself | Validation error, request blocked |
-| `test_accept_exchange_request` | Recipient accepts pending request | Status transitions to `Accepted` |
-| `test_reject_exchange_request` | Recipient rejects pending request | Status transitions to `Rejected` |
-| `test_cancel_exchange_request` | Sender cancels pending request | Status transitions to `Cancelled` |
-| `test_schedule_session_for_accepted_request` | Schedule meeting for accepted request | Session created with status `Scheduled` |
-| `test_prevent_session_for_pending_request` | Attempt to schedule session before acceptance | Blocked with validation error |
-| `test_complete_and_cancel_session` | Complete or cancel scheduled session | Valid status transition |
-| `test_unauthorized_session_tampering` | Third party attempts to modify session | Blocked / Unauthorized |
 
 ### Suite 5: Rating, Feedback & Dashboard (`tests/test_ratings.py`) — Phase 5
 | Test ID | Objective | Expected Result |
@@ -95,3 +105,4 @@
 | `test_prevent_rating_uncompleted_session` | Attempt to rate scheduled/cancelled session | Blocked |
 | `test_prevent_duplicate_rating` | Same reviewer rates same session twice | Blocked by unique constraint |
 | `test_student_dashboard_metrics` | Calculate dashboard counters | Accurate counts for skills, sessions, matches |
+| `test_admin_dashboard_metrics` | Platform-wide aggregation | Total students, skills, exchanges, sessions |

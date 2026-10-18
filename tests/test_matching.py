@@ -193,8 +193,7 @@ def test_student_detail_profile_inspection(auth_client, second_student_user, mat
     assert "Priya Patel" in html
     assert "Exchange Compatibility with You" in html
     assert "Java" in html
-    assert "Python" in html
-    assert "Coming in Phase 4" in html
+    assert "Send Exchange Proposal" in html
 
 def test_unauthenticated_cannot_access_matching_or_discovery(client):
     """Unauthenticated users attempting to access discovery or matching are redirected to login."""

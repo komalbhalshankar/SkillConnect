@@ -1,0 +1,293 @@
+{% extends 'base.html' %}
+
+{% block title %}Skill Exchanges — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Page Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <h3 class="fw-bold text-dark mb-1">
+        <i class="bi bi-arrow-left-right text-primary me-2"></i> Skill Exchanges
+      </h3>
+      <p class="text-secondary small mb-0">
+        Manage your peer exchange requests, accept incoming proposals, and track active collaborations.
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('exchanges.sessions_list') }}" class="btn btn-outline-primary btn-sm px-3 shadow-sm">
+        <i class="bi bi-calendar-event me-1"></i> My Sessions
+      </a>
+      <a href="{{ url_for('matching.index') }}" class="btn btn-primary btn-sm px-3 shadow-sm">
+        <i class="bi bi-search me-1"></i> Find Matches
+      </a>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  {% set pending_incoming = incoming | selectattr('is_pending') | list | length %}
+  {% set pending_outgoing = outgoing | selectattr('is_pending') | list | length %}
+
+  <ul class="nav nav-pills mb-4 gap-2" id="exchangeTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link {% if active_tab == 'incoming' %}active{% endif %} rounded-pill px-4 fw-semibold" 
+              id="incoming-tab" data-bs-toggle="pill" data-bs-target="#incoming" type="button" role="tab">
+        <i class="bi bi-inbox me-1"></i> Incoming Requests
+        {% if pending_incoming > 0 %}
+          <span class="badge bg-danger rounded-pill ms-1">{{ pending_incoming }}</span>
+        {% endif %}
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link {% if active_tab == 'outgoing' %}active{% endif %} rounded-pill px-4 fw-semibold" 
+              id="outgoing-tab" data-bs-toggle="pill" data-bs-target="#outgoing" type="button" role="tab">
+        <i class="bi bi-send me-1"></i> Outgoing Proposals
+        {% if pending_outgoing > 0 %}
+          <span class="badge bg-primary rounded-pill ms-1">{{ pending_outgoing }}</span>
+        {% endif %}
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="exchangeTabsContent">
+    
+    <!-- Incoming Requests Tab -->
+    <div class="tab-pane fade {% if active_tab == 'incoming' %}show active{% endif %}" id="incoming" role="tabpanel">
+      {% if incoming %}
+        <div class="row g-3">
+          {% for req in incoming %}
+            <div class="col-12">
+              <div class="card border-0 shadow-sm rounded-3 overflow-hidden border-start border-4 border-{{ req.status_badge_class }}">
+                <div class="card-body p-4">
+                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 48px; height: 48px;">
+                        {{ req.sender.name[:2]|upper }}
+                      </div>
+                      <div>
+                        <h5 class="fw-bold text-dark mb-0">
+                          <a href="{{ url_for('matching.student_detail', user_id=req.sender.id) }}" class="text-decoration-none text-dark">
+                            {{ req.sender.name }}
+                          </a>
+                        </h5>
+                        <span class="text-muted small">
+                          <i class="bi bi-mortarboard me-1"></i>{{ req.sender.college or 'Institution not set' }}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="badge bg-{{ req.status_badge_class }} bg-opacity-10 text-{{ req.status_badge_class }} border border-{{ req.status_badge_class }} border-opacity-25 px-3 py-2 text-uppercase fw-semibold" style="font-size: 0.75rem;">
+                        {{ req.status }}
+                      </span>
+                      <span class="text-muted small" title="{{ req.created_at.strftime('%Y-%m-%d %H:%M UTC') }}">
+                        <i class="bi bi-clock me-1"></i>{{ req.created_at.strftime('%b %d, %Y') }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Skills Exchange Grid -->
+                  <div class="row g-2 p-3 bg-light rounded-3 mb-3">
+                    <div class="col-md-6">
+                      <span class="text-muted small d-block mb-1">
+                        <i class="bi bi-person-check text-success me-1"></i> They Offer to Teach You:
+                      </span>
+                      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 fs-6">
+                        <i class="bi bi-mortarboard me-1"></i>{{ req.offered_skill.name }}
+                      </span>
+                    </div>
+                    <div class="col-md-6">
+                      <span class="text-muted small d-block mb-1">
+                        <i class="bi bi-arrow-repeat text-primary me-1"></i> They Want to Learn From You:
+                      </span>
+                      <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 fs-6">
+                        <i class="bi bi-lightbulb me-1"></i>{{ req.requested_skill.name }}
+                      </span>
+                    </div>
+                  </div>
+
+                  {% if req.message %}
+                    <div class="mb-3">
+                      <p class="text-secondary small fst-italic mb-0 bg-white p-2 border rounded-2">
+                        "{{ req.message }}"
+                      </p>
+                    </div>
+                  {% endif %}
+
+                  <!-- Action Buttons -->
+                  <div class="d-flex flex-wrap justify-content-between align-items-center pt-2 border-top gap-2">
+                    <div>
+                      <a href="{{ url_for('exchanges.request_detail', request_id=req.id) }}" class="btn btn-outline-secondary btn-sm px-3">
+                        <i class="bi bi-info-circle me-1"></i> View Details
+                      </a>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                      {% if req.is_pending %}
+                        <form method="POST" action="{{ url_for('exchanges.respond_request', request_id=req.id, action='reject') }}" class="d-inline">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                          <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('Are you sure you want to decline this exchange proposal?');">
+                            <i class="bi bi-x-circle me-1"></i> Decline
+                          </button>
+                        </form>
+                        <form method="POST" action="{{ url_for('exchanges.respond_request', request_id=req.id, action='accept') }}" class="d-inline">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                          <button type="submit" class="btn btn-success btn-sm px-4">
+                            <i class="bi bi-check-circle me-1"></i> Accept Exchange
+                          </button>
+                        </form>
+                      {% elif req.is_accepted %}
+                        {% if req.session %}
+                          <a href="{{ url_for('exchanges.session_detail', session_id=req.session.id) }}" class="btn btn-primary btn-sm px-3">
+                            <i class="bi bi-calendar-check me-1"></i> View Session ({{ req.session.status|capitalize }})
+                          </a>
+                        {% else %}
+                          <a href="{{ url_for('exchanges.schedule_session', request_id=req.id) }}" class="btn btn-success btn-sm px-3">
+                            <i class="bi bi-calendar-plus me-1"></i> Schedule Session
+                          </a>
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="card border-0 shadow-sm rounded-3 p-5 text-center bg-white">
+          <div class="mb-3 text-muted">
+            <i class="bi bi-inbox fs-1"></i>
+          </div>
+          <h5 class="fw-bold text-dark">No Incoming Requests</h5>
+          <p class="text-secondary small mb-3">
+            You don't have any exchange requests from other students at this time.
+          </p>
+          <div>
+            <a href="{{ url_for('matching.index') }}" class="btn btn-primary btn-sm px-4">
+              <i class="bi bi-search me-1"></i> Explore Recommended Matches
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Outgoing Proposals Tab -->
+    <div class="tab-pane fade {% if active_tab == 'outgoing' %}show active{% endif %}" id="outgoing" role="tabpanel">
+      {% if outgoing %}
+        <div class="row g-3">
+          {% for req in outgoing %}
+            <div class="col-12">
+              <div class="card border-0 shadow-sm rounded-3 overflow-hidden border-start border-4 border-{{ req.status_badge_class }}">
+                <div class="card-body p-4">
+                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="bg-success text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 48px; height: 48px;">
+                        {{ req.receiver.name[:2]|upper }}
+                      </div>
+                      <div>
+                        <h5 class="fw-bold text-dark mb-0">
+                          <a href="{{ url_for('matching.student_detail', user_id=req.receiver.id) }}" class="text-decoration-none text-dark">
+                            {{ req.receiver.name }}
+                          </a>
+                        </h5>
+                        <span class="text-muted small">
+                          <i class="bi bi-mortarboard me-1"></i>{{ req.receiver.college or 'Institution not set' }}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                      <span class="badge bg-{{ req.status_badge_class }} bg-opacity-10 text-{{ req.status_badge_class }} border border-{{ req.status_badge_class }} border-opacity-25 px-3 py-2 text-uppercase fw-semibold" style="font-size: 0.75rem;">
+                        {{ req.status }}
+                      </span>
+                      <span class="text-muted small" title="{{ req.created_at.strftime('%Y-%m-%d %H:%M UTC') }}">
+                        <i class="bi bi-clock me-1"></i>{{ req.created_at.strftime('%b %d, %Y') }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Skills Exchange Grid -->
+                  <div class="row g-2 p-3 bg-light rounded-3 mb-3">
+                    <div class="col-md-6">
+                      <span class="text-muted small d-block mb-1">
+                        <i class="bi bi-mortarboard text-success me-1"></i> You Offer to Teach:
+                      </span>
+                      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 fs-6">
+                        {{ req.offered_skill.name }}
+                      </span>
+                    </div>
+                    <div class="col-md-6">
+                      <span class="text-muted small d-block mb-1">
+                        <i class="bi bi-lightbulb text-primary me-1"></i> You Want to Learn:
+                      </span>
+                      <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 fs-6">
+                        {{ req.requested_skill.name }}
+                      </span>
+                    </div>
+                  </div>
+
+                  {% if req.message %}
+                    <div class="mb-3">
+                      <p class="text-secondary small fst-italic mb-0 bg-white p-2 border rounded-2">
+                        "{{ req.message }}"
+                      </p>
+                    </div>
+                  {% endif %}
+
+                  <!-- Action Buttons -->
+                  <div class="d-flex flex-wrap justify-content-between align-items-center pt-2 border-top gap-2">
+                    <div>
+                      <a href="{{ url_for('exchanges.request_detail', request_id=req.id) }}" class="btn btn-outline-secondary btn-sm px-3">
+                        <i class="bi bi-info-circle me-1"></i> View Details
+                      </a>
+                    </div>
+                    
+                    <div class="d-flex gap-2">
+                      {% if req.is_pending %}
+                        <form method="POST" action="{{ url_for('exchanges.cancel_request', request_id=req.id) }}" class="d-inline">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                          <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('Cancel this exchange proposal?');">
+                            <i class="bi bi-slash-circle me-1"></i> Cancel Proposal
+                          </button>
+                        </form>
+                      {% elif req.is_accepted %}
+                        {% if req.session %}
+                          <a href="{{ url_for('exchanges.session_detail', session_id=req.session.id) }}" class="btn btn-primary btn-sm px-3">
+                            <i class="bi bi-calendar-check me-1"></i> View Session ({{ req.session.status|capitalize }})
+                          </a>
+                        {% else %}
+                          <a href="{{ url_for('exchanges.schedule_session', request_id=req.id) }}" class="btn btn-success btn-sm px-3">
+                            <i class="bi bi-calendar-plus me-1"></i> Schedule Session
+                          </a>
+                        {% endif %}
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="card border-0 shadow-sm rounded-3 p-5 text-center bg-white">
+          <div class="mb-3 text-muted">
+            <i class="bi bi-send fs-1"></i>
+          </div>
+          <h5 class="fw-bold text-dark">No Outgoing Proposals</h5>
+          <p class="text-secondary small mb-3">
+            You haven't sent any skill exchange requests yet. Find a student who teaches what you want to learn!
+          </p>
+          <div>
+            <a href="{{ url_for('matching.index') }}" class="btn btn-primary btn-sm px-4">
+              <i class="bi bi-search me-1"></i> Find Students to Connect With
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

@@ -1,7 +1,7 @@
 # SkillConnect — UML Use Case Diagram Specification
 **Academic Level:** MCA Semester 1 — Python Mini Project  
 **System Boundary:** `SkillConnect System`  
-**Current Status:** Phase 3 Verified Baseline (Modules 1, 2, and 3 fully implemented and tested)
+**Current Status:** Phase 4 Verified Baseline (Modules 1, 2, 3, and 4 fully implemented and tested)
 
 ---
 
@@ -112,12 +112,12 @@ flowchart LR
 | | View Student Profile | Student | Inspects a peer's skills, bio, and compatibility overview. | **Phase 3 (Implemented & Tested)** |
 | | Discover Compatible Partners | Student | Triggers the rule-based matching engine. | **Phase 3 (Implemented & Tested)** |
 | | Calculate Compatibility Score | Student | *&lt;&lt;include&gt;&gt;* Computes 0–100% score and matched skills. | **Phase 3 (Implemented & Tested)** |
-| **Exchange & Session** | Send Exchange Request | Student | Proposes a skill exchange to another student. | *Phase 4 (Planned)* |
-| | Respond to Request | Student | Accepts or rejects incoming requests. | *Phase 4 (Planned)* |
-| | View Exchange History | Student | Tracks status of sent and received requests. | *Phase 4 (Planned)* |
-| | Schedule Learning Session | Student | *&lt;&lt;extend&gt;&gt;* Schedules accepted exchange meetings. | *Phase 4 (Planned)* |
-| | View Session Details | Student | Reviews meeting link/location and agenda notes. | *Phase 4 (Planned)* |
-| | Complete or Cancel Session | Student | Concludes or aborts scheduled sessions. | *Phase 4 (Planned)* |
+| **Exchange & Session** | Send Exchange Request | Student | Proposes a skill exchange to another student. | **Phase 4 (Implemented & Tested)** |
+| | Respond to Request | Student | Accepts or rejects incoming requests. | **Phase 4 (Implemented & Tested)** |
+| | View Exchange History | Student | Tracks status of incoming and outgoing requests. | **Phase 4 (Implemented & Tested)** |
+| | Schedule Learning Session | Student | *&lt;&lt;extend&gt;&gt;* Schedules accepted exchange meetings. | **Phase 4 (Implemented & Tested)** |
+| | View Session Details | Student | Reviews meeting link/location and agenda notes. | **Phase 4 (Implemented & Tested)** |
+| | Complete or Cancel Session | Student | Concludes, cancels, or reschedules sessions. | **Phase 4 (Implemented & Tested)** |
 | **Rating & Dashboard** | Rate Completed Exchange | Student | *&lt;&lt;extend&gt;&gt;* Evaluates completed sessions (1–5 stars). | *Phase 5 (Planned)* |
 | | Submit Written Feedback | Student | *&lt;&lt;include&gt;&gt;* Submits review comments. | *Phase 5 (Planned)* |
 | | View Dashboard & Analytics | Student | Displays summaries and Chart.js activity charts. | *Phase 5 (Planned)* |

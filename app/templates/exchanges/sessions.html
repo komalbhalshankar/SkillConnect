@@ -1,0 +1,224 @@
+{% extends 'base.html' %}
+
+{% block title %}My Sessions — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Page Header -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+    <div>
+      <h3 class="fw-bold text-dark mb-1">
+        <i class="bi bi-calendar-event text-primary me-2"></i> Learning Sessions
+      </h3>
+      <p class="text-secondary small mb-0">
+        Track your scheduled peer learning meetings, review agendas, and manage session lifecycles.
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <a href="{{ url_for('exchanges.index') }}" class="btn btn-outline-primary btn-sm px-3 shadow-sm">
+        <i class="bi bi-arrow-left-right me-1"></i> Exchange Requests
+      </a>
+      <a href="{{ url_for('matching.index') }}" class="btn btn-primary btn-sm px-3 shadow-sm">
+        <i class="bi bi-search me-1"></i> Find Matches
+      </a>
+    </div>
+  </div>
+
+  <!-- Tabs Navigation -->
+  <ul class="nav nav-pills mb-4 gap-2" id="sessionTabs" role="tablist">
+    <li class="nav-item" role="presentation">
+      <button class="nav-link active rounded-pill px-4 fw-semibold" id="upcoming-tab" data-bs-toggle="pill" data-bs-target="#upcoming" type="button" role="tab">
+        <i class="bi bi-clock me-1"></i> Upcoming Sessions
+        {% if upcoming_sessions %}
+          <span class="badge bg-primary rounded-pill ms-1">{{ upcoming_sessions|length }}</span>
+        {% endif %}
+      </button>
+    </li>
+    <li class="nav-item" role="presentation">
+      <button class="nav-link rounded-pill px-4 fw-semibold" id="past-tab" data-bs-toggle="pill" data-bs-target="#past" type="button" role="tab">
+        <i class="bi bi-check2-all me-1"></i> Past & Historical
+        {% if past_sessions %}
+          <span class="badge bg-secondary rounded-pill ms-1">{{ past_sessions|length }}</span>
+        {% endif %}
+      </button>
+    </li>
+  </ul>
+
+  <!-- Tab Content -->
+  <div class="tab-content" id="sessionTabsContent">
+    
+    <!-- Upcoming Sessions Tab -->
+    <div class="tab-pane fade show active" id="upcoming" role="tabpanel">
+      {% if upcoming_sessions %}
+        <div class="row g-3">
+          {% for sess in upcoming_sessions %}
+            {% set partner = sess.partner(current_user.id) %}
+            <div class="col-12">
+              <div class="card border-0 shadow-sm rounded-3 overflow-hidden border-start border-4 border-primary">
+                <div class="card-body p-4">
+                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-3">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 48px; height: 48px;">
+                        {{ partner.name[:2]|upper }}
+                      </div>
+                      <div>
+                        <div class="d-flex align-items-center gap-2">
+                          <h5 class="fw-bold text-dark mb-0">
+                            <a href="{{ url_for('matching.student_detail', user_id=partner.id) }}" class="text-decoration-none text-dark">
+                              {{ partner.name }}
+                            </a>
+                          </h5>
+                          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 text-uppercase" style="font-size: 0.7rem;">
+                            {{ sess.status }}
+                          </span>
+                        </div>
+                        <span class="text-muted small">
+                          <i class="bi bi-mortarboard me-1"></i>{{ partner.college or 'Institution not set' }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div class="text-md-end">
+                      <div class="fw-bold text-dark">
+                        <i class="bi bi-calendar3 text-primary me-1"></i> {{ sess.formatted_date }}
+                      </div>
+                      <div class="text-secondary small">
+                        <i class="bi bi-clock me-1"></i> {{ sess.formatted_time }} ({{ sess.duration_minutes }} mins)
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Details Grid -->
+                  <div class="row g-2 p-3 bg-light rounded-3 mb-3">
+                    <div class="col-md-4">
+                      <span class="text-muted small d-block mb-1">Learning Mode:</span>
+                      <span class="badge bg-light text-dark border text-capitalize">
+                        <i class="bi bi-laptop me-1"></i>{{ sess.mode.replace('_', ' ') }}
+                      </span>
+                    </div>
+                    <div class="col-md-8">
+                      <span class="text-muted small d-block mb-1">Exchange Focus:</span>
+                      <span class="fw-semibold text-dark small">
+                        {{ sess.request.offered_skill.name }} &harr; {{ sess.request.requested_skill.name }}
+                      </span>
+                    </div>
+                    {% if sess.meeting_details %}
+                      <div class="col-12 mt-2 pt-2 border-top">
+                        <span class="text-muted small d-block mb-1">Location / Video Link:</span>
+                        {% if sess.meeting_details.startswith('http') %}
+                          <a href="{{ sess.meeting_details }}" target="_blank" rel="noopener noreferrer" class="text-primary small text-break">
+                            <i class="bi bi-box-arrow-up-right me-1"></i>{{ sess.meeting_details }}
+                          </a>
+                        {% else %}
+                          <span class="text-dark small"><i class="bi bi-geo-alt me-1"></i>{{ sess.meeting_details }}</span>
+                        {% endif %}
+                      </div>
+                    {% endif %}
+                  </div>
+
+                  <!-- Actions -->
+                  <div class="d-flex flex-wrap justify-content-between align-items-center pt-2 border-top gap-2">
+                    <a href="{{ url_for('exchanges.session_detail', session_id=sess.id) }}" class="btn btn-outline-secondary btn-sm px-3">
+                      <i class="bi bi-info-circle me-1"></i> Session Details
+                    </a>
+
+                    <div class="d-flex gap-2">
+                      <form method="POST" action="{{ url_for('exchanges.cancel_session', session_id=sess.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-outline-danger btn-sm px-3" onclick="return confirm('Cancel this scheduled session?');">
+                          <i class="bi bi-x-circle me-1"></i> Cancel Session
+                        </button>
+                      </form>
+
+                      <form method="POST" action="{{ url_for('exchanges.complete_session', session_id=sess.id) }}" class="d-inline">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-success btn-sm px-3" onclick="return confirm('Mark this learning session as completed?');">
+                          <i class="bi bi-check-circle me-1"></i> Mark Completed
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="card border-0 shadow-sm rounded-3 p-5 text-center bg-white">
+          <div class="mb-3 text-muted">
+            <i class="bi bi-calendar-event fs-1"></i>
+          </div>
+          <h5 class="fw-bold text-dark">No Upcoming Sessions</h5>
+          <p class="text-secondary small mb-3">
+            You don't have any learning meetings scheduled right now. Check your accepted exchange requests to set a date!
+          </p>
+          <div>
+            <a href="{{ url_for('exchanges.index') }}" class="btn btn-primary btn-sm px-4">
+              <i class="bi bi-arrow-left-right me-1"></i> View Exchange Requests
+            </a>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <!-- Past Sessions Tab -->
+    <div class="tab-pane fade" id="past" role="tabpanel">
+      {% if past_sessions %}
+        <div class="row g-3">
+          {% for sess in past_sessions %}
+            {% set partner = sess.partner(current_user.id) %}
+            <div class="col-12">
+              <div class="card border-0 shadow-sm rounded-3 overflow-hidden border-start border-4 border-{{ sess.status_badge_class }}">
+                <div class="card-body p-4">
+                  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-start gap-3 mb-2">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="bg-secondary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold fs-5" style="width: 48px; height: 48px;">
+                        {{ partner.name[:2]|upper }}
+                      </div>
+                      <div>
+                        <div class="d-flex align-items-center gap-2">
+                          <h5 class="fw-bold text-dark mb-0">{{ partner.name }}</h5>
+                          <span class="badge bg-{{ sess.status_badge_class }} bg-opacity-10 text-{{ sess.status_badge_class }} border border-{{ sess.status_badge_class }} border-opacity-25 text-uppercase" style="font-size: 0.7rem;">
+                            {{ sess.status }}
+                          </span>
+                        </div>
+                        <span class="text-muted small">
+                          <i class="bi bi-calendar3 me-1"></i> {{ sess.formatted_date }} at {{ sess.formatted_time }}
+                        </span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <a href="{{ url_for('exchanges.session_detail', session_id=sess.id) }}" class="btn btn-outline-secondary btn-sm px-3">
+                        <i class="bi bi-journal-text me-1"></i> View Summary
+                      </a>
+                    </div>
+                  </div>
+
+                  <div class="p-2 bg-light rounded-2 text-secondary small mt-2">
+                    Exchange: <strong>{{ sess.request.offered_skill.name }}</strong> &harr; <strong>{{ sess.request.requested_skill.name }}</strong>
+                    {% if sess.notes %}
+                      <span class="d-block mt-1 text-muted fst-italic">"{{ sess.notes }}"</span>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div class="card border-0 shadow-sm rounded-3 p-5 text-center bg-white">
+          <div class="mb-3 text-muted">
+            <i class="bi bi-clock-history fs-1"></i>
+          </div>
+          <h5 class="fw-bold text-dark">No Past Sessions Yet</h5>
+          <p class="text-secondary small mb-0">
+            Completed and cancelled sessions will appear here in your learning history.
+          </p>
+        </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

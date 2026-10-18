@@ -212,12 +212,14 @@ Stores post-session peer evaluations and feedback.
 - Safe initialization: Running `flask --app run.py init-db` invokes `db.create_all()` within application context.
 - **Non-Destructive Guarantee:** Existing database files are never dropped, reset, or truncated on startup or initialization.
 
-### 4.2 Phase 3 Implemented & Active Schema
-- Tables active and verified in Phase 3:
+### 4.2 Phase 4 Implemented & Active Schema
+- Tables active and verified in Phase 4:
   1. `users` (Full schema active with authentication, profile fields, and role-based permissions)
   2. `skill_categories` (Predefined categories: Programming, Database, Web Development, Design, Communication, Other)
   3. `skills` (Standardized skills catalogue linked to categories)
-  4. `user_skills` (Active student skill portfolio associations with `skill_type`, `proficiency`, `notes`, and timestamps)
+  4. `user_skills` (Student skill portfolio associations with `skill_type`, `proficiency`, `notes`, and timestamps)
+  5. `exchange_requests` (Bilateral proposals with `sender_id`, `receiver_id`, `offered_skill_id`, `requested_skill_id`, `status`, `message`, and timestamps)
+  6. `exchange_sessions` (Scheduled learning meetings with `request_id`, `scheduled_at`, `duration_minutes`, `mode`, `meeting_details`, `notes`, `status`, and timestamps)
 
 ### 4.3 Custom Skill Addition & Deduplication Strategy
 - When a student adds an unlisted skill using the custom skill name input:
@@ -227,9 +229,16 @@ Stores post-session peer evaluations and feedback.
   4. The `user_skills` association is created with the resolved `skill_id`.
   5. The table-level unique constraint `UNIQUE(user_id, skill_id, skill_type)` permits a student to associate the same skill in both `teach` and `learn` (e.g., teaching foundational concepts while seeking advanced mentorship), but strictly prevents duplicate records under the same skill type.
 
-### 4.4 Safe Schema Upgrade Strategy for Future Phases
-- As development progresses into Phase 4 (ExchangeRequest & ExchangeSession) and Phase 5 (Rating):
-  1. The existing tables (`users`, `skills`, `user_skills`) already define foreign key targets so no breaking changes or data loss will occur.
-  2. Tables are added incrementally via `db.create_all()` (which creates new tables while preserving existing tables and data untouched).
-  3. No existing user or skill data is dropped, reset, or recreated.
+### 4.4 Session Management & Rescheduling Policy
+- **One Session Per Agreement with In-Place Rescheduling:**
+  1. To maintain clean 1-to-1 relational integrity and prevent accidental duplicate sessions, `exchange_sessions.request_id` enforces `UNIQUE(request_id)`.
+  2. A session can only be created after the parent `ExchangeRequest` enters `accepted` status.
+  3. If a session is cancelled, participants can reschedule under the same exchange agreement by updating `scheduled_at`, `duration_minutes`, `mode`, and `meeting_details`, which resets `status` to `'scheduled'`.
+  4. Attempting to schedule a session when an active `scheduled` session already exists is blocked by both service-level logic and the database-level uniqueness constraint.
+
+### 4.5 Safe Schema Upgrade Strategy for Future Phases
+- As development progresses into Phase 5 (Rating):
+  1. The `ratings` table already defines foreign key links to `exchange_sessions` and `users`.
+  2. Tables are verified incrementally via `db.create_all()` without dropping or wiping existing tables or user data.
+
 
