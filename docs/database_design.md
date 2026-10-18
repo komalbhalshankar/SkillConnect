@@ -205,7 +205,21 @@ Stores post-session peer evaluations and feedback.
 
 ---
 
-## 4. Integrity, Deletions & Migrations
-- Foreign key cascading is configured: removing a user cleans up their user skills, pending requests, and personal session associations.
-- Application initialization (`flask init-db`) creates tables idempotently using `db.create_all()`.
-- Seed script (`flask seed-data`) checks for existing records before inserting to guarantee no duplicate data or clobbering of existing accounts.
+## 4. Integrity, Setup & Upgrade Strategy
+
+### 4.1 Initial Setup Mechanism
+- Database engine: SQLite 3 stored locally at `instance/skillconnect.db`.
+- Safe initialization: Running `flask --app run.py init-db` invokes `db.create_all()` within application context.
+- **Non-Destructive Guarantee:** Existing database files are never dropped, reset, or truncated on startup or initialization.
+
+### 4.2 Phase 2 Implemented Schema
+- Tables active in Phase 2:
+  1. `users` (Full schema active with authentication and profile fields)
+  2. `skill_categories` (Established to enforce relational taxonomy)
+  3. `skills` (Established with foreign key to `skill_categories.id`)
+
+### 4.3 Safe Schema Upgrade Strategy for Future Phases
+- As development progresses into Phase 3 (UserSkill), Phase 4 (ExchangeRequest & ExchangeSession), and Phase 5 (Rating):
+  1. The existing `users` table already defines foreign key targets and cascading rules so no breaking changes or data loss will occur on the `users` table.
+  2. Future tables can be added incrementally via `db.create_all()` (which creates new tables while leaving existing tables untouched).
+  3. For production deployments with altering existing columns, Flask-Migrate (Alembic) can be introduced to manage versioned migration scripts without manual SQL edits.

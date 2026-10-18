@@ -2,96 +2,102 @@
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam actorStyle awesome
+skinparam usecaseBackgroundColor #FFFFFF
+skinparam usecaseBorderColor #0284C7
+skinparam usecaseFontName Arial
+skinparam usecaseFontSize 12
+skinparam arrowColor #334155
+skinparam arrowFontColor #0284C7
+skinparam arrowFontSize 10
+skinparam actorBorderColor #1E293B
+skinparam actorBackgroundColor #E2E8F0
+
 left to right direction
 
-actor "Student" as student
-actor "Administrator" as admin
+' ==========================================
+' ACTORS DEFINITION
+' ==========================================
+actor "Student" as student <<Primary Actor>>
+actor "Administrator" as admin <<Secondary Actor>>
 
-rectangle "SkillConnect System" as SkillConnect {
-  package "User Authentication & Profile" {
-    usecase "Register Account" as UC_Register
-    usecase "Log In / Log Out" as UC_Login
-    usecase "View Profile" as UC_ViewProfile
-    usecase "Update Profile" as UC_UpdateProfile
-  }
+' ==========================================
+' SYSTEM BOUNDARY
+' ==========================================
+rectangle "SkillConnect — Student Skill Exchange Platform" as SystemBoundary {
 
-  package "Skill Portfolio Management" {
-    usecase "Add Skill" as UC_AddSkill
-    usecase "Edit Skill" as UC_EditSkill
-    usecase "Remove Skill" as UC_RemoveSkill
-    usecase "Set Skill Type (Teach / Learn)" as UC_SetType
-    usecase "Set Proficiency Level" as UC_SetProficiency
-  }
+  ' --- Module 1: User Authentication & Profile ---
+  usecase "Register Account" as UC_Register
+  usecase "Log In / Log Out" as UC_Login
+  usecase "View & Update Profile" as UC_Profile
 
-  package "Discovery & Matching" {
-    usecase "Search & Filter Students" as UC_Search
-    usecase "View Student Profile" as UC_ViewPeerProfile
-    usecase "Discover Compatible Partners" as UC_Discover
-    usecase "View Compatibility Score & Matched Skills" as UC_ViewScore
-  }
+  ' --- Module 2: Skill Management ---
+  usecase "Manage Skills (Add, Edit, Remove)" as UC_ManageSkills
+  usecase "Specify Skill Type & Proficiency" as UC_SkillTypeProf
 
-  package "Exchange & Session Management" {
-    usecase "Send Exchange Request" as UC_SendRequest
-    usecase "Accept / Reject Request" as UC_RespondRequest
-    usecase "View Exchange Request History" as UC_ViewHistory
-    usecase "Schedule Session" as UC_ScheduleSession
-    usecase "View Session Details" as UC_ViewSession
-    usecase "Mark Session Completed / Cancel" as UC_CompleteCancelSession
-  }
+  ' --- Module 3: Skill Discovery & Matching ---
+  usecase "Search & Filter Students" as UC_Search
+  usecase "View Student Profile" as UC_ViewProfile
+  usecase "Discover Compatible Partners" as UC_Discover
+  usecase "Calculate Compatibility Score & Matched Skills" as UC_CalculateScore
 
-  package "Rating, Feedback & Dashboard" {
-    usecase "Rate Completed Exchange" as UC_RateExchange
-    usecase "Submit Written Feedback" as UC_SubmitFeedback
-    usecase "View Student Dashboard & Summaries" as UC_ViewDashboard
-  }
+  ' --- Module 4: Skill Exchange & Session Management ---
+  usecase "Send Exchange Request" as UC_SendRequest
+  usecase "Respond to Request (Accept / Reject)" as UC_RespondRequest
+  usecase "View Exchange History" as UC_History
+  usecase "Schedule Learning Session" as UC_Schedule
+  usecase "View Session Details" as UC_SessionDetails
+  usecase "Complete or Cancel Session" as UC_CompleteSession
 
-  package "Administration" {
-    usecase "Admin Log In" as UC_AdminLogin
-    usecase "Access Protected Admin Portal" as UC_AdminPortal
-    usecase "View Basic Platform Statistics" as UC_AdminStats
-    usecase "Manage Skill Categories & Skills" as UC_ManageCategories
-  }
+  ' --- Module 5: Rating, Feedback & Dashboard ---
+  usecase "Rate Completed Exchange" as UC_Rate
+  usecase "Submit Written Feedback" as UC_Feedback
+  usecase "View Dashboard & Activity Summaries" as UC_Dashboard
+
+  ' --- Administration ---
+  usecase "Log In as Administrator" as UC_AdminLogin
+  usecase "Access Protected Admin Portal" as UC_AdminPortal
+  usecase "View Platform Statistics" as UC_AdminStats
+  usecase "Manage Skill Categories & Skills" as UC_ManageTaxonomy
 }
 
-' Student Relationships
+' ==========================================
+' STUDENT ASSOCIATIONS
+' ==========================================
 student --> UC_Register
 student --> UC_Login
-student --> UC_ViewProfile
-student --> UC_UpdateProfile
-
-student --> UC_AddSkill
-student --> UC_EditSkill
-student --> UC_RemoveSkill
-UC_AddSkill ..> UC_SetType : <<include>>
-UC_AddSkill ..> UC_SetProficiency : <<include>>
-UC_EditSkill ..> UC_SetProficiency : <<extend>>
-
+student --> UC_Profile
+student --> UC_ManageSkills
 student --> UC_Search
-student --> UC_ViewPeerProfile
+student --> UC_ViewProfile
 student --> UC_Discover
-UC_Discover ..> UC_ViewScore : <<include>>
-
 student --> UC_SendRequest
 student --> UC_RespondRequest
-student --> UC_ViewHistory
-student --> UC_ScheduleSession
-student --> UC_ViewSession
-student --> UC_CompleteCancelSession
-UC_ScheduleSession ..> UC_RespondRequest : <<extend>> (upon Acceptance)
+student --> UC_History
+student --> UC_Schedule
+student --> UC_SessionDetails
+student --> UC_CompleteSession
+student --> UC_Rate
+student --> UC_Dashboard
 
-student --> UC_RateExchange
-student --> UC_ViewDashboard
-UC_RateExchange ..> UC_SubmitFeedback : <<include>>
-UC_RateExchange ..> UC_CompleteCancelSession : <<extend>> (only for Completed)
+' ==========================================
+' INCLUDE & EXTEND RELATIONSHIPS
+' ==========================================
+UC_ManageSkills ..> UC_SkillTypeProf : <<include>>
+UC_Discover ..> UC_CalculateScore : <<include>>
+UC_Rate ..> UC_Feedback : <<include>>
+UC_Schedule ..> UC_RespondRequest : <<extend>>
+UC_Rate ..> UC_CompleteSession : <<extend>>
 
-' Administrator Relationships
+' ==========================================
+' ADMINISTRATOR ASSOCIATIONS
+' ==========================================
 admin --> UC_AdminLogin
 admin --> UC_AdminPortal
 admin --> UC_AdminStats
-admin --> UC_ManageCategories
+admin --> UC_ManageTaxonomy
 
 UC_AdminPortal ..> UC_AdminLogin : <<include>>
 UC_AdminStats ..> UC_AdminPortal : <<include>>
-UC_ManageCategories ..> UC_AdminPortal : <<include>>
+UC_ManageTaxonomy ..> UC_AdminPortal : <<include>>
 
 @enduml

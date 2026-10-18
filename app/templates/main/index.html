@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}SkillConnect — Learn & Teach Skills with Fellow Students{% endblock %}
+
+{% block content %}
+<div class="hero-section text-center rounded-3 mb-5 mx-3 mx-lg-0 py-5">
+  <div class="container py-3">
+    <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-3 py-2 rounded-pill fw-semibold mb-3">
+      <i class="bi bi-mortarboard-fill me-1"></i> Peer-to-Peer Student Skill Barter
+    </span>
+    <h1 class="display-4 fw-bold text-dark mb-3">
+      Exchange Skills. Learn Together. Grow Faster.
+    </h1>
+    <p class="lead text-secondary mx-auto mb-4" style="max-width: 680px;">
+      SkillConnect is a collaborative platform designed for college students to teach skills they have mastered and learn skills they desire—entirely without monetary barriers.
+    </p>
+    <div class="d-flex justify-content-center gap-3">
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-lg shadow-sm">
+        <i class="bi bi-person-plus-fill me-1"></i> Join SkillConnect
+      </a>
+      <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary btn-lg">
+        <i class="bi bi-box-arrow-in-right me-1"></i> Student Sign In
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="container mb-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">How SkillConnect Works</h2>
+    <p class="text-muted">A structured, reciprocal approach to peer learning</p>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-md-3">
+      <div class="card h-100 p-3 text-center border-0 shadow-sm bg-white">
+        <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
+          <i class="bi bi-person-badge text-primary fs-4"></i>
+        </div>
+        <h5 class="fw-bold">1. Build Profile</h5>
+        <p class="text-muted small">
+          Register with your college details, availability, and academic learning interests.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 p-3 text-center border-0 shadow-sm bg-white">
+        <div class="rounded-circle bg-success bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
+          <i class="bi bi-collection-fill text-success fs-4"></i>
+        </div>
+        <h5 class="fw-bold">2. Declare Skills</h5>
+        <p class="text-muted small">
+          Specify what you can Teach and what you wish to Learn, along with your proficiency level.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 p-3 text-center border-0 shadow-sm bg-white">
+        <div class="rounded-circle bg-info bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
+          <i class="bi bi-shuffle text-info fs-4"></i>
+        </div>
+        <h5 class="fw-bold">3. Match &amp; Exchange</h5>
+        <p class="text-muted small">
+          Discover compatible partners using our two-way deterministic matching engine.
+        </p>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card h-100 p-3 text-center border-0 shadow-sm bg-white">
+        <div class="rounded-circle bg-warning bg-opacity-10 d-inline-flex align-items-center justify-content-center mx-auto mb-3" style="width: 56px; height: 56px;">
+          <i class="bi bi-star-half text-warning fs-4"></i>
+        </div>
+        <h5 class="fw-bold">4. Session &amp; Rate</h5>
+        <p class="text-muted small">
+          Schedule learning sessions, complete exchanges, and build a verified reputation.
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mb-5">
+  <div class="card border-0 shadow-sm p-4 bg-light">
+    <div class="row align-items-center">
+      <div class="col-lg-8">
+        <h4 class="fw-bold mb-2">Ready to expand your skillset?</h4>
+        <p class="text-secondary mb-0">
+          Create your student account today to join your college peers in reciprocal skill exchanges.
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary px-4">
+          Register Free Account
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

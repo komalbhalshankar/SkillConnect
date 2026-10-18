@@ -1,172 +1,126 @@
 # SkillConnect — UML Use Case Diagram Specification
-**Version:** 1.0  
-**Project:** SkillConnect — Student Skill Exchange Platform  
-**System Boundary:** `SkillConnect`
+**Academic Level:** MCA Semester 1 — Python Mini Project  
+**System Boundary:** `SkillConnect System`  
 
 ---
 
 ## 1. Overview
-The **SkillConnect UML Use Case Diagram** models the functional interactions between external actors and the SkillConnect application boundary. The diagram captures all user-facing requirements across the five core application modules and the administration tier.
+This UML Use Case Diagram models the functional interactions between the system actors and the **SkillConnect** platform. It uses clean, standard UML notation without unnecessary numbering prefixes.
 
-### Visual Diagram
-A rendered, vector-quality SVG diagram is available at [use_case_diagram.svg](use_case_diagram.svg).  
-The editable PlantUML source is stored at [use_case_diagram.puml](use_case_diagram.puml).  
-The editable Mermaid source is stored at [use_case_diagram.mmd](use_case_diagram.mmd).
+- **Visual Vector Diagram:** [use_case_diagram.svg](use_case_diagram.svg)
+- **PlantUML Source:** [use_case_diagram.puml](use_case_diagram.puml)
+- **Mermaid Source:** [use_case_diagram.mmd](use_case_diagram.mmd)
 
 ```mermaid
 flowchart LR
     %% Actors
-    Student["fa:fa-user-graduate Student"]
-    Admin["fa:fa-user-shield Administrator"]
+    Student["fa:fa-user-graduate Student<br/>&lt;&lt;Primary Actor&gt;&gt;"]
+    Admin["fa:fa-user-shield Administrator<br/>&lt;&lt;Secondary Actor&gt;&gt;"]
 
     subgraph SkillConnect ["System Boundary: SkillConnect Platform"]
-        subgraph ModAuth ["Module 1: Authentication & Profile"]
-            UC_Reg(["Register"])
-            UC_Auth(["Log In / Log Out"])
-            UC_Prof(["View & Update Profile"])
-        end
+        %% Module 1
+        UC_Reg(["Register Account"])
+        UC_Auth(["Log In / Log Out"])
+        UC_Prof(["View & Update Profile"])
 
-        subgraph ModSkills ["Module 2: Skill Management"]
-            UC_AddSkill(["Add Skill"])
-            UC_ManageSkill(["Edit / Remove Skill"])
-            UC_SetType(["Set Skill Type: Teach / Learn"])
-            UC_SetProf(["Set Proficiency Level"])
-        end
+        %% Module 2
+        UC_ManageSkills(["Manage Skills (Add, Edit, Remove)"])
+        UC_SkillDetails(["Specify Skill Type & Proficiency"])
 
-        subgraph ModMatch ["Module 3: Discovery & Matching"]
-            UC_Search(["Search & Filter Students"])
-            UC_PeerProf(["View Student Profile"])
-            UC_Discover(["Discover Compatible Partners"])
-            UC_ViewScore(["View Compatibility Score & Matched Skills"])
-        end
+        %% Module 3
+        UC_Search(["Search & Filter Students"])
+        UC_ViewProfile(["View Student Profile"])
+        UC_Discover(["Discover Compatible Partners"])
+        UC_CalculateScore(["Calculate Compatibility Score & Matched Skills"])
 
-        subgraph ModExch ["Module 4: Exchange & Session"]
-            UC_SendReq(["Send Exchange Request"])
-            UC_RespReq(["Accept / Reject Incoming Request"])
-            UC_HistReq(["View Exchange Request History"])
-            UC_SchedSess(["Schedule Session"])
-            UC_ViewSess(["View Session Details"])
-            UC_CompCancSess(["Mark Session Completed / Cancel"])
-        end
+        %% Module 4
+        UC_SendRequest(["Send Exchange Request"])
+        UC_RespondRequest(["Respond to Request (Accept / Reject)"])
+        UC_History(["View Exchange History"])
+        UC_Schedule(["Schedule Learning Session"])
+        UC_SessionDetails(["View Session Details"])
+        UC_CompleteSession(["Complete or Cancel Session"])
 
-        subgraph ModDash ["Module 5: Rating, Feedback & Dashboard"]
-            UC_Rate(["Rate Completed Exchange"])
-            UC_Feedback(["Submit Written Feedback"])
-            UC_Dash(["View Dashboard & Activity Summaries"])
-        end
+        %% Module 5
+        UC_Rate(["Rate Completed Exchange"])
+        UC_Feedback(["Submit Written Feedback"])
+        UC_Dashboard(["View Dashboard & Activity Summaries"])
 
-        subgraph ModAdmin ["Administration"]
-            UC_AdminAuth(["Log In with Admin Account"])
-            UC_AdminPortal(["Access Protected Admin Area"])
-            UC_AdminStats(["View Platform Statistics"])
-            UC_AdminCats(["Manage Skill Categories & Skills"])
-        end
+        %% Administration
+        UC_AdminLogin(["Log In as Administrator"])
+        UC_AdminPortal(["Access Protected Admin Portal"])
+        UC_AdminStats(["View Platform Statistics"])
+        UC_ManageTaxonomy(["Manage Skill Categories & Skills"])
     end
 
     %% Student Connections
     Student --> UC_Reg
     Student --> UC_Auth
     Student --> UC_Prof
-
-    Student --> UC_AddSkill
-    Student --> UC_ManageSkill
-    UC_AddSkill -.->|<<include>>| UC_SetType
-    UC_AddSkill -.->|<<include>>| UC_SetProf
-
+    Student --> UC_ManageSkills
     Student --> UC_Search
-    Student --> UC_PeerProf
+    Student --> UC_ViewProfile
     Student --> UC_Discover
-    UC_Discover -.->|<<include>>| UC_ViewScore
-
-    Student --> UC_SendReq
-    Student --> UC_RespReq
-    Student --> UC_HistReq
-    Student --> UC_SchedSess
-    Student --> UC_ViewSess
-    Student --> UC_CompCancSess
-
+    Student --> UC_SendRequest
+    Student --> UC_RespondRequest
+    Student --> UC_History
+    Student --> UC_Schedule
+    Student --> UC_SessionDetails
+    Student --> UC_CompleteSession
     Student --> UC_Rate
-    UC_Rate -.->|<<include>>| UC_Feedback
-    UC_Rate -.->|<<extend>>| UC_CompCancSess
-    Student --> UC_Dash
+    Student --> UC_Dashboard
+
+    %% Include / Extend Connections
+    UC_ManageSkills -.->|&lt;&lt;include&gt;&gt;| UC_SkillDetails
+    UC_Discover -.->|&lt;&lt;include&gt;&gt;| UC_CalculateScore
+    UC_Rate -.->|&lt;&lt;include&gt;&gt;| UC_Feedback
+    UC_Schedule -.->|&lt;&lt;extend&gt;&gt;| UC_RespondRequest
+    UC_Rate -.->|&lt;&lt;extend&gt;&gt;| UC_CompleteSession
 
     %% Admin Connections
-    Admin --> UC_AdminAuth
+    Admin --> UC_AdminLogin
     Admin --> UC_AdminPortal
     Admin --> UC_AdminStats
-    Admin --> UC_AdminCats
-    UC_AdminPortal -.->|<<include>>| UC_AdminAuth
+    Admin --> UC_ManageTaxonomy
+    UC_AdminPortal -.->|&lt;&lt;include&gt;&gt;| UC_AdminLogin
+    UC_AdminStats -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal
+    UC_ManageTaxonomy -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal
 ```
 
 ---
 
-## 2. Actors & Primary Roles
+## 2. Actors Description
 
-### 2.1 Student Actor
-- **Description:** A verified student enrolled in an academic institution who teaches acquired skills and learns desired skills from peers.
-- **Goals:** Find complementary skill partners, negotiate bilateral learning exchanges, attend scheduled sessions, build peer reputation, and track personal development.
-
-### 2.2 Administrator Actor
-- **Description:** An authenticated administrative staff member responsible for platform oversight, statistics monitoring, and skill taxonomy maintenance.
-- **Goals:** Ensure platform integrity, monitor engagement metrics, and organize skill categories.
+1. **Student Actor (Primary Actor):**
+   The registered peer learner/teacher. Every student can declare skills to teach and skills to learn under a unified profile, search peers, discover bilateral matches, send requests, schedule sessions, and rate peers.
+2. **Administrator Actor (Secondary Actor):**
+   The college department coordinator or system moderator. Responsible for role-protected oversight, platform usage statistics, and curating official skill categories and skills.
 
 ---
 
-## 3. Detailed Use Case Specifications by Module
+## 3. Use Case Descriptions & Implementation Status
 
-### Module 1: User Authentication & Profile
-| Use Case ID | Name | Actor | Description |
-| :--- | :--- | :--- | :--- |
-| **UC-101** | Register | Student | Student enters personal details (name, email, password, college) to create a new platform account. |
-| **UC-102** | Log In & Log Out | Student / Admin | Verifies hashed credentials and establishes an authenticated session via Flask-Login. |
-| **UC-103** | View & Update Profile | Student | Allows the student to manage bio, academic institution, and schedule availability. |
-
-### Module 2: Skill Management
-| Use Case ID | Name | Actor | Description |
-| :--- | :--- | :--- | :--- |
-| **UC-201** | Add Skill | Student | Associates a standardized skill with the student's profile. Includes setting type and proficiency. |
-| **UC-202** | Edit / Remove Skill | Student | Updates proficiency/notes or deletes an existing skill association owned by the student. |
-| **UC-203** | Set Teach / Learn Type | Student | *<<include>>* Defines whether the skill is being offered (`Teach`) or requested (`Learn`). |
-| **UC-204** | Set Proficiency Level | Student | *<<include>>* Declares expertise (`Beginner`, `Intermediate`, `Advanced`). |
-
-### Module 3: Skill Discovery & Matching
-| Use Case ID | Name | Actor | Description |
-| :--- | :--- | :--- | :--- |
-| **UC-301** | Search & Filter Students | Student | Searches peers by skill name, category, and proficiency level. |
-| **UC-302** | View Student Profile | Student | Views public academic and skill information of a prospective peer. |
-| **UC-303** | Discover Compatible Partners | Student | Triggers the deterministic two-way matching engine to locate bilateral matches. |
-| **UC-304** | View Compatibility Score & Matched Skills | Student | *<<include>>* Displays an interpretable 0–100% score and granular matched skills breakdown. |
-
-### Module 4: Skill Exchange & Session
-| Use Case ID | Name | Actor | Description |
-| :--- | :--- | :--- | :--- |
-| **UC-401** | Send Exchange Request | Student | Proposes a reciprocal exchange specifying offered skill, requested skill, and a message. |
-| **UC-402** | Accept / Reject Request | Student | Recipient responds to a pending proposal. Acceptance transitions status to `Accepted`. |
-| **UC-403** | View Request History | Student | Inspects outgoing and incoming requests categorized by status. |
-| **UC-404** | Schedule Session | Student | *<<extend>>* Available once a request is `Accepted`. Sets date, time, mode, and location/link. |
-| **UC-405** | View Session Details | Student | Reviews upcoming or historical meeting details and notes. |
-| **UC-406** | Mark Session Completed / Cancel | Student | Eligible participants mark finished sessions as `Completed` or abort with `Cancelled`. |
-
-### Module 5: Rating, Feedback & Dashboard
-| Use Case ID | Name | Actor | Description |
-| :--- | :--- | :--- | :--- |
-| **UC-501** | Rate Completed Exchange | Student | *<<extend>>* Triggers only after a session is marked `Completed`. Submits 1–5 star rating. |
-| **UC-502** | Submit Written Feedback | Student | *<<include>>* Optional written testimonial alongside the numeric star rating. |
-| **UC-503** | View Dashboard & Summaries | Student | Visualizes total skills, matches, upcoming sessions, and Chart.js activity charts. |
-
-### Administration
-| Use Case ID | Name | Actor | Description |
-| :--- | :--- | :--- | :--- |
-| **UC-601** | Admin Authentication | Administrator | Authenticates with administrative credentials to access `/admin`. |
-| **UC-602** | Access Protected Admin Area | Administrator | *<<include>>* Guarded by role-based authorization decorator. |
-| **UC-603** | View Basic Platform Statistics | Administrator | Summarizes user totals, exchange count, session completions, and platform satisfaction. |
-| **UC-604** | Manage Skill Categories & Skills | Administrator | Creates, edits, and audits official platform skill taxonomy. |
-
----
-
-## 4. Key Relationship Justifications
-1. **`<<include>>` (Add Skill $\rightarrow$ Set Type & Set Proficiency):** Adding a skill is not functionally complete without defining whether it is for teaching or learning and establishing proficiency.
-2. **`<<include>>` (Discover Compatible Partners $\rightarrow$ View Compatibility Score & Matched Skills):** Partner recommendation is incomplete without displaying the deterministic score and underlying matching skills.
-3. **`<<extend>>` (Schedule Session $\rightarrow$ Accept Request):** A session cannot be scheduled arbitrarily; scheduling extends the acceptance of a bilateral exchange proposal.
-4. **`<<extend>>` (Rate Completed Exchange $\rightarrow$ Mark Session Completed):** Rating is conditionally enabled only after a session transitions into the `Completed` state.
-5. **`<<include>>` (Rate Completed Exchange $\rightarrow$ Submit Written Feedback):** Qualitative review feedback is integrated directly into the exchange evaluation workflow.
+| Module | Use Case Name | Actor | Description | Target Phase & Status |
+| :--- | :--- | :--- | :--- | :---: |
+| **Authentication & Profile** | Register Account | Student | Creates account with name, email, password, and college. | **Phase 2 (Implemented & Tested)** |
+| | Log In / Log Out | Student / Admin | Authenticates session via Flask-Login. | **Phase 2 (Implemented & Tested)** |
+| | View & Update Profile | Student | Manages bio, college, and availability. | **Phase 2 (Implemented & Tested)** |
+| **Skill Management** | Manage Skills | Student | Adds, edits, or deletes skills in personal portfolio. | *Phase 3 (Planned)* |
+| | Specify Skill Type & Proficiency | Student | *&lt;&lt;include&gt;&gt;* Defines Teach/Learn intent and level. | *Phase 3 (Planned)* |
+| **Discovery & Matching** | Search & Filter Students | Student | Searches peers by name, category, or proficiency. | *Phase 3 (Planned)* |
+| | View Student Profile | Student | Inspects a peer's skills, bio, and reviews. | *Phase 3 (Planned)* |
+| | Discover Compatible Partners | Student | Triggers the rule-based matching engine. | *Phase 3 (Planned)* |
+| | Calculate Compatibility Score | Student | *&lt;&lt;include&gt;&gt;* Computes 0–100% score and matched skills. | *Phase 3 (Planned)* |
+| **Exchange & Session** | Send Exchange Request | Student | Proposes a skill exchange to another student. | *Phase 4 (Planned)* |
+| | Respond to Request | Student | Accepts or rejects incoming requests. | *Phase 4 (Planned)* |
+| | View Exchange History | Student | Tracks status of sent and received requests. | *Phase 4 (Planned)* |
+| | Schedule Learning Session | Student | *&lt;&lt;extend&gt;&gt;* Schedules accepted exchange meetings. | *Phase 4 (Planned)* |
+| | View Session Details | Student | Reviews meeting link/location and agenda notes. | *Phase 4 (Planned)* |
+| | Complete or Cancel Session | Student | Concludes or aborts scheduled sessions. | *Phase 4 (Planned)* |
+| **Rating & Dashboard** | Rate Completed Exchange | Student | *&lt;&lt;extend&gt;&gt;* Evaluates completed sessions (1–5 stars). | *Phase 5 (Planned)* |
+| | Submit Written Feedback | Student | *&lt;&lt;include&gt;&gt;* Submits review comments. | *Phase 5 (Planned)* |
+| | View Dashboard & Analytics | Student | Displays summaries and Chart.js activity charts. | *Phase 5 (Planned)* |
+| **Administration** | Log In as Administrator | Admin | Authenticates as admin. | **Phase 2 (Implemented & Tested)** |
+| | Access Admin Portal | Admin | Role-protected admin dashboard. | **Phase 2 (Implemented & Tested)** |
+| | View Platform Statistics | Admin | Reviews platform-wide usage metrics. | *Phase 5 (Planned)* |
+| | Manage Categories & Skills | Admin | Curates official categories and skills taxonomy. | *Phase 3 (Planned)* |

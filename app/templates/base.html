@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}SkillConnect — Student Skill Exchange Platform{% endblock %}</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+  
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  <!-- Navigation Header -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom sticky-top py-2">
+    <div class="container">
+      <a class="navbar-brand d-flex align-items-center gap-2" href="{{ url_for('main.index') }}">
+        <i class="bi bi-arrow-left-right text-primary fs-4"></i>
+        <span>SkillConnect</span>
+      </a>
+      
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto">
+          {% if current_user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'main.dashboard' %}active{% endif %}" href="{{ url_for('main.dashboard') }}">
+                <i class="bi bi-speedometer2 me-1"></i> Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'main.profile' %}active{% endif %}" href="{{ url_for('main.profile') }}">
+                <i class="bi bi-person-circle me-1"></i> My Profile
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}">
+                <i class="bi bi-house-door me-1"></i> Home
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+        
+        <ul class="navbar-nav ms-auto align-items-lg-center gap-2">
+          {% if current_user.is_authenticated %}
+            <li class="nav-item d-flex align-items-center me-2">
+              <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 badge-role me-2">
+                {{ current_user.role | capitalize }}
+              </span>
+              <span class="text-secondary small fw-medium">
+                {{ current_user.name }}
+              </span>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-outline-danger btn-sm px-3" href="{{ url_for('auth.logout') }}">
+                <i class="bi bi-box-arrow-right me-1"></i> Logout
+              </a>
+            </li>
+          {% else %}
+            <li class="nav-item">
+              <a class="btn btn-outline-primary btn-sm px-3" href="{{ url_for('auth.login') }}">
+                <i class="bi bi-box-arrow-in-right me-1"></i> Sign In
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="btn btn-primary btn-sm px-3 text-white" href="{{ url_for('auth.register') }}">
+                <i class="bi bi-person-plus me-1"></i> Register
+              </a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Flash Notification Messages -->
+  <div class="container mt-3">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category if category != 'message' else 'info' }} alert-dismissible fade show shadow-sm" role="alert">
+            <div class="d-flex align-items-center">
+              {% if category == 'success' %}
+                <i class="bi bi-check-circle-fill me-2 fs-5"></i>
+              {% elif category == 'danger' %}
+                <i class="bi bi-exclamation-triangle-fill me-2 fs-5"></i>
+              {% elif category == 'warning' %}
+                <i class="bi bi-exclamation-circle-fill me-2 fs-5"></i>
+              {% else %}
+                <i class="bi bi-info-circle-fill me-2 fs-5"></i>
+              {% endif %}
+              <div>{{ message }}</div>
+            </div>
+            <button type="button" class="btn-close" data-bs-toggle="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+
+  <!-- Main View Content -->
+  <main class="py-4">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="py-4 mt-auto">
+    <div class="container text-center text-muted small">
+      <div class="mb-1">
+        <strong>SkillConnect</strong> — Student Skill Exchange Platform (Version 1.0)
+      </div>
+      <div>
+        MCA Semester 1 • Python Mini Project • Built with Flask &amp; SQLite
+      </div>
+    </div>
+  </footer>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

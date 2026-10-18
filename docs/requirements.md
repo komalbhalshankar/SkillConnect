@@ -35,16 +35,30 @@ The initial Version 1.0 release is structured into five cohesive modules:
 
 ---
 
-## 3. Functional Requirements by Module
+## 3. Implementation Status Matrix (By Phase)
+
+| Module | Core Features | Target Phase | Implementation Status | Test Coverage |
+| :--- | :--- | :---: | :---: | :---: |
+| **Module 1: User Auth & Profile** | Registration, Login, Logout, RBAC, Profile View/Edit | Phase 2 | **Implemented & Verified** | 100% (Unit & Integration) |
+| **Database Foundation** | SQLite schema, User, SkillCategory, Skill models | Phase 2 | **Implemented & Verified** | 100% (Model constraints & CLI) |
+| **Module 2: Skill Management** | Add/Edit/Delete Teach & Learn Skills, Taxonomy | Phase 3 | *Planned (Models established)* | Scheduled for Phase 3 |
+| **Module 3: Discovery & Matching** | Deterministic two-way matching engine, Directory | Phase 3 | *Planned* | Scheduled for Phase 3 |
+| **Module 4: Exchange & Session** | Exchange proposals, State machine, Scheduling | Phase 4 | *Planned* | Scheduled for Phase 4 |
+| **Module 5: Rating & Dashboard** | Post-session reviews, Star ratings, Chart.js feeds | Phase 5 | *Planned* | Scheduled for Phase 5 |
+| **Administration** | Safe CLI admin creation (`create-admin`), `@admin_required` | Phase 2 | **Implemented & Verified** | 100% (CLI & RBAC) |
+
+---
+
+## 4. Functional Requirements by Module
 
 ### Module 1: User Authentication and Profile
-- **FR-1.1 Student Registration:** Students register with Name, Email, Password, College, Bio, and Availability schedule.
-- **FR-1.2 Unique Email Verification:** System validates email format and enforces strict database uniqueness.
-- **FR-1.3 Password Security:** Passwords must be hashed using `werkzeug.security.generate_password_hash` with secure salting. Plaintext passwords must never be stored or logged.
-- **FR-1.4 Session Management:** Session authentication powered by `Flask-Login` with `@login_required` route decorators.
-- **FR-1.5 Role-Based Access Control (RBAC):** Distinct roles (`student`, `admin`) enforced on both UI and backend controller endpoints.
-- **FR-1.6 Profile Management:** Students can view their profile and update their bio, college, and availability schedule at any time.
-- **FR-1.7 Safe Validation & Error Messaging:** Server-side validation with user-friendly flash messages for invalid inputs.
+- **FR-1.1 Student Registration:** Students register with Name, Email, Password, College, Bio, and Availability schedule. *(Status: Implemented & Tested)*
+- **FR-1.2 Unique Email Verification:** System validates email format and enforces strict database uniqueness. *(Status: Implemented & Tested)*
+- **FR-1.3 Password Security:** Passwords must be hashed using `werkzeug.security.generate_password_hash` with secure salting. Plaintext passwords must never be stored or logged. *(Status: Implemented & Tested)*
+- **FR-1.4 Session Management:** Session authentication powered by `Flask-Login` with `@login_required` route decorators. *(Status: Implemented & Tested)*
+- **FR-1.5 Role-Based Access Control (RBAC):** Distinct roles (`student`, `admin`) enforced on both UI and backend controller endpoints. *(Status: Implemented & Tested)*
+- **FR-1.6 Profile Management:** Students can view their profile and update their bio, college, and availability schedule at any time. *(Status: Implemented & Tested)*
+- **FR-1.7 Safe Validation & Error Messaging:** Server-side validation with user-friendly flash messages for invalid inputs. *(Status: Implemented & Tested)*
 
 ### Module 2: Skill Management
 - **FR-2.1 Skill Organization:** Skills belong to standardized categories (e.g., Programming & Tech, Design & Creative, Communication & Languages, Academics & Science, Business & Marketing).

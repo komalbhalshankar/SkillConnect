@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}My Student Profile — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Breadcrumb / Back Link -->
+      <div class="mb-3">
+        <a href="{{ url_for('main.dashboard') }}" class="text-decoration-none text-muted small">
+          <i class="bi bi-arrow-left me-1"></i> Back to Dashboard
+        </a>
+      </div>
+
+      <div class="card border-0 shadow-sm mb-4">
+        <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-2">
+            <i class="bi bi-person-circle text-primary fs-5"></i>
+            <h5 class="fw-bold mb-0">Student Profile</h5>
+          </div>
+          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 badge-role">
+            {{ current_user.role | capitalize }}
+          </span>
+        </div>
+
+        <div class="card-body p-4">
+          <!-- Read-Only Account Details -->
+          <div class="alert alert-light border d-flex justify-content-between align-items-center p-3 mb-4">
+            <div>
+              <div class="small text-muted">Registered Email Address (Login ID)</div>
+              <div class="fw-bold text-dark">{{ current_user.email }}</div>
+            </div>
+            <div class="text-end text-muted small">
+              <i class="bi bi-shield-check text-success me-1"></i> Verified Account
+            </div>
+          </div>
+
+          <!-- Edit Profile Form -->
+          <form method="POST" action="{{ url_for('main.profile') }}" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+              <label for="{{ form.name.id }}" class="form-label fw-medium">{{ form.name.label.text }} <span class="text-danger">*</span></label>
+              {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="Full name") }}
+              {% for error in form.name.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.college.id }}" class="form-label fw-medium">{{ form.college.label.text }}</label>
+              {{ form.college(class="form-control" + (" is-invalid" if form.college.errors else ""), placeholder="College or University department") }}
+              {% for error in form.college.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.availability.id }}" class="form-label fw-medium">{{ form.availability.label.text }}</label>
+              {{ form.availability(class="form-control" + (" is-invalid" if form.availability.errors else ""), placeholder="e.g. Weekday evenings, Saturday mornings") }}
+              {% for error in form.availability.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+              <div class="form-text small">Indicate when you are generally free for peer learning exchanges.</div>
+            </div>
+
+            <div class="mb-4">
+              <label for="{{ form.bio.id }}" class="form-label fw-medium">{{ form.bio.label.text }}</label>
+              {{ form.bio(class="form-control" + (" is-invalid" if form.bio.errors else ""), rows=4, placeholder="Introduce yourself, your academic interests, and what motivates you to share or learn skills.") }}
+              {% for error in form.bio.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="d-flex justify-content-end gap-2">
+              <a href="{{ url_for('main.dashboard') }}" class="btn btn-outline-secondary px-3">
+                Cancel
+              </a>
+              {{ form.submit(class="btn btn-primary px-4 text-white fw-medium") }}
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

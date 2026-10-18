@@ -1,82 +1,73 @@
 flowchart LR
     %% Actors
-    Student["fa:fa-user-graduate Student"]
-    Admin["fa:fa-user-shield Administrator"]
+    Student["fa:fa-user-graduate Student<br/>&lt;&lt;Primary Actor&gt;&gt;"]
+    Admin["fa:fa-user-shield Administrator<br/>&lt;&lt;Secondary Actor&gt;&gt;"]
 
     subgraph SkillConnect ["System Boundary: SkillConnect Platform"]
-        subgraph ModAuth ["Module 1: Authentication & Profile"]
-            UC_Reg(["Register"])
-            UC_Auth(["Log In / Log Out"])
-            UC_Prof(["View & Update Profile"])
-        end
+        %% Module 1
+        UC_Reg(["Register Account"])
+        UC_Auth(["Log In / Log Out"])
+        UC_Prof(["View & Update Profile"])
 
-        subgraph ModSkills ["Module 2: Skill Management"]
-            UC_AddSkill(["Add Skill"])
-            UC_ManageSkill(["Edit / Remove Skill"])
-            UC_SetType(["Set Skill Type: Teach / Learn"])
-            UC_SetProf(["Set Proficiency Level"])
-        end
+        %% Module 2
+        UC_ManageSkills(["Manage Skills (Add, Edit, Remove)"])
+        UC_SkillDetails(["Specify Skill Type & Proficiency"])
 
-        subgraph ModMatch ["Module 3: Discovery & Matching"]
-            UC_Search(["Search & Filter Students"])
-            UC_PeerProf(["View Student Profile"])
-            UC_Discover(["Discover Compatible Partners"])
-            UC_ViewScore(["View Compatibility Score & Matched Skills"])
-        end
+        %% Module 3
+        UC_Search(["Search & Filter Students"])
+        UC_ViewProfile(["View Student Profile"])
+        UC_Discover(["Discover Compatible Partners"])
+        UC_CalculateScore(["Calculate Compatibility Score & Matched Skills"])
 
-        subgraph ModExch ["Module 4: Exchange & Session"]
-            UC_SendReq(["Send Exchange Request"])
-            UC_RespReq(["Accept / Reject Incoming Request"])
-            UC_HistReq(["View Exchange Request History"])
-            UC_SchedSess(["Schedule Session"])
-            UC_ViewSess(["View Session Details"])
-            UC_CompCancSess(["Mark Session Completed / Cancel"])
-        end
+        %% Module 4
+        UC_SendRequest(["Send Exchange Request"])
+        UC_RespondRequest(["Respond to Request (Accept / Reject)"])
+        UC_History(["View Exchange History"])
+        UC_Schedule(["Schedule Learning Session"])
+        UC_SessionDetails(["View Session Details"])
+        UC_CompleteSession(["Complete or Cancel Session"])
 
-        subgraph ModDash ["Module 5: Rating, Feedback & Dashboard"]
-            UC_Rate(["Rate Completed Exchange"])
-            UC_Feedback(["Submit Written Feedback"])
-            UC_Dash(["View Dashboard & Activity Summaries"])
-        end
+        %% Module 5
+        UC_Rate(["Rate Completed Exchange"])
+        UC_Feedback(["Submit Written Feedback"])
+        UC_Dashboard(["View Dashboard & Activity Summaries"])
 
-        subgraph ModAdmin ["Administration"]
-            UC_AdminAuth(["Log In with Admin Account"])
-            UC_AdminPortal(["Access Protected Admin Area"])
-            UC_AdminStats(["View Platform Statistics"])
-            UC_AdminCats(["Manage Skill Categories & Skills"])
-        end
+        %% Administration
+        UC_AdminLogin(["Log In as Administrator"])
+        UC_AdminPortal(["Access Protected Admin Portal"])
+        UC_AdminStats(["View Platform Statistics"])
+        UC_ManageTaxonomy(["Manage Skill Categories & Skills"])
     end
 
     %% Student Connections
     Student --> UC_Reg
     Student --> UC_Auth
     Student --> UC_Prof
-
-    Student --> UC_AddSkill
-    Student --> UC_ManageSkill
-    UC_AddSkill -.->|<<include>>| UC_SetType
-    UC_AddSkill -.->|<<include>>| UC_SetProf
-
+    Student --> UC_ManageSkills
     Student --> UC_Search
-    Student --> UC_PeerProf
+    Student --> UC_ViewProfile
     Student --> UC_Discover
-    UC_Discover -.->|<<include>>| UC_ViewScore
-
-    Student --> UC_SendReq
-    Student --> UC_RespReq
-    Student --> UC_HistReq
-    Student --> UC_SchedSess
-    Student --> UC_ViewSess
-    Student --> UC_CompCancSess
-
+    Student --> UC_SendRequest
+    Student --> UC_RespondRequest
+    Student --> UC_History
+    Student --> UC_Schedule
+    Student --> UC_SessionDetails
+    Student --> UC_CompleteSession
     Student --> UC_Rate
-    UC_Rate -.->|<<include>>| UC_Feedback
-    UC_Rate -.->|<<extend>>| UC_CompCancSess
-    Student --> UC_Dash
+    Student --> UC_Dashboard
+
+    %% Include / Extend Connections
+    UC_ManageSkills -.->|&lt;&lt;include&gt;&gt;| UC_SkillDetails
+    UC_Discover -.->|&lt;&lt;include&gt;&gt;| UC_CalculateScore
+    UC_Rate -.->|&lt;&lt;include&gt;&gt;| UC_Feedback
+    UC_Schedule -.->|&lt;&lt;extend&gt;&gt;| UC_RespondRequest
+    UC_Rate -.->|&lt;&lt;extend&gt;&gt;| UC_CompleteSession
 
     %% Admin Connections
-    Admin --> UC_AdminAuth
+    Admin --> UC_AdminLogin
     Admin --> UC_AdminPortal
     Admin --> UC_AdminStats
-    Admin --> UC_AdminCats
-    UC_AdminPortal -.->|<<include>>| UC_AdminAuth
+    Admin --> UC_ManageTaxonomy
+    UC_AdminPortal -.->|&lt;&lt;include&gt;&gt;| UC_AdminLogin
+    UC_AdminStats -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal
+    UC_ManageTaxonomy -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal

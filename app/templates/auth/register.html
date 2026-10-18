@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block title %}Student Registration — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6 col-md-8">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom py-3 text-center">
+          <div class="rounded-circle bg-primary bg-opacity-10 d-inline-flex align-items-center justify-content-center mb-2" style="width: 48px; height: 48px;">
+            <i class="bi bi-person-plus text-primary fs-4"></i>
+          </div>
+          <h4 class="fw-bold mb-1">Create Student Account</h4>
+          <p class="text-muted small mb-0">Join your peers on SkillConnect</p>
+        </div>
+        
+        <div class="card-body p-4">
+          <form method="POST" action="{{ url_for('auth.register') }}" novalidate>
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+              <label for="{{ form.name.id }}" class="form-label fw-medium">{{ form.name.label.text }} <span class="text-danger">*</span></label>
+              {{ form.name(class="form-control" + (" is-invalid" if form.name.errors else ""), placeholder="e.g. Rahul Sharma") }}
+              {% for error in form.name.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.email.id }}" class="form-label fw-medium">{{ form.email.label.text }} <span class="text-danger">*</span></label>
+              {{ form.email(class="form-control" + (" is-invalid" if form.email.errors else ""), placeholder="e.g. rahul@college.edu") }}
+              {% for error in form.email.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+              <div class="form-text small">Your email will be used to log in securely.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.college.id }}" class="form-label fw-medium">{{ form.college.label.text }}</label>
+              {{ form.college(class="form-control" + (" is-invalid" if form.college.errors else ""), placeholder="e.g. Dept of Computer Applications, University Campus") }}
+              {% for error in form.college.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.password.id }}" class="form-label fw-medium">{{ form.password.label.text }} <span class="text-danger">*</span></label>
+                {{ form.password(class="form-control" + (" is-invalid" if form.password.errors else ""), placeholder="Minimum 6 characters") }}
+                {% for error in form.password.errors %}
+                  <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="{{ form.confirm_password.id }}" class="form-label fw-medium">{{ form.confirm_password.label.text }} <span class="text-danger">*</span></label>
+                {{ form.confirm_password(class="form-control" + (" is-invalid" if form.confirm_password.errors else ""), placeholder="Re-enter password") }}
+                {% for error in form.confirm_password.errors %}
+                  <div class="invalid-feedback">{{ error }}</div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.bio.id }}" class="form-label fw-medium">{{ form.bio.label.text }}</label>
+              {{ form.bio(class="form-control" + (" is-invalid" if form.bio.errors else ""), rows=2, placeholder="Brief introduction about your academic background and interests") }}
+              {% for error in form.bio.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="mb-4">
+              <label for="{{ form.availability.id }}" class="form-label fw-medium">{{ form.availability.label.text }}</label>
+              {{ form.availability(class="form-control" + (" is-invalid" if form.availability.errors else ""), placeholder="e.g. Weekday evenings, Saturday mornings") }}
+              {% for error in form.availability.errors %}
+                <div class="invalid-feedback">{{ error }}</div>
+              {% endfor %}
+            </div>
+
+            <div class="d-grid mb-3">
+              {{ form.submit(class="btn btn-primary py-2 text-white fw-medium") }}
+            </div>
+
+            <div class="text-center small text-muted">
+              Already have an account? <a href="{{ url_for('auth.login') }}" class="text-primary fw-medium text-decoration-none">Sign in here</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

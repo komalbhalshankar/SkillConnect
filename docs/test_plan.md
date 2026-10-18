@@ -12,17 +12,37 @@
 
 ---
 
-## 2. Test Suites Matrix
+## 2. Phase 2 Verified Test Execution Report
 
-### Suite 1: Authentication & Access Control (`tests/test_auth.py`)
-| Test ID | Objective | Expected Result |
-| :--- | :--- | :--- |
-| `test_user_registration_success` | Register a new student with valid inputs | User created, password securely hashed, redirect to login |
-| `test_duplicate_email_registration` | Attempt registration with an existing email | Registration rejected with descriptive error message |
-| `test_user_login_and_logout` | Log in with valid credentials and log out | Session established on login, session cleared on logout |
-| `test_invalid_credentials_login` | Attempt login with wrong password | 401/Flash error, authentication denied |
-| `test_protected_routes_unauthenticated` | Access `/dashboard`, `/skills`, `/exchanges` when logged out | Redirected to `/auth/login` |
-| `test_profile_update` | Modify bio, college, and availability | Profile changes persisted in database |
+**Test Run Date:** October 18, 2026  
+**Environment:** Python 3.14.7 / pytest 9.1.1 / Flask Test Client  
+**Execution Command:** `pytest -v`  
+**Overall Result:** **18 Passed, 0 Failed, 0 Errors (100% Pass Rate)**
+
+| Test File | Test Case Name | Objective | Result |
+| :--- | :--- | :--- | :---: |
+| `tests/test_auth.py` | `test_successful_student_registration` | Valid registration creates user, hashes password, redirects to login | **PASSED** |
+| `tests/test_auth.py` | `test_duplicate_email_registration_rejected` | Duplicate email rejected with flash alert | **PASSED** |
+| `tests/test_auth.py` | `test_password_hashing_security` | Plaintext never stored; Werkzeug salt & hash verified | **PASSED** |
+| `tests/test_auth.py` | `test_successful_login` | Valid credentials establish authenticated Flask-Login session | **PASSED** |
+| `tests/test_auth.py` | `test_unsuccessful_login_with_wrong_password` | Incorrect password rejected with error alert | **PASSED** |
+| `tests/test_auth.py` | `test_unsuccessful_login_with_unregistered_email` | Nonexistent email rejected | **PASSED** |
+| `tests/test_auth.py` | `test_logout` | Session cleared on logout | **PASSED** |
+| `tests/test_auth.py` | `test_protected_routes_redirect_unauthenticated_user` | `/dashboard` and `/profile` redirect to `/auth/login` | **PASSED** |
+| `tests/test_auth.py` | `test_admin_access_allowed_for_admin_role` | Administrator accesses `/admin` successfully (HTTP 200) | **PASSED** |
+| `tests/test_auth.py` | `test_admin_access_forbidden_for_student_role` | Regular student receives HTTP 403 Forbidden on `/admin` | **PASSED** |
+| `tests/test_database.py`| `test_user_email_unique_database_constraint` | Database-level unique constraint on User.email enforced | **PASSED** |
+| `tests/test_database.py`| `test_skill_category_and_skill_models_relationship` | SkillCategory $\leftrightarrow$ Skill relational primary/foreign keys | **PASSED** |
+| `tests/test_database.py`| `test_cli_init_db` | `flask init-db` command creates tables idempotently | **PASSED** |
+| `tests/test_database.py`| `test_cli_create_admin` | `flask create-admin` creates admin account without code secrets | **PASSED** |
+| `tests/test_profile.py` | `test_view_logged_in_profile` | Authenticated student views personal profile fields | **PASSED** |
+| `tests/test_profile.py` | `test_update_profile_success` | Student updates name, college, bio, availability | **PASSED** |
+| `tests/test_profile.py` | `test_profile_update_validation_rejects_empty_name` | Server-side validation rejects empty/invalid names | **PASSED** |
+| `tests/test_profile.py` | `test_unauthorized_user_cannot_update_other_student_profile` | Ownership enforced; students cannot alter other profiles | **PASSED** |
+
+---
+
+## 3. Future Phases Test Matrix (Scheduled)
 
 ### Suite 2: Skill Portfolio Management (`tests/test_skills.py`)
 | Test ID | Objective | Expected Result |
