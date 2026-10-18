@@ -88,3 +88,42 @@ def admin_client(client, admin_user):
         'password': 'adminSecretPassword789'
     }, follow_redirects=True)
     return client
+
+@pytest.fixture
+def sample_category(app):
+    """Create and return a sample skill category."""
+    from app.models.skill import SkillCategory
+    cat = SkillCategory(
+        name="Programming Languages",
+        icon="bi-code-slash",
+        description="Core software development languages."
+    )
+    db.session.add(cat)
+    db.session.commit()
+    return cat
+
+@pytest.fixture
+def sample_skill(app, sample_category):
+    """Create and return a sample skill."""
+    from app.models.skill import Skill
+    skill = Skill(
+        category_id=sample_category.id,
+        name="Python",
+        description="High-level backend and scripting language."
+    )
+    db.session.add(skill)
+    db.session.commit()
+    return skill
+
+@pytest.fixture
+def second_skill(app, sample_category):
+    """Create and return a second sample skill."""
+    from app.models.skill import Skill
+    skill = Skill(
+        category_id=sample_category.id,
+        name="Java",
+        description="Enterprise and Android programming."
+    )
+    db.session.add(skill)
+    db.session.commit()
+    return skill

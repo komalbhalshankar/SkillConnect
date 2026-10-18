@@ -90,3 +90,52 @@
 | `test_admin_portal_access_admin_role` | Admin accesses `/admin` | HTTP 200, stats displayed |
 | `test_admin_portal_access_student_role` | Regular student accesses `/admin` | HTTP 403 Forbidden |
 | `test_admin_manage_categories` | Admin creates/edits skill category | Category saved and available in taxonomy |
+
+---
+
+## 4. Verified Automated Test Execution Results
+
+All tests run against isolated in-memory SQLite instances with clean teardown after each test.
+
+### Execution Summary (Phase 2 & Phase 3)
+- **Total Tests Collected:** 33
+- **Passed:** 33 (100%)
+- **Failed:** 0
+- **Duration:** 8.74s
+
+| Test Suite File | Test Function | Verified Behavior | Status |
+| :--- | :--- | :--- | :---: |
+| `tests/test_auth.py` | `test_successful_student_registration` | Valid registration, password hashing, DB insertion | **PASSED** |
+| `tests/test_auth.py` | `test_duplicate_email_registration_rejected` | Form catches existing email, rejects duplicate | **PASSED** |
+| `tests/test_auth.py` | `test_password_hashing_security` | Plaintext never stored; Werkzeug hashes verified | **PASSED** |
+| `tests/test_auth.py` | `test_successful_login` | Valid credentials establish authenticated session | **PASSED** |
+| `tests/test_auth.py` | `test_unsuccessful_login_with_wrong_password` | Rejects incorrect password with friendly alert | **PASSED** |
+| `tests/test_auth.py` | `test_unsuccessful_login_with_unregistered_email` | Rejects unregistered email | **PASSED** |
+| `tests/test_auth.py` | `test_logout` | Destroys session; redirects to login | **PASSED** |
+| `tests/test_auth.py` | `test_protected_routes_redirect_unauthenticated_user` | `@login_required` redirects unauthenticated requests | **PASSED** |
+| `tests/test_auth.py` | `test_admin_access_allowed_for_admin_role` | Admin role accesses `/admin` portal (HTTP 200) | **PASSED** |
+| `tests/test_auth.py` | `test_admin_access_forbidden_for_student_role` | Student role blocked from `/admin` (HTTP 403) | **PASSED** |
+| `tests/test_database.py` | `test_user_email_unique_database_constraint` | Database-level unique constraint on `users.email` | **PASSED** |
+| `tests/test_database.py` | `test_skill_category_and_skill_models_relationship` | Foreign key binding between `SkillCategory` and `Skill` | **PASSED** |
+| `tests/test_database.py` | `test_cli_init_db` | `flask init-db` command idempotence | **PASSED** |
+| `tests/test_database.py` | `test_cli_create_admin` | `flask create-admin` CLI provisioning | **PASSED** |
+| `tests/test_profile.py` | `test_view_logged_in_profile` | Profile page renders authenticated student info | **PASSED** |
+| `tests/test_profile.py` | `test_update_profile_success` | Updates name, college, bio, and availability | **PASSED** |
+| `tests/test_profile.py` | `test_profile_update_validation_rejects_empty_name` | Reject empty name input with validation error | **PASSED** |
+| `tests/test_profile.py` | `test_unauthorized_user_cannot_update_other_student_profile` | Profile strictly tied to authenticated session | **PASSED** |
+| `tests/test_skills.py` | `test_unauthenticated_redirected_from_skills` | `/skills/` redirects guest to login | **PASSED** |
+| `tests/test_skills.py` | `test_student_can_view_skills_portfolio` | Displays student's teach and learn lists | **PASSED** |
+| `tests/test_skills.py` | `test_add_teach_skill_success` | Adds skill to Teach portfolio with proficiency & notes | **PASSED** |
+| `tests/test_skills.py` | `test_add_learn_skill_success` | Adds skill to Learn wishlist with proficiency & notes | **PASSED** |
+| `tests/test_skills.py` | `test_prevent_duplicate_skill_in_same_list` | Rejects duplicate skill addition in same list | **PASSED** |
+| `tests/test_skills.py` | `test_prevent_adding_same_skill_as_both_teach_and_learn` | Enforces mutual exclusivity between teach & learn | **PASSED** |
+| `tests/test_skills.py` | `test_edit_skill_proficiency_and_notes` | Updates proficiency and custom notes | **PASSED** |
+| `tests/test_skills.py` | `test_delete_skill_from_portfolio` | Removes skill from portfolio | **PASSED** |
+| `tests/test_skills.py` | `test_prevent_unauthorized_user_from_editing_other_student_skill` | Cross-student edit attempt returns HTTP 403 | **PASSED** |
+| `tests/test_skills.py` | `test_prevent_unauthorized_user_from_deleting_other_student_skill` | Cross-student delete attempt returns HTTP 403 | **PASSED** |
+| `tests/test_skills.py` | `test_admin_can_create_category` | Admin creates skill category via portal | **PASSED** |
+| `tests/test_skills.py` | `test_admin_can_create_skill` | Admin creates standardized skill under category | **PASSED** |
+| `tests/test_skills.py` | `test_student_cannot_access_admin_skill_routes` | Student blocked from admin skill routes (HTTP 403) | **PASSED** |
+| `tests/test_skills.py` | `test_cli_seed_skills_command` | `flask seed-skills` populates academic taxonomy | **PASSED** |
+| `tests/test_skills.py` | `test_explore_skills_catalog_public` | Public catalog browser `/skills/explore` renders | **PASSED** |
+

@@ -41,11 +41,11 @@ The initial Version 1.0 release is structured into five cohesive modules:
 | :--- | :--- | :---: | :---: | :---: |
 | **Module 1: User Auth & Profile** | Registration, Login, Logout, RBAC, Profile View/Edit | Phase 2 | **Implemented & Verified** | 100% (Unit & Integration) |
 | **Database Foundation** | SQLite schema, User, SkillCategory, Skill models | Phase 2 | **Implemented & Verified** | 100% (Model constraints & CLI) |
-| **Module 2: Skill Management** | Add/Edit/Delete Teach & Learn Skills, Taxonomy | Phase 3 | *Planned (Models established)* | Scheduled for Phase 3 |
-| **Module 3: Discovery & Matching** | Deterministic two-way matching engine, Directory | Phase 3 | *Planned* | Scheduled for Phase 3 |
-| **Module 4: Exchange & Session** | Exchange proposals, State machine, Scheduling | Phase 4 | *Planned* | Scheduled for Phase 4 |
+| **Module 2: Skill Management** | Add/Edit/Delete Teach & Learn Skills, Taxonomy, Admin Curation | Phase 3 | **Implemented & Verified** | 100% (15 Unit & Integration tests) |
+| **Module 3: Discovery & Matching** | Deterministic two-way matching engine, Directory | Phase 4 | *Planned* | Scheduled for Phase 4 |
+| **Module 4: Exchange & Session** | Exchange proposals, State machine, Scheduling | Phase 5 | *Planned* | Scheduled for Phase 5 |
 | **Module 5: Rating & Dashboard** | Post-session reviews, Star ratings, Chart.js feeds | Phase 5 | *Planned* | Scheduled for Phase 5 |
-| **Administration** | Safe CLI admin creation (`create-admin`), `@admin_required` | Phase 2 | **Implemented & Verified** | 100% (CLI & RBAC) |
+| **Administration** | Safe CLI admin creation (`create-admin`), `@admin_required`, Category/Skill CRUD | Phase 2 & 3 | **Implemented & Verified** | 100% (CLI & RBAC) |
 
 ---
 
@@ -61,14 +61,14 @@ The initial Version 1.0 release is structured into five cohesive modules:
 - **FR-1.7 Safe Validation & Error Messaging:** Server-side validation with user-friendly flash messages for invalid inputs. *(Status: Implemented & Tested)*
 
 ### Module 2: Skill Management
-- **FR-2.1 Skill Organization:** Skills belong to standardized categories (e.g., Programming & Tech, Design & Creative, Communication & Languages, Academics & Science, Business & Marketing).
+- **FR-2.1 Skill Organization:** Skills belong to standardized categories (e.g., Programming Languages, Web Development, Data Science & AI, CS Foundations, Design & Multimedia, Communication & Professional). *(Status: Implemented & Tested)*
 - **FR-2.2 Skill Association:** Students link skills to their profile with:
   - Skill Type: `Teach` (skills the student can teach) or `Learn` (skills the student wants to learn).
   - Proficiency Level: `Beginner`, `Intermediate`, or `Advanced`.
-  - Optional custom notes on experience or specific learning goals.
-- **FR-2.3 Duplicate Prevention:** A student cannot add the same skill twice under the same skill type.
-- **FR-2.4 Authorization & Ownership:** Students can edit or delete only their own skill records.
-- **FR-2.5 Category Seeding:** Sensible default categories and baseline skills are pre-seeded for initial demonstration.
+  - Optional custom notes on experience or specific learning goals. *(Status: Implemented & Tested)*
+- **FR-2.3 Duplicate Prevention:** A student cannot add the same skill twice under the same skill type, nor can they add the exact same skill to both Teach and Learn simultaneously. *(Status: Implemented & Tested)*
+- **FR-2.4 Authorization & Ownership:** Students can edit or delete only their own skill records; cross-user edits/deletions trigger HTTP 403 Forbidden. *(Status: Implemented & Tested)*
+- **FR-2.5 Category Seeding & Admin Curation:** Idempotent CLI seeding command (`flask seed-skills`) and Admin portal category/skill CRUD routes. *(Status: Implemented & Tested)*
 
 ### Module 3: Skill Discovery and Matching
 - **FR-3.1 Search & Filter:** Students can search peers by skill name, and filter by skill category, proficiency level, and exchange role.

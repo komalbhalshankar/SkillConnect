@@ -88,15 +88,21 @@ Python_Mini_Project_Sem l/
    ```bash
    flask --app run.py init-db
    ```
-   *Note: This creates the tables in `instance/skillconnect.db` without deleting or resetting any existing data.*
+   *Note: This creates all tables in `instance/skillconnect.db` without deleting or resetting any existing data.*
 
-5. **Create an Initial Administrator (CLI):**
+5. **Seed Standard Academic Skills & Categories (Idempotent):**
+   ```bash
+   flask --app run.py seed-skills
+   ```
+   *Seeds standard curriculum categories (Programming, Web Dev, Data Science, CS Core, Design, Communication) and 24+ baseline skills.*
+
+6. **Create an Initial Administrator (CLI):**
    ```bash
    flask --app run.py create-admin
    ```
    *Follow the interactive prompt to set admin name, email, and password securely.*
 
-6. **Run the Application:**
+7. **Run the Application:**
    ```bash
    python run.py
    ```
@@ -106,24 +112,35 @@ Python_Mini_Project_Sem l/
 
 ## 5. Running Automated Tests
 
-All Phase 2 functionality is covered by automated unit and integration tests using `pytest` and Flask's test client running against an isolated in-memory SQLite database:
+All functionality across Phase 2 and Phase 3 is covered by automated unit and integration tests using `pytest` and Flask's test client running against an isolated in-memory SQLite database (`sqlite:///:memory:`):
 
 ```bash
 pytest -v
 ```
 
-### Verified Test Suite (18/18 Passing):
-- **Authentication (`tests/test_auth.py`):**
+### Verified Test Suite (33/33 Passing):
+- **Authentication & RBAC (`tests/test_auth.py` — 10 tests):**
   - Registration, duplicate email rejection, Werkzeug password hashing.
   - Successful login, failed login (bad password / unknown email), logout.
   - Route protection (redirection to login) and Role-Based Access Control (`/admin` forbidden for students, allowed for admins).
-- **Profile (`tests/test_profile.py`):**
+- **Profile Management (`tests/test_profile.py` — 4 tests):**
   - Profile viewing, profile updating (name, college, bio, availability).
   - Validation enforcement (empty name rejection) and ownership isolation.
-- **Database & Models (`tests/test_database.py`):**
+- **Database & Models (`tests/test_database.py` — 4 tests):**
   - Unique email database constraints.
   - `SkillCategory` and `Skill` model relationships.
   - Safe database initialization CLI (`flask init-db`) and administrator creation CLI (`flask create-admin`).
+- **Skill Taxonomy & Portfolios (`tests/test_skills.py` — 15 tests):**
+  - Adding skills to Teach and Learn portfolios with proficiency and notes.
+  - Mutual exclusivity enforcement (cannot add same skill to both Teach and Learn).
+  - Duplicate prevention in the same skill list.
+  - Updating proficiency and notes.
+  - Deleting skills from portfolio.
+  - Cross-user ownership protection (HTTP 403 Forbidden on unauthorized edit/delete).
+  - Admin category and skill creation via portal.
+  - Student RBAC restrictions on admin skill routes (HTTP 403 Forbidden).
+  - CLI skill seeding command (`flask seed-skills`).
+  - Public skill catalog browser (`/skills/explore`).
 
 ---
 
@@ -133,7 +150,8 @@ pytest -v
 | :--- | :--- | :--- |
 | **Phase 1** | Requirements, UML Use Case, Architecture & Skeleton | **Completed** |
 | **Phase 2** | Database Foundation, Authentication & Student Profile | **Completed & Verified** |
-| **Phase 3** | Skill Taxonomy, Categories & Student Skill Portfolios | *Next Milestone (Pending Approval)* |
-| **Phase 4** | Two-Way Reciprocal Matching Engine & Compatibility Scoring | *Planned* |
+| **Phase 3** | Skill Taxonomy, Categories & Student Skill Portfolios | **Completed & Verified** |
+| **Phase 4** | Two-Way Reciprocal Matching Engine & Compatibility Scoring | *Next Milestone (Pending Approval)* |
 | **Phase 5** | Exchange Requests, Sessions, Feedback & Analytics | *Planned* |
+
 

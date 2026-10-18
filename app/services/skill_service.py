@@ -59,6 +59,16 @@ class SkillService:
         if existing:
             return None, f"You already have '{skill.name}' in your {clean_type} skills list."
 
+        opposite_type = 'learn' if clean_type == 'teach' else 'teach'
+        opposite_existing = UserSkill.query.filter_by(
+            user_id=user_id,
+            skill_id=skill_id,
+            skill_type=opposite_type
+        ).first()
+
+        if opposite_existing:
+            return None, f"You are already registered to {opposite_type} '{skill.name}'. A skill cannot be added to both Teach and Learn simultaneously."
+
         user_skill = UserSkill(
             user_id=user_id,
             skill_id=skill_id,

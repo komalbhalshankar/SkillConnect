@@ -105,22 +105,22 @@ flowchart LR
 | **Authentication & Profile** | Register Account | Student | Creates account with name, email, password, and college. | **Phase 2 (Implemented & Tested)** |
 | | Log In / Log Out | Student / Admin | Authenticates session via Flask-Login. | **Phase 2 (Implemented & Tested)** |
 | | View & Update Profile | Student | Manages bio, college, and availability. | **Phase 2 (Implemented & Tested)** |
-| **Skill Management** | Manage Skills | Student | Adds, edits, or deletes skills in personal portfolio. | *Phase 3 (Planned)* |
-| | Specify Skill Type & Proficiency | Student | *&lt;&lt;include&gt;&gt;* Defines Teach/Learn intent and level. | *Phase 3 (Planned)* |
-| **Discovery & Matching** | Search & Filter Students | Student | Searches peers by name, category, or proficiency. | *Phase 3 (Planned)* |
-| | View Student Profile | Student | Inspects a peer's skills, bio, and reviews. | *Phase 3 (Planned)* |
-| | Discover Compatible Partners | Student | Triggers the rule-based matching engine. | *Phase 3 (Planned)* |
-| | Calculate Compatibility Score | Student | *&lt;&lt;include&gt;&gt;* Computes 0–100% score and matched skills. | *Phase 3 (Planned)* |
-| **Exchange & Session** | Send Exchange Request | Student | Proposes a skill exchange to another student. | *Phase 4 (Planned)* |
-| | Respond to Request | Student | Accepts or rejects incoming requests. | *Phase 4 (Planned)* |
-| | View Exchange History | Student | Tracks status of sent and received requests. | *Phase 4 (Planned)* |
-| | Schedule Learning Session | Student | *&lt;&lt;extend&gt;&gt;* Schedules accepted exchange meetings. | *Phase 4 (Planned)* |
-| | View Session Details | Student | Reviews meeting link/location and agenda notes. | *Phase 4 (Planned)* |
-| | Complete or Cancel Session | Student | Concludes or aborts scheduled sessions. | *Phase 4 (Planned)* |
+| **Skill Management** | Manage Skills | Student | Adds, edits, or deletes skills in personal portfolio. | **Phase 3 (Implemented & Tested)** |
+| | Specify Skill Type & Proficiency | Student | *&lt;&lt;include&gt;&gt;* Defines Teach/Learn intent and level. | **Phase 3 (Implemented & Tested)** |
+| **Discovery & Matching** | Search & Filter Students | Student | Searches peers by name, category, or proficiency. | *Phase 4 (Planned)* |
+| | View Student Profile | Student | Inspects a peer's skills, bio, and reviews. | *Phase 4 (Planned)* |
+| | Discover Compatible Partners | Student | Triggers the rule-based matching engine. | *Phase 4 (Planned)* |
+| | Calculate Compatibility Score | Student | *&lt;&lt;include&gt;&gt;* Computes 0–100% score and matched skills. | *Phase 4 (Planned)* |
+| **Exchange & Session** | Send Exchange Request | Student | Proposes a skill exchange to another student. | *Phase 5 (Planned)* |
+| | Respond to Request | Student | Accepts or rejects incoming requests. | *Phase 5 (Planned)* |
+| | View Exchange History | Student | Tracks status of sent and received requests. | *Phase 5 (Planned)* |
+| | Schedule Learning Session | Student | *&lt;&lt;extend&gt;&gt;* Schedules accepted exchange meetings. | *Phase 5 (Planned)* |
+| | View Session Details | Student | Reviews meeting link/location and agenda notes. | *Phase 5 (Planned)* |
+| | Complete or Cancel Session | Student | Concludes or aborts scheduled sessions. | *Phase 5 (Planned)* |
 | **Rating & Dashboard** | Rate Completed Exchange | Student | *&lt;&lt;extend&gt;&gt;* Evaluates completed sessions (1–5 stars). | *Phase 5 (Planned)* |
 | | Submit Written Feedback | Student | *&lt;&lt;include&gt;&gt;* Submits review comments. | *Phase 5 (Planned)* |
 | | View Dashboard & Analytics | Student | Displays summaries and Chart.js activity charts. | *Phase 5 (Planned)* |
 | **Administration** | Log In as Administrator | Admin | Authenticates as admin. | **Phase 2 (Implemented & Tested)** |
 | | Access Admin Portal | Admin | Role-protected admin dashboard. | **Phase 2 (Implemented & Tested)** |
 | | View Platform Statistics | Admin | Reviews platform-wide usage metrics. | *Phase 5 (Planned)* |
-| | Manage Categories & Skills | Admin | Curates official categories and skills taxonomy. | *Phase 3 (Planned)* |
+| | Manage Categories & Skills | Admin | Curates official categories and skills taxonomy. | **Phase 3 (Implemented & Tested)** |

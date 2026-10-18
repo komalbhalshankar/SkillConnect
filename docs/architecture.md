@@ -151,18 +151,38 @@ The modular architecture guarantees that future modules (e.g., Real-time Chat, V
 
 ---
 
-## 5. Phase 2 Implementation Status
-In **Phase 2 (Database Foundation, Authentication & Student Profile)**, the core architecture is operational:
-- **Application Factory:** `create_app()` dynamically loads configuration (`DevelopmentConfig`, `TestingConfig`, `ProductionConfig`) and binds extensions.
+## 5. Implementation Phases & Architecture Status
+
+### Phase 2: Database Foundation, Authentication & Student Profile (Completed)
+- **Application Factory:** `create_app()` dynamically loads configuration (`DevelopmentConfig`, `TestingConfig`, `ProductionConfig`) and binds extensions (`db`, `login_manager`, `csrf`).
 - **Active Blueprints:**
   - `main_bp` (`/`): Landing page, placeholder student dashboard, and profile management.
   - `auth_bp` (`/auth`): Student registration, session login, and logout.
   - `admin_bp` (`/admin`): Role-restricted administration portal.
 - **ORM Persistence:**
-  - `User`: Primary authentication entity with password hashing, college, bio, availability, and role-based permissions (`student`, `admin`).
+  - `User`: Primary authentication entity with password hashing (Werkzeug), college, bio, availability, and role-based permissions (`student`, `admin`).
   - `SkillCategory` & `Skill`: Foundation taxonomy models establishing foreign key relationships for future skill portfolio association.
-  - Forward-compatible relational hooks for `UserSkill`, `ExchangeRequest`, `ExchangeSession`, and `Rating` (models designed without requiring alterations to `User`).
+  - Forward-compatible relational hooks for `UserSkill`, `ExchangeRequest`, `ExchangeSession`, and `Rating`.
 - **Administrative CLI Tooling:**
   - `flask init-db`: Non-destructive table initialization.
   - `flask create-admin`: Secure administrator provisioning without hardcoded credentials.
+
+### Phase 3: Skill Taxonomy, Categories & Student Skill Portfolios (Completed)
+- **Active Blueprints & Controllers:**
+  - `skills_bp` (`/skills`):
+    - `GET /skills/`: Personal skill portfolio view displaying Teach and Learn lists with proficiency badges and notes.
+    - `POST /skills/add`: Add skill to Teach or Learn portfolio.
+    - `POST /skills/edit/<int:user_skill_id>`: Edit proficiency and notes with strict ownership validation.
+    - `POST /skills/delete/<int:user_skill_id>`: Remove skill from portfolio with strict ownership validation.
+    - `GET /skills/explore`: Public/student categorized skill catalog browser.
+  - `admin_bp` (`/admin`):
+    - `POST /admin/categories/add`: Admin category creation.
+    - `POST /admin/skills/add`: Admin standardized skill creation under a category.
+- **Domain Service Layer (`SkillService`):**
+  - Business rules: Mutual exclusivity ensuring a student cannot register the same skill to both Teach and Learn simultaneously.
+  - Duplicate prevention on identical skill types.
+  - Ownership enforcement returning HTTP 403 Forbidden for unauthorized cross-student mutations.
+- **CLI Seeding:**
+  - `flask seed-skills`: Idempotently seeds standard academic categories and skills across 6 domains (Programming, Web Dev, Data Science, CS Foundations, Design, Communication).
+
 

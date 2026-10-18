@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Skill Catalog — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Banner -->
+  <div class="text-center bg-white p-5 rounded-4 shadow-sm border mb-4">
+    <div class="d-inline-flex p-3 rounded-circle bg-primary bg-opacity-10 text-primary mb-3">
+      <i class="bi bi-compass fs-2"></i>
+    </div>
+    <h2 class="fw-bold text-dark mb-2">Academic &amp; Professional Skill Catalog</h2>
+    <p class="text-muted mx-auto mb-3" style="max-width: 650px;">
+      Browse our standardized curriculum of peer-exchangeable skills across programming, software architecture, data science, and professional communication.
+    </p>
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('skills.index') }}" class="btn btn-primary btn-sm px-4 py-2 text-white">
+        <i class="bi bi-mortarboard me-1"></i> Manage My Skills
+      </a>
+    {% else %}
+      <a href="{{ url_for('auth.register') }}" class="btn btn-primary btn-sm px-4 py-2 text-white">
+        <i class="bi bi-person-plus me-1"></i> Register to Start Exchanging
+      </a>
+    {% endif %}
+  </div>
+
+  <!-- Categories Grid -->
+  {% if categories %}
+    <div class="row g-4">
+      {% for cat in categories %}
+        <div class="col-md-6 col-lg-4">
+          <div class="card h-100 border-0 shadow-sm rounded-3">
+            <div class="card-header bg-white border-bottom py-3 d-flex align-items-center justify-content-between">
+              <div class="d-flex align-items-center gap-2">
+                <span class="badge bg-primary bg-opacity-10 text-primary p-2 rounded-circle fs-6">
+                  <i class="{{ cat.icon }}"></i>
+                </span>
+                <h6 class="fw-bold mb-0 text-dark">{{ cat.name }}</h6>
+              </div>
+              <span class="badge bg-light text-secondary border small">
+                {{ cat.skills|length }} skills
+              </span>
+            </div>
+            <div class="card-body p-4">
+              {% if cat.description %}
+                <p class="text-muted small mb-3">{{ cat.description }}</p>
+              {% endif %}
+
+              {% if cat.skills %}
+                <div class="d-flex flex-wrap gap-2">
+                  {% for s in cat.skills %}
+                    <span class="badge bg-light text-dark border p-2 px-3 fw-medium">
+                      {{ s.name }}
+                    </span>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <p class="text-muted small fst-italic mb-0">No skills in this category yet.</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+  {% else %}
+    <div class="text-center py-5 bg-white rounded-3 border">
+      <i class="bi bi-inbox text-muted fs-1 mb-2"></i>
+      <h5 class="fw-bold text-secondary">Skill Catalog is Empty</h5>
+      <p class="text-muted small">Please run <code>flask --app run.py seed-skills</code> or add categories as an administrator.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

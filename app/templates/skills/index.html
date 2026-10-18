@@ -1,0 +1,303 @@
+{% extends "base.html" %}
+
+{% block title %}My Skill Portfolio — SkillConnect{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <!-- Header Banner -->
+  <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center bg-white p-4 rounded-3 shadow-sm border mb-4 gap-3">
+    <div>
+      <div class="d-flex align-items-center gap-2 mb-1">
+        <h2 class="fw-bold mb-0">My Skill Portfolio</h2>
+        <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 badge-role">
+          Peer Exchange
+        </span>
+      </div>
+      <p class="text-muted mb-0 small">
+        Curate the skills you can <strong>teach</strong> and the skills you want to <strong>learn</strong> from fellow students.
+      </p>
+    </div>
+    <div class="d-flex gap-2">
+      <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 p-2 px-3 fs-6">
+        <i class="bi bi-mortarboard-fill me-1"></i> {{ teach_skills|length }} Teaching
+      </span>
+      <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 p-2 px-3 fs-6">
+        <i class="bi bi-lightbulb-fill me-1"></i> {{ learn_skills|length }} Learning
+      </span>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    <!-- Left Column: Add Skill Form -->
+    <div class="col-lg-4">
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white border-bottom py-3">
+          <h5 class="fw-bold mb-0 d-flex align-items-center gap-2">
+            <i class="bi bi-plus-circle text-primary"></i>
+            Add Skill to Portfolio
+          </h5>
+        </div>
+        <div class="card-body p-4">
+          <form method="POST" action="{{ url_for('skills.add') }}">
+            {{ form.hidden_tag() }}
+
+            <div class="mb-3">
+              <label for="skill_id" class="form-label fw-semibold small text-secondary">Standardized Skill</label>
+              {{ form.skill_id(class="form-select", id="skill_id") }}
+              <div class="form-text small">Select from categorized academic skills.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="skill_type" class="form-label fw-semibold small text-secondary">Exchange Intent</label>
+              {{ form.skill_type(class="form-select", id="skill_type") }}
+              <div class="form-text small">Choose whether you will teach or learn this skill.</div>
+            </div>
+
+            <div class="mb-3">
+              <label for="proficiency" class="form-label fw-semibold small text-secondary">Proficiency Level</label>
+              {{ form.proficiency(class="form-select", id="proficiency") }}
+            </div>
+
+            <div class="mb-3">
+              <label for="notes" class="form-label fw-semibold small text-secondary">Notes (Optional)</label>
+              {{ form.notes(class="form-control", id="notes", placeholder="e.g. Focus on OOP, Spring Boot, DSA problems") }}
+              <div class="form-text small">Max 200 characters detailing focus topics.</div>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 text-white fw-medium py-2">
+              <i class="bi bi-plus-lg me-1"></i> Add to Portfolio
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Quick Guidance Card -->
+      <div class="card border-0 shadow-sm rounded-3 mt-4 bg-light">
+        <div class="card-body p-3">
+          <h6 class="fw-bold text-dark small mb-2">
+            <i class="bi bi-shield-check text-success me-1"></i> Barter Rule Reminder
+          </h6>
+          <p class="text-muted small mb-0">
+            A skill cannot be listed under both <em>Teach</em> and <em>Learn</em> simultaneously. Keep your listings accurate to facilitate reliable barter matches in Phase 4.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Teach and Learn Portfolios -->
+    <div class="col-lg-8">
+      <!-- Section 1: Skills I Can Teach -->
+      <div class="card border-0 shadow-sm rounded-3 mb-4">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-success text-white p-2 rounded-circle">
+              <i class="bi bi-mortarboard"></i>
+            </span>
+            <div>
+              <h5 class="fw-bold mb-0">Skills I Can Teach</h5>
+              <div class="text-muted small">Skills you offer to teach peers in exchange for learning.</div>
+            </div>
+          </div>
+          <span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1">
+            {{ teach_skills|length }} Active
+          </span>
+        </div>
+        <div class="card-body p-4">
+          {% if teach_skills %}
+            <div class="row g-3">
+              {% for us in teach_skills %}
+                <div class="col-12">
+                  <div class="border rounded-3 p-3 bg-white shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <div class="flex-grow-1">
+                      <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <h6 class="fw-bold mb-0 text-dark">{{ us.skill.name }}</h6>
+                        <span class="badge bg-light text-secondary border small">
+                          <i class="{{ us.skill.category.icon }} me-1"></i>{{ us.skill.category.name }}
+                        </span>
+                        {% if us.proficiency == 'advanced' %}
+                          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">Advanced</span>
+                        {% elif us.proficiency == 'intermediate' %}
+                          <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">Intermediate</span>
+                        {% else %}
+                          <span class="badge bg-secondary bg-opacity-10 text-secondary border">Beginner</span>
+                        {% endif %}
+                      </div>
+                      {% if us.notes %}
+                        <p class="text-secondary small mb-0 fst-italic">"{{ us.notes }}"</p>
+                      {% else %}
+                        <p class="text-muted small mb-0">No specific notes provided.</p>
+                      {% endif %}
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                      <!-- Edit Modal Trigger -->
+                      <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editModal{{ us.id }}">
+                        <i class="bi bi-pencil me-1"></i> Edit
+                      </button>
+
+                      <!-- Delete Form -->
+                      <form method="POST" action="{{ url_for('skills.delete', user_skill_id=us.id) }}" onsubmit="return confirm('Remove {{ us.skill.name }} from your teaching portfolio?');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+
+                  <!-- Edit Modal -->
+                  <div class="modal fade" id="editModal{{ us.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ us.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h6 class="modal-title fw-bold" id="editModalLabel{{ us.id }}">
+                            Edit {{ us.skill.name }} (Teach)
+                          </h6>
+                          <button type="button" class="btn-close" data-bs-toggle="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" action="{{ url_for('skills.edit', user_skill_id=us.id) }}">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                          <div class="modal-body">
+                            <div class="mb-3">
+                              <label class="form-label fw-semibold small text-secondary">Proficiency Level</label>
+                              <select name="proficiency" class="form-select">
+                                <option value="beginner" {% if us.proficiency == 'beginner' %}selected{% endif %}>Beginner</option>
+                                <option value="intermediate" {% if us.proficiency == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                                <option value="advanced" {% if us.proficiency == 'advanced' %}selected{% endif %}>Advanced</option>
+                              </select>
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label fw-semibold small text-secondary">Notes (Optional)</label>
+                              <input type="text" name="notes" class="form-control" value="{{ us.notes or '' }}" maxlength="200" placeholder="e.g. Focus areas, topics mastered">
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-sm text-white">Save Changes</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-4 bg-light rounded-3">
+              <i class="bi bi-mortarboard text-muted fs-1 d-block mb-2"></i>
+              <h6 class="fw-semibold text-secondary mb-1">No teaching skills listed yet</h6>
+              <p class="text-muted small mb-0">Use the form on the left to add skills you can teach to fellow students.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Section 2: Skills I Want to Learn -->
+      <div class="card border-0 shadow-sm rounded-3">
+        <div class="card-header bg-white border-bottom py-3 d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center gap-2">
+            <span class="badge bg-info text-white p-2 rounded-circle">
+              <i class="bi bi-lightbulb"></i>
+            </span>
+            <div>
+              <h5 class="fw-bold mb-0">Skills I Want to Learn</h5>
+              <div class="text-muted small">Skills you wish to learn from skilled peers in the community.</div>
+            </div>
+          </div>
+          <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 px-2 py-1">
+            {{ learn_skills|length }} Active
+          </span>
+        </div>
+        <div class="card-body p-4">
+          {% if learn_skills %}
+            <div class="row g-3">
+              {% for us in learn_skills %}
+                <div class="col-12">
+                  <div class="border rounded-3 p-3 bg-white shadow-sm d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <div class="flex-grow-1">
+                      <div class="d-flex align-items-center gap-2 mb-1 flex-wrap">
+                        <h6 class="fw-bold mb-0 text-dark">{{ us.skill.name }}</h6>
+                        <span class="badge bg-light text-secondary border small">
+                          <i class="{{ us.skill.category.icon }} me-1"></i>{{ us.skill.category.name }}
+                        </span>
+                        {% if us.proficiency == 'advanced' %}
+                          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">Target: Advanced</span>
+                        {% elif us.proficiency == 'intermediate' %}
+                          <span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25">Target: Intermediate</span>
+                        {% else %}
+                          <span class="badge bg-secondary bg-opacity-10 text-secondary border">Target: Beginner</span>
+                        {% endif %}
+                      </div>
+                      {% if us.notes %}
+                        <p class="text-secondary small mb-0 fst-italic">"{{ us.notes }}"</p>
+                      {% else %}
+                        <p class="text-muted small mb-0">No specific notes provided.</p>
+                      {% endif %}
+                    </div>
+                    
+                    <div class="d-flex align-items-center gap-2">
+                      <!-- Edit Modal Trigger -->
+                      <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#editLearnModal{{ us.id }}">
+                        <i class="bi bi-pencil me-1"></i> Edit
+                      </button>
+
+                      <!-- Delete Form -->
+                      <form method="POST" action="{{ url_for('skills.delete', user_skill_id=us.id) }}" onsubmit="return confirm('Remove {{ us.skill.name }} from your learning wishlist?');">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                          <i class="bi bi-trash"></i>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+
+                  <!-- Edit Modal -->
+                  <div class="modal fade" id="editLearnModal{{ us.id }}" tabindex="-1" aria-labelledby="editLearnModalLabel{{ us.id }}" aria-hidden="true">
+                    <div class="modal-dialog">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h6 class="modal-title fw-bold" id="editLearnModalLabel{{ us.id }}">
+                            Edit {{ us.skill.name }} (Learn)
+                          </h6>
+                          <button type="button" class="btn-close" data-bs-toggle="modal" aria-label="Close"></button>
+                        </div>
+                        <form method="POST" action="{{ url_for('skills.edit', user_skill_id=us.id) }}">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                          <div class="modal-body">
+                            <div class="mb-3">
+                              <label class="form-label fw-semibold small text-secondary">Desired Target Proficiency</label>
+                              <select name="proficiency" class="form-select">
+                                <option value="beginner" {% if us.proficiency == 'beginner' %}selected{% endif %}>Beginner</option>
+                                <option value="intermediate" {% if us.proficiency == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                                <option value="advanced" {% if us.proficiency == 'advanced' %}selected{% endif %}>Advanced</option>
+                              </select>
+                            </div>
+                            <div class="mb-3">
+                              <label class="form-label fw-semibold small text-secondary">Notes (Optional)</label>
+                              <input type="text" name="notes" class="form-control" value="{{ us.notes or '' }}" maxlength="200" placeholder="e.g. Seeking help with recursion, exam prep">
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary btn-sm text-white">Save Changes</button>
+                          </div>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div class="text-center py-4 bg-light rounded-3">
+              <i class="bi bi-lightbulb text-muted fs-1 d-block mb-2"></i>
+              <h6 class="fw-semibold text-secondary mb-1">No learning skills listed yet</h6>
+              <p class="text-muted small mb-0">Use the form on the left to add skills you want to learn from other students.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
