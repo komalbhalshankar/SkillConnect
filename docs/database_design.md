@@ -15,6 +15,13 @@ The SkillConnect database is designed following **Third Normal Form (3NF)** prin
 
 ## 2. Entity-Relationship (ER) Diagram
 
+- **High-Resolution PNG:** [database_er_diagram.png](file:///d:/MCA/Python_Mini_Project_Sem%20l/docs/database_er_diagram.png) (1660 &times; 1140 px)
+- **Scalable Vector Graphic (SVG):** [database_er_diagram.svg](file:///d:/MCA/Python_Mini_Project_Sem%20l/docs/database_er_diagram.svg) (Lossless vector graphic)
+- **Comprehensive Data Dictionary (PDF):** [SkillConnect_Data_Dictionary.pdf](file:///d:/MCA/Python_Mini_Project_Sem%20l/docs/SkillConnect_Data_Dictionary.pdf)
+- **Interactive Diagrams Viewer:** [diagrams_viewer.html](file:///d:/MCA/Python_Mini_Project_Sem%20l/docs/diagrams_viewer.html)
+
+![SkillConnect Database ER Diagram](file:///d:/MCA/Python_Mini_Project_Sem%20l/docs/database_er_diagram.png)
+
 ```mermaid
 erDiagram
     USERS ||--o{ USER_SKILLS : "declares"

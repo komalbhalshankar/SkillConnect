@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1520 1380" width="100%" height="100%" style="background:#ffffff; font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap');
+      text { font-family: 'Inter', 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; }
+      .title { font-size: 20px; font-weight: 700; fill: #ffffff; letter-spacing: 0.5px; }
+      .subtitle { font-size: 13px; font-weight: 500; fill: #94a3b8; }
+      .pkg-title { font-size: 13px; font-weight: 700; fill: #0f172a; }
+      .class-name { font-size: 13px; font-weight: 700; fill: #ffffff; }
+      .stereotype { font-size: 10px; font-weight: 500; fill: #bae6fd; }
+      .attr-text { font-size: 11px; font-weight: 400; fill: #334155; }
+      .method-text { font-size: 11px; font-weight: 500; fill: #0369a1; }
+      .service-method { font-size: 11px; font-weight: 500; fill: #15803d; }
+      .comment-text { font-size: 10px; font-weight: 400; fill: #64748b; }
+      .mult-text { font-size: 10px; font-weight: 700; fill: #0f172a; }
+      .rel-label { font-size: 10px; font-weight: 600; fill: #475569; }
+    </style>
+    <filter id="shadow" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 1 L 10 5 L 0 9 z" fill="#334155"/>
+    </marker>
+    <marker id="dash-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#0284c7"/>
+    </marker>
+    <marker id="serv-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 2 L 8 5 L 0 8 z" fill="#16a34a"/>
+    </marker>
+    <marker id="diamond" viewBox="0 0 16 10" refX="0" refY="5" markerWidth="12" markerHeight="8" orient="auto-start-reverse">
+      <polygon points="0,5 8,1 16,5 8,9" fill="#0f172a" stroke="#0f172a" stroke-width="1"/>
+    </marker>
+  </defs>
+
+  <!-- Title Header -->
+  <rect x="30" y="20" width="1460" height="56" rx="8" fill="#0f172a"/>
+  <text x="55" y="55" class="title">UML CLASS DIAGRAM — SKILLCONNECT PLATFORM</text>
+  <text x="1465" y="55" class="subtitle" text-anchor="end">MCA Semester 1 • Layered MVC Architecture with Service Layer &amp; SQLAlchemy ORM</text>
+
+  <!-- ========================================================= -->
+  <!-- SECTION 1: DOMAIN ENTITIES (SQLAlchemy ORM Models)        -->
+  <!-- ========================================================= -->
+  <rect x="30" y="94" width="1460" height="730" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <rect x="30" y="94" width="1460" height="34" rx="10" fill="#e2e8f0"/>
+  <text x="55" y="117" class="pkg-title">PACKAGE: app.models (Domain Entities &amp; Relational Persistence Tier)</text>
+
+  <!-- Class: SkillCategory -->
+  <g id="class-SkillCategory" transform="translate(60, 150)" filter="url(#shadow)">
+    <rect width="230" height="180" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.8"/>
+    <rect width="230" height="32" rx="6" fill="#0284c7"/>
+    <text x="115" y="21" class="class-name" text-anchor="middle">SkillCategory</text>
+    <line x1="0" y1="32" x2="230" y2="32" stroke="#0284c7" stroke-width="1.8"/>
+    <!-- Attributes -->
+    <text x="12" y="54" class="attr-text">+ id: int {PK}</text>
+    <text x="12" y="73" class="attr-text">+ name: str {UK}</text>
+    <text x="12" y="92" class="attr-text">+ description: str</text>
+    <text x="12" y="111" class="attr-text">+ icon: str</text>
+    <text x="12" y="130" class="attr-text">+ created_at: datetime</text>
+    <line x1="0" y1="142" x2="230" y2="142" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Methods -->
+    <text x="12" y="162" class="method-text">+ __repr__(): str</text>
+  </g>
+
+  <!-- Class: Skill -->
+  <g id="class-Skill" transform="translate(340, 150)" filter="url(#shadow)">
+    <rect width="230" height="180" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.8"/>
+    <rect width="230" height="32" rx="6" fill="#0284c7"/>
+    <text x="115" y="21" class="class-name" text-anchor="middle">Skill</text>
+    <line x1="0" y1="32" x2="230" y2="32" stroke="#0284c7" stroke-width="1.8"/>
+    <!-- Attributes -->
+    <text x="12" y="54" class="attr-text">+ id: int {PK}</text>
+    <text x="12" y="73" class="attr-text">+ category_id: int {FK}</text>
+    <text x="12" y="92" class="attr-text">+ name: str {UK, Index}</text>
+    <text x="12" y="111" class="attr-text">+ description: str</text>
+    <text x="12" y="130" class="attr-text">+ created_at: datetime</text>
+    <line x1="0" y1="142" x2="230" y2="142" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Methods -->
+    <text x="12" y="162" class="method-text">+ __repr__(): str</text>
+  </g>
+
+  <!-- Class: UserSkill (Associative Entity) -->
+  <g id="class-UserSkill" transform="translate(630, 150)" filter="url(#shadow)">
+    <rect width="270" height="240" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.8"/>
+    <rect width="270" height="32" rx="6" fill="#0284c7"/>
+    <text x="135" y="15" class="stereotype" text-anchor="middle">&lt;&lt;associative entity&gt;&gt;</text>
+    <text x="135" y="27" class="class-name" text-anchor="middle">UserSkill</text>
+    <line x1="0" y1="32" x2="270" y2="32" stroke="#0284c7" stroke-width="1.8"/>
+    <!-- Attributes -->
+    <text x="12" y="52" class="attr-text">+ id: int {PK}</text>
+    <text x="12" y="70" class="attr-text">+ user_id: int {FK, Index}</text>
+    <text x="12" y="88" class="attr-text">+ skill_id: int {FK, Index}</text>
+    <text x="12" y="106" class="attr-text">+ skill_type: str ("teach"|"learn")</text>
+    <text x="12" y="124" class="attr-text">+ proficiency: str ("beg"|"int"|"adv")</text>
+    <text x="12" y="142" class="attr-text">+ notes: str</text>
+    <text x="12" y="160" class="attr-text">+ created_at: datetime</text>
+    <text x="12" y="178" class="attr-text">+ updated_at: datetime</text>
+    <line x1="0" y1="188" x2="270" y2="188" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Methods -->
+    <text x="12" y="208" class="method-text">+ proficiency_weight(): int</text>
+    <text x="12" y="226" class="method-text">+ __repr__(): str</text>
+  </g>
+
+  <!-- Class: User -->
+  <g id="class-User" transform="translate(970, 150)" filter="url(#shadow)">
+    <rect width="330" height="340" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.8"/>
+    <rect width="330" height="32" rx="6" fill="#0284c7"/>
+    <text x="165" y="15" class="stereotype" text-anchor="middle">&lt;&lt;UserMixin, db.Model&gt;&gt;</text>
+    <text x="165" y="27" class="class-name" text-anchor="middle">User</text>
+    <line x1="0" y1="32" x2="330" y2="32" stroke="#0284c7" stroke-width="1.8"/>
+    <!-- Attributes -->
+    <text x="12" y="50" class="attr-text">+ id: int {PK}</text>
+    <text x="12" y="68" class="attr-text">+ name: str</text>
+    <text x="12" y="86" class="attr-text">+ email: str {UK, Index}</text>
+    <text x="12" y="104" class="attr-text">+ password_hash: str</text>
+    <text x="12" y="122" class="attr-text">+ role: str ("student"|"admin")</text>
+    <text x="12" y="140" class="attr-text">+ college: str</text>
+    <text x="12" y="158" class="attr-text">+ bio: text</text>
+    <text x="12" y="176" class="attr-text">+ availability: str</text>
+    <text x="12" y="194" class="attr-text">+ created_at / updated_at: datetime</text>
+    <line x1="0" y1="204" x2="330" y2="204" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Methods -->
+    <text x="12" y="222" class="method-text">+ set_password(password: str): void</text>
+    <text x="12" y="239" class="method-text">+ check_password(password: str): bool</text>
+    <text x="12" y="256" class="method-text">+ is_admin: bool {property}</text>
+    <text x="12" y="273" class="method-text">+ teach_skills: list[UserSkill] {property}</text>
+    <text x="12" y="290" class="method-text">+ learn_skills: list[UserSkill] {property}</text>
+    <text x="12" y="307" class="method-text">+ average_rating: float {property}</text>
+    <text x="12" y="324" class="method-text">+ review_count: int {property}</text>
+  </g>
+
+  <!-- Class: ExchangeRequest -->
+  <g id="class-ExchangeRequest" transform="translate(180, 440)" filter="url(#shadow)">
+    <rect width="320" height="310" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.8"/>
+    <rect width="320" height="32" rx="6" fill="#0284c7"/>
+    <text x="160" y="21" class="class-name" text-anchor="middle">ExchangeRequest</text>
+    <line x1="0" y1="32" x2="320" y2="32" stroke="#0284c7" stroke-width="1.8"/>
+    <!-- Attributes -->
+    <text x="12" y="50" class="attr-text">+ id: int {PK}</text>
+    <text x="12" y="67" class="attr-text">+ sender_id: int {FK, Index}</text>
+    <text x="12" y="84" class="attr-text">+ receiver_id: int {FK, Index}</text>
+    <text x="12" y="101" class="attr-text">+ offered_skill_id: int {FK}</text>
+    <text x="12" y="118" class="attr-text">+ requested_skill_id: int {FK}</text>
+    <text x="12" y="135" class="attr-text">+ status: str ("pending"|"accepted"|"rejected")</text>
+    <text x="12" y="152" class="attr-text">+ message: text</text>
+    <text x="12" y="169" class="attr-text">+ created_at / updated_at: datetime</text>
+    <line x1="0" y1="180" x2="320" y2="180" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Methods -->
+    <text x="12" y="198" class="method-text">+ is_pending / is_accepted: bool</text>
+    <text x="12" y="216" class="method-text">+ is_rejected / is_cancelled: bool</text>
+    <text x="12" y="234" class="method-text">+ partner(user_id: int): User</text>
+    <text x="12" y="252" class="method-text">+ is_participant(user_id: int): bool</text>
+    <text x="12" y="270" class="method-text">+ status_badge_class: str {property}</text>
+    <text x="12" y="295" class="comment-text">Enforces state transitions &amp; reciprocal checks</text>
+  </g>
+
+  <!-- Class: ExchangeSession -->
+  <g id="class-ExchangeSession" transform="translate(570, 440)" filter="url(#shadow)">
+    <rect width="320" height="310" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.8"/>
+    <rect width="320" height="32" rx="6" fill="#0284c7"/>
+    <text x="160" y="21" class="class-name" text-anchor="middle">ExchangeSession</text>
+    <line x1="0" y1="32" x2="320" y2="32" stroke="#0284c7" stroke-width="1.8"/>
+    <!-- Attributes -->
+    <text x="12" y="50" class="attr-text">+ id: int {PK}</text>
+    <text x="12" y="67" class="attr-text">+ request_id: int {FK, UK}</text>
+    <text x="12" y="84" class="attr-text">+ scheduled_at: datetime</text>
+    <text x="12" y="101" class="attr-text">+ duration_minutes: int (15..300)</text>
+    <text x="12" y="118" class="attr-text">+ mode: str ("online"|"in_person"|"hybrid")</text>
+    <text x="12" y="135" class="attr-text">+ meeting_details: str</text>
+    <text x="12" y="152" class="attr-text">+ notes: text</text>
+    <text x="12" y="169" class="attr-text">+ status: str ("scheduled"|"completed"|"cancelled")</text>
+    <line x1="0" y1="180" x2="320" y2="180" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Methods -->
+    <text x="12" y="198" class="method-text">+ is_scheduled / is_completed: bool</text>
+    <text x="12" y="216" class="method-text">+ is_participant(user_id: int): bool</text>
+    <text x="12" y="234" class="method-text">+ partner(user_id: int): User</text>
+    <text x="12" y="252" class="method-text">+ has_user_rated(user_id: int): bool</text>
+    <text x="12" y="270" class="method-text">+ get_user_rating(user_id: int): Rating</text>
+    <text x="12" y="288" class="method-text">+ formatted_date / formatted_time: str</text>
+  </g>
+
+  <!-- Class: Rating -->
+  <g id="class-Rating" transform="translate(970, 520)" filter="url(#shadow)">
+    <rect width="330" height="230" rx="6" fill="#ffffff" stroke="#0284c7" stroke-width="1.8"/>
+    <rect width="330" height="32" rx="6" fill="#0284c7"/>
+    <text x="165" y="21" class="class-name" text-anchor="middle">Rating</text>
+    <line x1="0" y1="32" x2="330" y2="32" stroke="#0284c7" stroke-width="1.8"/>
+    <!-- Attributes -->
+    <text x="12" y="52" class="attr-text">+ id: int {PK}</text>
+    <text x="12" y="70" class="attr-text">+ session_id: int {FK, Index}</text>
+    <text x="12" y="88" class="attr-text">+ reviewer_id: int {FK, Index}</text>
+    <text x="12" y="106" class="attr-text">+ reviewee_id: int {FK, Index}</text>
+    <text x="12" y="124" class="attr-text">+ score: int (CK: 1 &lt;= score &lt;= 5)</text>
+    <text x="12" y="142" class="attr-text">+ feedback: text (&lt;= 500 chars)</text>
+    <text x="12" y="160" class="attr-text">+ created_at: datetime</text>
+    <line x1="0" y1="172" x2="330" y2="172" stroke="#e2e8f0" stroke-width="1"/>
+    <!-- Constraints / Notes -->
+    <text x="12" y="192" fill="#b45309" font-size="11" font-weight="600">UNIQUE(session_id, reviewer_id)</text>
+    <text x="12" y="210" class="method-text">+ __repr__(): str</text>
+  </g>
+
+  <!-- ========================================================= -->
+  <!-- MODEL RELATIONSHIP CONNECTORS & MULTIPLICITIES            -->
+  <!-- ========================================================= -->
+  <!-- SkillCategory to Skill (Composition) -->
+  <line x1="290" y1="235" x2="340" y2="235" stroke="#0f172a" stroke-width="1.8"/>
+  <polygon points="290,235 298,230 306,235 298,240" fill="#0f172a"/>
+  <text x="310" y="227" class="mult-text">1</text>
+  <text x="324" y="227" class="mult-text">0..*</text>
+
+  <!-- Skill to UserSkill (Association) -->
+  <line x1="570" y1="235" x2="630" y2="235" stroke="#0f172a" stroke-width="1.8"/>
+  <text x="578" y="227" class="mult-text">1</text>
+  <text x="612" y="227" class="mult-text">0..*</text>
+
+  <!-- User to UserSkill (Composition) -->
+  <line x1="970" y1="235" x2="900" y2="235" stroke="#0f172a" stroke-width="1.8"/>
+  <polygon points="970,235 962,230 954,235 962,240" fill="#0f172a"/>
+  <text x="936" y="227" class="mult-text">1</text>
+  <text x="908" y="227" class="mult-text">0..*</text>
+
+  <!-- ExchangeRequest to ExchangeSession (1-to-0..1 Composition) -->
+  <line x1="500" y1="580" x2="570" y2="580" stroke="#0f172a" stroke-width="1.8"/>
+  <polygon points="500,580 508,575 516,580 508,585" fill="#0f172a"/>
+  <text x="522" y="572" class="mult-text">1</text>
+  <text x="548" y="572" class="mult-text">0..1</text>
+
+  <!-- ExchangeSession to Rating (1-to-0..2 Composition) -->
+  <line x1="890" y1="580" x2="970" y2="580" stroke="#0f172a" stroke-width="1.8"/>
+  <polygon points="890,580 898,575 906,580 898,585" fill="#0f172a"/>
+  <text x="912" y="572" class="mult-text">1</text>
+  <text x="945" y="572" class="mult-text">0..2</text>
+
+  <!-- User to ExchangeRequest (Sender / Receiver) -->
+  <path d="M 1030 490 L 1030 515 L 500 515" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3" fill="none"/>
+  <text x="750" y="510" class="rel-label" text-anchor="middle">sender &amp; receiver (1 to 0..*)</text>
+
+  <!-- Skill to ExchangeRequest (Offered / Requested) -->
+  <path d="M 450 330 L 450 440" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3" fill="none"/>
+  <text x="455" y="380" class="rel-label">offered / requested (1 to 0..*)</text>
+
+  <!-- User to Rating (Reviewer / Reviewee) -->
+  <line x1="1135" y1="490" x2="1135" y2="520" stroke="#475569" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="1145" y="508" class="rel-label">reviews (1 to 0..*)</text>
+
+  <!-- ========================================================= -->
+  <!-- SECTION 2: SERVICE LAYER (Business Logic Classes)         -->
+  <!-- ========================================================= -->
+  <rect x="30" y="844" width="1460" height="505" rx="10" fill="#f0fdf4" stroke="#86efac" stroke-width="1.5"/>
+  <rect x="30" y="844" width="1460" height="34" rx="10" fill="#dcfce7"/>
+  <text x="55" y="867" fill="#14532d" font-size="14" font-weight="bold">PACKAGE: app.services (Service Layer — Business Logic &amp; Orchestration)</text>
+
+  <!-- AuthService -->
+  <g id="class-AuthService" transform="translate(60, 900)" filter="url(#shadow)">
+    <rect width="260" height="190" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect width="260" height="32" rx="6" fill="#16a34a"/>
+    <text x="130" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
+    <text x="130" y="27" class="class-name" text-anchor="middle">AuthService</text>
+    <line x1="0" y1="32" x2="260" y2="32" stroke="#16a34a" stroke-width="1.8"/>
+    <text x="12" y="56" class="service-method">+ register_user(...) : tuple</text>
+    <text x="12" y="82" class="service-method">+ authenticate_user(...) : User</text>
+    <text x="12" y="108" class="service-method">+ update_profile(...) : tuple</text>
+    <text x="12" y="134" class="service-method">+ change_password(...) : tuple</text>
+    <text x="12" y="162" class="comment-text">Manages credentials, hashing,</text>
+    <text x="12" y="177" class="comment-text">role verification &amp; session auth</text>
+  </g>
+
+  <!-- SkillService -->
+  <g id="class-SkillService" transform="translate(345, 900)" filter="url(#shadow)">
+    <rect width="265" height="215" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect width="265" height="32" rx="6" fill="#16a34a"/>
+    <text x="132" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
+    <text x="132" y="27" class="class-name" text-anchor="middle">SkillService</text>
+    <line x1="0" y1="32" x2="265" y2="32" stroke="#16a34a" stroke-width="1.8"/>
+    <text x="12" y="54" class="service-method">+ get_all_categories() : list</text>
+    <text x="12" y="76" class="service-method">+ get_skills_by_category(...) : list</text>
+    <text x="12" y="98" class="service-method">+ get_user_skills(...) : list</text>
+    <text x="12" y="120" class="service-method">+ add_user_skill(...) : tuple</text>
+    <text x="12" y="142" class="service-method">+ remove_user_skill(...) : tuple</text>
+    <text x="12" y="164" class="service-method">+ update_user_skill(...) : tuple</text>
+    <text x="12" y="186" class="service-method">+ search_students(...) : list</text>
+  </g>
+
+  <!-- MatchingService -->
+  <g id="class-MatchingService" transform="translate(635, 900)" filter="url(#shadow)">
+    <rect width="265" height="215" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect width="265" height="32" rx="6" fill="#16a34a"/>
+    <text x="132" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
+    <text x="132" y="27" class="class-name" text-anchor="middle">MatchingService</text>
+    <line x1="0" y1="32" x2="265" y2="32" stroke="#16a34a" stroke-width="1.8"/>
+    <text x="12" y="54" class="service-method">+ calculate_compatibility(A, B) : dict</text>
+    <text x="12" y="78" class="service-method">+ find_matches(user, ...) : list</text>
+    <text x="12" y="102" class="service-method">+ get_top_matches(user, limit) : list</text>
+    <line x1="0" y1="116" x2="265" y2="116" stroke="#bbf7d0" stroke-width="1"/>
+    <text x="12" y="136" class="comment-text">Deterministic Rule Engine:</text>
+    <text x="12" y="153" class="comment-text">40 pts Forward + 40 pts Reverse</text>
+    <text x="12" y="170" class="comment-text">+ 10 pts Category Alignment</text>
+    <text x="12" y="187" class="comment-text">+ 10 pts Proficiency Differential</text>
+  </g>
+
+  <!-- ExchangeService -->
+  <g id="class-ExchangeService" transform="translate(925, 900)" filter="url(#shadow)">
+    <rect width="270" height="235" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect width="270" height="32" rx="6" fill="#16a34a"/>
+    <text x="135" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
+    <text x="135" y="27" class="class-name" text-anchor="middle">ExchangeService</text>
+    <line x1="0" y1="32" x2="270" y2="32" stroke="#16a34a" stroke-width="1.8"/>
+    <text x="12" y="52" class="service-method">+ create_request(...) : tuple</text>
+    <text x="12" y="72" class="service-method">+ respond_to_request(...) : tuple</text>
+    <text x="12" y="92" class="service-method">+ cancel_request(...) : tuple</text>
+    <text x="12" y="112" class="service-method">+ schedule_session(...) : tuple</text>
+    <text x="12" y="132" class="service-method">+ complete_session(...) : tuple</text>
+    <text x="12" y="152" class="service-method">+ cancel_session(...) : tuple</text>
+    <text x="12" y="172" class="service-method">+ get_user_requests(...) : list</text>
+    <text x="12" y="192" class="service-method">+ get_user_sessions(...) : list</text>
+  </g>
+
+  <!-- RatingService & StatsService (Right column) -->
+  <g id="class-RatingService" transform="translate(1220, 900)" filter="url(#shadow)">
+    <rect width="240" height="170" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect width="240" height="32" rx="6" fill="#16a34a"/>
+    <text x="120" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
+    <text x="120" y="27" class="class-name" text-anchor="middle">RatingService</text>
+    <line x1="0" y1="32" x2="240" y2="32" stroke="#16a34a" stroke-width="1.8"/>
+    <text x="10" y="55" class="service-method">+ submit_rating(...) : tuple</text>
+    <text x="10" y="80" class="service-method">+ get_user_ratings(...) : list</text>
+    <text x="10" y="105" class="service-method">+ get_session_ratings(...) : list</text>
+    <text x="10" y="132" class="comment-text">Validates completed status, participant</text>
+    <text x="10" y="148" class="comment-text">authorization &amp; rating score bounds</text>
+  </g>
+
+  <g id="class-StatsService" transform="translate(1220, 1090)" filter="url(#shadow)">
+    <rect width="240" height="155" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect width="240" height="32" rx="6" fill="#16a34a"/>
+    <text x="120" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
+    <text x="120" y="27" class="class-name" text-anchor="middle">StatsService</text>
+    <line x1="0" y1="32" x2="240" y2="32" stroke="#16a34a" stroke-width="1.8"/>
+    <text x="10" y="55" class="service-method">+ get_student_stats(u_id) : dict</text>
+    <text x="10" y="80" class="service-method">+ get_admin_stats() : dict</text>
+    <text x="10" y="108" class="comment-text">Computes platform totals, activity</text>
+    <text x="10" y="124" class="comment-text">summaries &amp; categorical breakdowns</text>
+  </g>
+
+</svg>

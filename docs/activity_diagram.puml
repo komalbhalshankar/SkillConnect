@@ -1,0 +1,99 @@
+@startuml SkillConnect_Activity_Diagram
+skinparam shadowing false
+skinparam packageStyle rectangle
+skinparam activityFontSize 11
+skinparam activityBorderColor #0284C7
+skinparam activityBackgroundColor #FFFFFF
+skinparam arrowColor #334155
+skinparam arrowFontSize 10
+skinparam partitionBorderColor #94A3B8
+skinparam partitionBackgroundColor #F8FAFC
+
+title SkillConnect — Skill Exchange Lifecycle Activity Diagram
+
+|#E0F2FE|Student A (Sender)|
+|#F1F5F9|SkillConnect System|
+|#FEF3C7|Student B (Receiver)|
+
+|Student A (Sender)|
+start
+:Browse Discovery / Search Peers;
+:Select Target Peer (Student B);
+:Select Offered Skill (from Teach list)
+and Requested Skill (from B's Teach list);
+:Submit Exchange Proposal;
+
+|SkillConnect System|
+:Validate Proposal Prerequisites;
+if (Is Proposal Valid?\n(Not self, valid skills, no active duplicates)) then (No)
+  :Display Validation Flash Error;
+  |Student A (Sender)|
+  :Review & Correct Form;
+  detach
+else (Yes)
+  |SkillConnect System|
+  :Save ExchangeRequest (status='pending');
+  :Notify Student B in Inbox;
+endif
+
+|Student B (Receiver)|
+:View Request in Exchange Inbox;
+:Review Offered & Requested Skills;
+if (Accept Proposal?) then (Reject)
+  :Click 'Reject';
+  |SkillConnect System|
+  :Update ExchangeRequest (status='rejected');
+  |Student B (Receiver)|
+  stop
+else (Accept)
+  :Click 'Accept';
+  |SkillConnect System|
+  :Update ExchangeRequest (status='accepted');
+endif
+
+|Student A (Sender)|
+:Open Accepted Exchange;
+:Fill Scheduling Form
+(Date, Time, Duration 15-300m, Mode, Link);
+:Submit Schedule;
+
+|SkillConnect System|
+if (Schedule Valid?\n(Future date & valid duration)) then (Invalid)
+  :Display Schedule Error;
+  |Student A (Sender)|
+  :Adjust Date/Time;
+  detach
+else (Valid)
+  |SkillConnect System|
+  :Save ExchangeSession (status='scheduled');
+endif
+
+|Student A (Sender)|
+:Conduct Peer Learning Session with Student B;
+:Click 'Mark Session Completed';
+
+|SkillConnect System|
+:Update ExchangeSession (status='completed');
+:Unlock Rating Submissions;
+
+fork
+  |Student A (Sender)|
+  :Submit 1-5 Star Rating & Feedback for B;
+  |SkillConnect System|
+  :Save Rating;
+  :Recalculate Student B's Average Rating;
+fork again
+  |Student B (Receiver)|
+  :Submit 1-5 Star Rating & Feedback for A;
+  |SkillConnect System|
+  :Save Rating;
+  :Recalculate Student A's Average Rating;
+end fork
+
+|SkillConnect System|
+:Update Dashboard Stats & Badges;
+
+|Student A (Sender)|
+stop
+
+@enduml

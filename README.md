@@ -44,16 +44,21 @@ Python_Mini_Project_Sem l/
 │       ├── matching/           # Student discovery & match recommendations
 │       ├── exchanges/          # Exchange requests, scheduling, session detail, rating views
 │       └── errors/             # Custom 403, 404, 500 error pages
-├── docs/                       # Project documentation & diagrams
-│   ├── requirements.md         # System requirements specification (SRS)
-│   ├── use_case_diagram.md     # UML use case diagram documentation
-│   ├── use_case_diagram.svg    # Rendered vector UML use case diagram
-│   ├── use_case_diagram.mmd    # Mermaid diagram source
-│   ├── use_case_diagram.puml   # PlantUML diagram source
-│   ├── architecture.md         # System architecture specification
-│   ├── database_design.md      # Relational schema design and data dictionary
-│   ├── matching_algorithm.md   # Mathematical specification of the matching engine
-│   └── test_plan.md            # Comprehensive QA test plan
+├── docs/                       # Project documentation, UML diagrams & specifications
+│   ├── diagrams_viewer.html    # Interactive browser hub for all UML diagrams (SVG/PNG)
+│   ├── use_case_diagram.md     # UML Use Case Diagram specification (SVG, PNG, PUML, MMD)
+│   ├── activity_diagram.md     # UML Activity & Swimlane Diagram specification (SVG, PNG, PUML)
+│   ├── class_diagram.md        # UML Class Diagram domain models & services (SVG, PNG, PUML)
+│   ├── database_design.md      # Relational schema design (3NF), ER diagram & field specs
+│   ├── database_er_diagram.png # High-resolution Entity-Relationship diagram
+│   ├── data_dictionary.md      # Relational Data Dictionary specification
+│   ├── data_dictionary.html    # Interactive filterable Data Dictionary web table
+│   ├── SkillConnect_Data_Dictionary.pdf # Print-ready vectorized A4 Data Dictionary
+│   ├── module_description.md   # Architectural breakdown of all 5 modules (SVG, PNG)
+│   ├── architecture.md         # System layered MVC architecture specification
+│   ├── matching_algorithm.md   # Mathematical specification of 40/40/10/10 matching engine
+│   ├── requirements.md         # Software Requirements Specification (SRS)
+│   └── test_plan.md            # Comprehensive QA test plan and coverage matrix
 ├── tests/                      # Automated test suites (pytest)
 │   ├── conftest.py             # Fixtures and test client
 │   ├── test_auth.py            # Authentication, hashing, access control tests (10 tests)
@@ -69,6 +74,20 @@ Python_Mini_Project_Sem l/
 ├── requirements.txt            # Python dependencies
 └── run.py                      # Flask entry point and CLI commands
 ```
+
+### 3.1 UML Diagrams & System Documentation
+
+| Document / Diagram | Formats Available | Description & Highlights |
+| :--- | :--- | :--- |
+| **Interactive Diagrams Hub** | [`diagrams_viewer.html`](docs/diagrams_viewer.html) | Interactive HTML browser with instant zoom and direct vector downloads |
+| **UML Use Case Diagram** | [PNG](docs/use_case_diagram.png) • [SVG](docs/use_case_diagram.svg) • [MD](docs/use_case_diagram.md) | Actor boundaries, Student & Administrator actions across all 5 modules |
+| **UML Activity Diagram** | [PNG](docs/activity_diagram.png) • [SVG](docs/activity_diagram.svg) • [MD](docs/activity_diagram.md) | Swimlane workflow (Student A &harr; System &harr; Student B) & matching logic |
+| **UML Class Diagram** | [PNG](docs/class_diagram.png) • [SVG](docs/class_diagram.svg) • [MD](docs/class_diagram.md) | Layered MVC architecture, SQLAlchemy 3NF models, and Service layer |
+| **Database ER Diagram** | [PNG](docs/database_er_diagram.png) • [SVG](docs/database_er_diagram.svg) • [MD](docs/database_design.md) | 7 normalized tables, primary/foreign keys, and relational cardinality |
+| **Relational Data Dictionary** | [PDF](docs/SkillConnect_Data_Dictionary.pdf) • [HTML](docs/data_dictionary.html) • [MD](docs/data_dictionary.md) | Print-ready A4 PDF & interactive data matrix of tables, columns, constraints |
+| **Module Architecture** | [PNG](docs/module_description.png) • [SVG](docs/module_description.svg) • [MD](docs/module_description.md) | High-level system architecture and breakdown of 5 core modules |
+| **Matching Algorithm** | [MD](docs/matching_algorithm.md) | Deterministic 40/40/10/10 mathematical scoring formula |
+| **System Test Plan** | [MD](docs/test_plan.md) | Comprehensive test scenarios and 91 verified pytest test cases |
 
 ---
 

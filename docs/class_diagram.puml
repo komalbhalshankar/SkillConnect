@@ -1,0 +1,202 @@
+@startuml SkillConnect_Class_Diagram
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam classAttributeIconSize 0
+skinparam classFontStyle bold
+skinparam classFontSize 11
+skinparam classAttributeFontSize 10
+skinparam classBorderColor #0284C7
+skinparam classBackgroundColor #FFFFFF
+skinparam arrowColor #334155
+skinparam arrowFontSize 10
+
+' ==========================================
+' DOMAIN ENTITIES (DATA LAYER)
+' ==========================================
+package "Models (SQLAlchemy ORM Entities)" #F8FAFC {
+
+  class User {
+    + id: int {PK}
+    + name: string(120)
+    + email: string(180) {UK}
+    + password_hash: string(255)
+    + role: string(20)
+    + college: string(180)
+    + bio: text
+    + availability: string(120)
+    + created_at: datetime
+    + updated_at: datetime
+    --
+    + set_password(password: str): void
+    + check_password(password: str): bool
+    + is_admin(): bool
+    + teach_skills(): list[UserSkill]
+    + learn_skills(): list[UserSkill]
+    + average_rating(): float
+    + review_count(): int
+  }
+
+  class SkillCategory {
+    + id: int {PK}
+    + name: string(80) {UK}
+    + description: string(255)
+    + icon: string(50)
+    + created_at: datetime
+  }
+
+  class Skill {
+    + id: int {PK}
+    + category_id: int {FK}
+    + name: string(100) {UK}
+    + description: string(255)
+    + created_at: datetime
+  }
+
+  class UserSkill {
+    + id: int {PK}
+    + user_id: int {FK}
+    + skill_id: int {FK}
+    + skill_type: string(10)
+    + proficiency: string(20)
+    + notes: string(255)
+    + created_at: datetime
+    + updated_at: datetime
+    --
+    + proficiency_weight(): int
+  }
+
+  class ExchangeRequest {
+    + id: int {PK}
+    + sender_id: int {FK}
+    + receiver_id: int {FK}
+    + offered_skill_id: int {FK}
+    + requested_skill_id: int {FK}
+    + status: string(20)
+    + message: text
+    + created_at: datetime
+    + updated_at: datetime
+    --
+    + is_pending(): bool
+    + is_accepted(): bool
+    + is_rejected(): bool
+    + is_cancelled(): bool
+    + partner(user_id: int): User
+    + is_participant(user_id: int): bool
+  }
+
+  class ExchangeSession {
+    + id: int {PK}
+    + request_id: int {FK, UK}
+    + scheduled_at: datetime
+    + duration_minutes: int
+    + mode: string(20)
+    + meeting_details: string(255)
+    + notes: text
+    + status: string(20)
+    + created_at: datetime
+    + updated_at: datetime
+    --
+    + is_scheduled(): bool
+    + is_completed(): bool
+    + is_cancelled(): bool
+    + formatted_date(): str
+    + formatted_time(): str
+    + is_participant(user_id: int): bool
+    + partner(user_id: int): User
+    + has_user_rated(user_id: int): bool
+    + get_user_rating(user_id: int): Rating
+  }
+
+  class Rating {
+    + id: int {PK}
+    + session_id: int {FK}
+    + reviewer_id: int {FK}
+    + reviewee_id: int {FK}
+    + score: int
+    + feedback: text
+    + created_at: datetime
+  }
+}
+
+' ==========================================
+' SERVICE LAYER (BUSINESS LOGIC)
+' ==========================================
+package "Services (Business Logic Layer)" #EFF6FF {
+
+  class AuthService <<service>> {
+    + register_user(...)
+    + authenticate_user(...)
+    + update_profile(...)
+    + change_password(...)
+  }
+
+  class SkillService <<service>> {
+    + get_all_categories()
+    + get_all_skills()
+    + get_skills_by_category(...)
+    + get_user_skills(...)
+    + add_user_skill(...)
+    + remove_user_skill(...)
+    + search_students(...)
+  }
+
+  class MatchingService <<service>> {
+    + calculate_compatibility(user_a, user_b)
+    + find_matches(user, ...)
+    + get_top_matches(user, limit)
+  }
+
+  class ExchangeService <<service>> {
+    + create_request(...)
+    + respond_to_request(...)
+    + cancel_request(...)
+    + schedule_session(...)
+    + complete_session(...)
+    + cancel_session(...)
+  }
+
+  class RatingService <<service>> {
+    + submit_rating(...)
+    + get_user_ratings(...)
+    + get_session_ratings(...)
+  }
+
+  class StatsService <<service>> {
+    + get_student_dashboard_stats(...)
+    + get_admin_platform_stats(...)
+  }
+}
+
+' ==========================================
+' MODEL RELATIONSHIPS
+' ==========================================
+User "1" *-- "0..*" UserSkill : owns
+SkillCategory "1" *-- "0..*" Skill : classifies
+Skill "1" -- "0..*" UserSkill : referenced in
+
+User "1" -- "0..*" ExchangeRequest : sender
+User "1" -- "0..*" ExchangeRequest : receiver
+Skill "1" -- "0..*" ExchangeRequest : offered
+Skill "1" -- "0..*" ExchangeRequest : requested
+
+ExchangeRequest "1" *-- "0..1" ExchangeSession : schedules
+ExchangeSession "1" *-- "0..2" Rating : evaluated in
+
+User "1" -- "0..*" Rating : reviewer
+User "1" -- "0..*" Rating : reviewee
+
+' ==========================================
+' SERVICE DEPENDENCIES
+' ==========================================
+AuthService ..> User
+SkillService ..> Skill
+SkillService ..> UserSkill
+MatchingService ..> UserSkill
+ExchangeService ..> ExchangeRequest
+ExchangeService ..> ExchangeSession
+RatingService ..> Rating
+RatingService ..> ExchangeSession
+StatsService ..> User
+StatsService ..> ExchangeSession
+
+@enduml

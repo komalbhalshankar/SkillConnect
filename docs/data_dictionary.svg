@@ -1,0 +1,637 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1750 3536" width="1750" height="3536">
+<defs>
+      <linearGradient id="headerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#0f172a" />
+        <stop offset="100%" stop-color="#1e293b" />
+      </linearGradient>
+      <linearGradient id="cardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#ffffff" />
+        <stop offset="100%" stop-color="#f8fafc" />
+      </linearGradient>
+      <filter id="shadow" x="-2%" y="-1%" width="104%" height="106%">
+        <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000" flood-opacity="0.08"/>
+      </filter>
+      <style>
+        .font-sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+        .font-mono { font-family: "Consolas", "Courier New", monospace; }
+      </style>
+    </defs>
+<rect width="1750" height="3536" fill="#f1f5f9"/>
+
+    <g transform="translate(40, 30)">
+      <rect width="1670" height="145" rx="14" fill="url(#headerGrad)" filter="url(#shadow)"/>
+      <rect x="0" y="0" width="8" height="145" rx="4" fill="#0284c7"/>
+      
+      <text x="35" y="48" class="font-sans" font-size="28" font-weight="700" fill="#f8fafc" letter-spacing="0.5">SkillConnect — Database Data Dictionary</text>
+      <text x="35" y="78" class="font-sans" font-size="15" fill="#94a3b8">Peer-to-Peer Student Skill Exchange Platform • MCA Semester 1 Mini Project • Schema Specification v1.0</text>
+      
+      <!-- Badges -->
+      <g transform="translate(35, 96)">
+        <rect x="0" y="0" width="165" height="28" rx="6" fill="#0369a1"/>
+        <text x="12" y="19" class="font-sans" font-size="12" font-weight="600" fill="#ffffff">ENGINE: SQLite 3 (3NF)</text>
+        
+        <rect x="180" y="0" width="185" height="28" rx="6" fill="#047857"/>
+        <text x="192" y="19" class="font-sans" font-size="12" font-weight="600" fill="#ffffff">ORM: Flask-SQLAlchemy</text>
+        
+        <rect x="380" y="0" width="160" height="28" rx="6" fill="#6d28d9"/>
+        <text x="392" y="19" class="font-sans" font-size="12" font-weight="600" fill="#ffffff">CORE TABLES: 7 Active</text>
+        
+        <rect x="555" y="0" width="195" height="28" rx="6" fill="#be123c"/>
+        <text x="567" y="19" class="font-sans" font-size="12" font-weight="600" fill="#ffffff">INTEGRITY: 89 Tests Passed</text>
+      </g>
+    </g>
+    
+<g transform="translate(40, 205)">
+<rect width="1670" height="511" rx="12" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+
+        <rect width="1670" height="70" rx="12" fill="#1e293b"/>
+        <rect y="60" width="1670" height="10" fill="#1e293b"/>
+        <text x="25" y="33" class="font-mono" font-size="20" font-weight="700" fill="#38bdf8">1. users</text>
+        <text x="25" y="54" class="font-sans" font-size="13" fill="#cbd5e1">Stores student and administrator credentials, profiles, academic institution, and role-based access.</text>
+        
+
+        <rect y="70" width="1670" height="36" fill="#334155"/>
+        <text x="60" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">COLUMN NAME</text>
+        <text x="270" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DATA TYPE</text>
+        <text x="460" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">CONSTRAINTS / KEYS</text>
+        <text x="680" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">NULLABLE</text>
+        <text x="780" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DEFAULT</text>
+        <text x="930" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DESCRIPTION &amp; BUSINESS LOGIC</text>
+        
+<rect y="106" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="129" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">id</text>
+<text x="270" y="129" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="114" width="104" height="20" rx="4" fill="#fef3c7"/>
+<text x="463" y="128" class="font-sans" font-size="11" font-weight="700" fill="#b45309">PK, AUTOINC</text>
+<text x="695" y="129" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="129" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="129" class="font-sans" font-size="13" fill="#334155">Unique primary identifier for user account</text>
+<rect y="142" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="165" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">name</text>
+<text x="270" y="165" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(120)</text>
+<rect x="455" y="150" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="164" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="165" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="165" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="165" class="font-sans" font-size="13" fill="#334155">Full legal or display name of student / admin</text>
+<rect y="178" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="201" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">email</text>
+<text x="270" y="201" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(180)</text>
+<rect x="455" y="186" width="120" height="20" rx="4" fill="#dcfce7"/>
+<text x="463" y="200" class="font-sans" font-size="11" font-weight="700" fill="#15803d">UNIQUE, INDEX</text>
+<text x="695" y="201" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="201" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="201" class="font-sans" font-size="13" fill="#334155">Institutional email address (login credential)</text>
+<rect y="214" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="237" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">password_hash</text>
+<text x="270" y="237" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(255)</text>
+<rect x="455" y="222" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="236" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="237" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="237" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="237" class="font-sans" font-size="13" fill="#334155">Cryptographically salted password hash (pbkdf2:sha256)</text>
+<rect y="250" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="273" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">role</text>
+<text x="270" y="273" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(20)</text>
+<rect x="455" y="258" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="272" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="273" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="273" class="font-mono" font-size="12" fill="#64748b">'student'</text>
+<text x="930" y="273" class="font-sans" font-size="13" fill="#334155">Authorization role: &#x27;student&#x27; or &#x27;admin&#x27;</text>
+<rect y="286" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="309" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">college</text>
+<text x="270" y="309" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(180)</text>
+<rect x="455" y="294" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="308" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="309" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="309" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="309" class="font-sans" font-size="13" fill="#334155">Enrolled college / university institution name</text>
+<rect y="322" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="345" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">bio</text>
+<text x="270" y="345" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">TEXT</text>
+<rect x="455" y="330" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="344" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="345" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="345" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="345" class="font-sans" font-size="13" fill="#334155">Student biography, academic interests &amp; background</text>
+<rect y="358" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="381" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">availability</text>
+<text x="270" y="381" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(120)</text>
+<rect x="455" y="366" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="380" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="381" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="381" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="381" class="font-sans" font-size="13" fill="#334155">Preferred study hours (e.g. &#x27;Weekends &amp; Evenings&#x27;)</text>
+<rect y="394" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="417" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">created_at</text>
+<text x="270" y="417" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="402" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="416" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="417" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="417" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="417" class="font-sans" font-size="13" fill="#334155">Account creation timestamp (UTC)</text>
+<rect y="430" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="453" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">updated_at</text>
+<text x="270" y="453" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="438" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="452" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="453" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="453" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="453" class="font-sans" font-size="13" fill="#334155">Profile last updated timestamp (UTC, onupdate)</text>
+
+        <rect y="466" width="1670" height="38" rx="0 0 12 12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+        <text x="25" y="490" class="font-sans" font-size="12.5" font-weight="600" fill="#475569">💡 Relationships: 1-N user_skills, sent_requests, received_requests, given_ratings, received_ratings.</text>
+        
+</g>
+<g transform="translate(40, 746)">
+<rect width="1670" height="331" rx="12" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+
+        <rect width="1670" height="70" rx="12" fill="#1e293b"/>
+        <rect y="60" width="1670" height="10" fill="#1e293b"/>
+        <text x="25" y="33" class="font-mono" font-size="20" font-weight="700" fill="#38bdf8">2. skill_categories</text>
+        <text x="25" y="54" class="font-sans" font-size="13" fill="#cbd5e1">Standardized academic and technical taxonomy groupings for classifying platform skills.</text>
+        
+
+        <rect y="70" width="1670" height="36" fill="#334155"/>
+        <text x="60" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">COLUMN NAME</text>
+        <text x="270" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DATA TYPE</text>
+        <text x="460" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">CONSTRAINTS / KEYS</text>
+        <text x="680" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">NULLABLE</text>
+        <text x="780" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DEFAULT</text>
+        <text x="930" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DESCRIPTION &amp; BUSINESS LOGIC</text>
+        
+<rect y="106" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="129" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">id</text>
+<text x="270" y="129" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="114" width="104" height="20" rx="4" fill="#fef3c7"/>
+<text x="463" y="128" class="font-sans" font-size="11" font-weight="700" fill="#b45309">PK, AUTOINC</text>
+<text x="695" y="129" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="129" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="129" class="font-sans" font-size="13" fill="#334155">Unique category primary identifier</text>
+<rect y="142" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="165" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">name</text>
+<text x="270" y="165" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(80)</text>
+<rect x="455" y="150" width="144" height="20" rx="4" fill="#dcfce7"/>
+<text x="463" y="164" class="font-sans" font-size="11" font-weight="700" fill="#15803d">UNIQUE, NOT NULL</text>
+<text x="695" y="165" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="165" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="165" class="font-sans" font-size="13" fill="#334155">Category name (e.g. &#x27;Programming &amp; Tech&#x27;, &#x27;Database&#x27;)</text>
+<rect y="178" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="201" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">description</text>
+<text x="270" y="201" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(255)</text>
+<rect x="455" y="186" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="200" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="201" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="201" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="201" class="font-sans" font-size="13" fill="#334155">Overview of subjects covered in this category</text>
+<rect y="214" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="237" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">icon</text>
+<text x="270" y="237" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(50)</text>
+<rect x="455" y="222" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="236" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="237" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="237" class="font-mono" font-size="12" fill="#64748b">'bi-tag'</text>
+<text x="930" y="237" class="font-sans" font-size="13" fill="#334155">Bootstrap Icons CSS class for UI visual badge</text>
+<rect y="250" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="273" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">created_at</text>
+<text x="270" y="273" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="258" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="272" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="273" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="273" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="273" class="font-sans" font-size="13" fill="#334155">Taxonomy creation timestamp (UTC)</text>
+
+        <rect y="286" width="1670" height="38" rx="0 0 12 12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+        <text x="25" y="310" class="font-sans" font-size="12.5" font-weight="600" fill="#475569">💡 Relationships: 1-N skills (cascade delete-orphan). Pre-seeded categories: Programming, Database, Web Dev, etc.</text>
+        
+</g>
+<g transform="translate(40, 1107)">
+<rect width="1670" height="331" rx="12" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+
+        <rect width="1670" height="70" rx="12" fill="#1e293b"/>
+        <rect y="60" width="1670" height="10" fill="#1e293b"/>
+        <text x="25" y="33" class="font-mono" font-size="20" font-weight="700" fill="#38bdf8">3. skills</text>
+        <text x="25" y="54" class="font-sans" font-size="13" fill="#cbd5e1">Canonical catalogue of predefined and student-proposed skills available for peer exchange.</text>
+        
+
+        <rect y="70" width="1670" height="36" fill="#334155"/>
+        <text x="60" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">COLUMN NAME</text>
+        <text x="270" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DATA TYPE</text>
+        <text x="460" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">CONSTRAINTS / KEYS</text>
+        <text x="680" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">NULLABLE</text>
+        <text x="780" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DEFAULT</text>
+        <text x="930" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DESCRIPTION &amp; BUSINESS LOGIC</text>
+        
+<rect y="106" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="129" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">id</text>
+<text x="270" y="129" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="114" width="104" height="20" rx="4" fill="#fef3c7"/>
+<text x="463" y="128" class="font-sans" font-size="11" font-weight="700" fill="#b45309">PK, AUTOINC</text>
+<text x="695" y="129" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="129" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="129" class="font-sans" font-size="13" fill="#334155">Unique skill primary identifier</text>
+<rect y="142" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="165" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">category_id</text>
+<text x="270" y="165" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="150" width="112" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="164" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, NOT NULL</text>
+<text x="695" y="165" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="165" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="165" class="font-sans" font-size="13" fill="#334155">Parent category ID referencing skill_categories(id)</text>
+<rect y="178" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="201" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">name</text>
+<text x="270" y="201" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(100)</text>
+<rect x="455" y="186" width="120" height="20" rx="4" fill="#dcfce7"/>
+<text x="463" y="200" class="font-sans" font-size="11" font-weight="700" fill="#15803d">UNIQUE, INDEX</text>
+<text x="695" y="201" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="201" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="201" class="font-sans" font-size="13" fill="#334155">Standardized skill name (e.g. &#x27;Python&#x27;, &#x27;SQL&#x27;, &#x27;Figma&#x27;)</text>
+<rect y="214" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="237" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">description</text>
+<text x="270" y="237" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(255)</text>
+<rect x="455" y="222" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="236" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="237" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="237" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="237" class="font-sans" font-size="13" fill="#334155">Summary curriculum or domain details</text>
+<rect y="250" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="273" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">created_at</text>
+<text x="270" y="273" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="258" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="272" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="273" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="273" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="273" class="font-sans" font-size="13" fill="#334155">Skill registration timestamp (UTC)</text>
+
+        <rect y="286" width="1670" height="38" rx="0 0 12 12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+        <text x="25" y="310" class="font-sans" font-size="12.5" font-weight="600" fill="#475569">💡 Foreign Key: category_id -&gt; skill_categories(id). Case-insensitive deduplication applied on new skills.</text>
+        
+</g>
+<g transform="translate(40, 1468)">
+<rect width="1670" height="439" rx="12" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+
+        <rect width="1670" height="70" rx="12" fill="#1e293b"/>
+        <rect y="60" width="1670" height="10" fill="#1e293b"/>
+        <text x="25" y="33" class="font-mono" font-size="20" font-weight="700" fill="#38bdf8">4. user_skills</text>
+        <text x="25" y="54" class="font-sans" font-size="13" fill="#cbd5e1">Junction table mapping student portfolios to skills with teaching/learning intent and proficiency.</text>
+        
+
+        <rect y="70" width="1670" height="36" fill="#334155"/>
+        <text x="60" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">COLUMN NAME</text>
+        <text x="270" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DATA TYPE</text>
+        <text x="460" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">CONSTRAINTS / KEYS</text>
+        <text x="680" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">NULLABLE</text>
+        <text x="780" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DEFAULT</text>
+        <text x="930" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DESCRIPTION &amp; BUSINESS LOGIC</text>
+        
+<rect y="106" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="129" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">id</text>
+<text x="270" y="129" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="114" width="104" height="20" rx="4" fill="#fef3c7"/>
+<text x="463" y="128" class="font-sans" font-size="11" font-weight="700" fill="#b45309">PK, AUTOINC</text>
+<text x="695" y="129" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="129" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="129" class="font-sans" font-size="13" fill="#334155">Unique junction record identifier</text>
+<rect y="142" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="165" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">user_id</text>
+<text x="270" y="165" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="150" width="88" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="164" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, INDEX</text>
+<text x="695" y="165" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="165" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="165" class="font-sans" font-size="13" fill="#334155">Student ID referencing users(id)</text>
+<rect y="178" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="201" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">skill_id</text>
+<text x="270" y="201" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="186" width="88" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="200" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, INDEX</text>
+<text x="695" y="201" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="201" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="201" class="font-sans" font-size="13" fill="#334155">Skill ID referencing skills(id)</text>
+<rect y="214" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="237" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">skill_type</text>
+<text x="270" y="237" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(10)</text>
+<rect x="455" y="222" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="236" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="237" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="237" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="237" class="font-sans" font-size="13" fill="#334155">Intent type: &#x27;teach&#x27; (offering) or &#x27;learn&#x27; (seeking)</text>
+<rect y="250" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="273" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">proficiency</text>
+<text x="270" y="273" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(20)</text>
+<rect x="455" y="258" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="272" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="273" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="273" class="font-mono" font-size="12" fill="#64748b">'intermediate'</text>
+<text x="930" y="273" class="font-sans" font-size="13" fill="#334155">Proficiency level: &#x27;beginner&#x27;, &#x27;intermediate&#x27;, &#x27;advanced&#x27;</text>
+<rect y="286" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="309" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">notes</text>
+<text x="270" y="309" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(255)</text>
+<rect x="455" y="294" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="308" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="309" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="309" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="309" class="font-sans" font-size="13" fill="#334155">Custom student notes, target frameworks, or topic focus</text>
+<rect y="322" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="345" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">created_at</text>
+<text x="270" y="345" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="330" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="344" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="345" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="345" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="345" class="font-sans" font-size="13" fill="#334155">Record addition timestamp (UTC)</text>
+<rect y="358" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="381" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">updated_at</text>
+<text x="270" y="381" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="366" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="380" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="381" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="381" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="381" class="font-sans" font-size="13" fill="#334155">Record last modified timestamp (UTC, onupdate)</text>
+
+        <rect y="394" width="1670" height="38" rx="0 0 12 12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+        <text x="25" y="418" class="font-sans" font-size="12.5" font-weight="600" fill="#475569">💡 Unique Constraint: uq_user_skill_type(user_id, skill_id, skill_type) prevents duplicate entries per intent.</text>
+        
+</g>
+<g transform="translate(40, 1937)">
+<rect width="1670" height="475" rx="12" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+
+        <rect width="1670" height="70" rx="12" fill="#1e293b"/>
+        <rect y="60" width="1670" height="10" fill="#1e293b"/>
+        <text x="25" y="33" class="font-mono" font-size="20" font-weight="700" fill="#38bdf8">5. exchange_requests</text>
+        <text x="25" y="54" class="font-sans" font-size="13" fill="#cbd5e1">Bilateral skill swap proposals initiated by one student to another with offered and requested skills.</text>
+        
+
+        <rect y="70" width="1670" height="36" fill="#334155"/>
+        <text x="60" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">COLUMN NAME</text>
+        <text x="270" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DATA TYPE</text>
+        <text x="460" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">CONSTRAINTS / KEYS</text>
+        <text x="680" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">NULLABLE</text>
+        <text x="780" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DEFAULT</text>
+        <text x="930" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DESCRIPTION &amp; BUSINESS LOGIC</text>
+        
+<rect y="106" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="129" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">id</text>
+<text x="270" y="129" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="114" width="104" height="20" rx="4" fill="#fef3c7"/>
+<text x="463" y="128" class="font-sans" font-size="11" font-weight="700" fill="#b45309">PK, AUTOINC</text>
+<text x="695" y="129" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="129" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="129" class="font-sans" font-size="13" fill="#334155">Unique exchange proposal identifier</text>
+<rect y="142" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="165" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">sender_id</text>
+<text x="270" y="165" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="150" width="88" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="164" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, INDEX</text>
+<text x="695" y="165" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="165" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="165" class="font-sans" font-size="13" fill="#334155">Initiating student ID referencing users(id)</text>
+<rect y="178" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="201" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">receiver_id</text>
+<text x="270" y="201" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="186" width="88" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="200" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, INDEX</text>
+<text x="695" y="201" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="201" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="201" class="font-sans" font-size="13" fill="#334155">Recipient peer student ID referencing users(id)</text>
+<rect y="214" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="237" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">offered_skill_id</text>
+<text x="270" y="237" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="222" width="112" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="236" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, NOT NULL</text>
+<text x="695" y="237" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="237" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="237" class="font-sans" font-size="13" fill="#334155">Skill sender teaches, referencing skills(id)</text>
+<rect y="250" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="273" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">requested_skill_id</text>
+<text x="270" y="273" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="258" width="112" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="272" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, NOT NULL</text>
+<text x="695" y="273" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="273" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="273" class="font-sans" font-size="13" fill="#334155">Skill sender wants to learn, referencing skills(id)</text>
+<rect y="286" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="309" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">status</text>
+<text x="270" y="309" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(20)</text>
+<rect x="455" y="294" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="308" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="309" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="309" class="font-mono" font-size="12" fill="#64748b">'pending'</text>
+<text x="930" y="309" class="font-sans" font-size="13" fill="#334155">State: &#x27;pending&#x27;, &#x27;accepted&#x27;, &#x27;rejected&#x27;, &#x27;cancelled&#x27;</text>
+<rect y="322" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="345" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">message</text>
+<text x="270" y="345" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">TEXT</text>
+<rect x="455" y="330" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="344" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="345" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="345" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="345" class="font-sans" font-size="13" fill="#334155">Introductory proposal message and schedule preferences</text>
+<rect y="358" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="381" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">created_at</text>
+<text x="270" y="381" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="366" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="380" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="381" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="381" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="381" class="font-sans" font-size="13" fill="#334155">Proposal sent timestamp (UTC)</text>
+<rect y="394" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="417" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">updated_at</text>
+<text x="270" y="417" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="402" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="416" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="417" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="417" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="417" class="font-sans" font-size="13" fill="#334155">Status transition timestamp (UTC, onupdate)</text>
+
+        <rect y="430" width="1670" height="38" rx="0 0 12 12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+        <text x="25" y="454" class="font-sans" font-size="12.5" font-weight="600" fill="#475569">💡 Foreign Keys: sender_id, receiver_id -&gt; users(id); offered_skill_id, requested_skill_id -&gt; skills(id).</text>
+        
+</g>
+<g transform="translate(40, 2442)">
+<rect width="1670" height="511" rx="12" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+
+        <rect width="1670" height="70" rx="12" fill="#1e293b"/>
+        <rect y="60" width="1670" height="10" fill="#1e293b"/>
+        <text x="25" y="33" class="font-mono" font-size="20" font-weight="700" fill="#38bdf8">6. exchange_sessions</text>
+        <text x="25" y="54" class="font-sans" font-size="13" fill="#cbd5e1">Scheduled learning meetings originating from accepted exchange requests.</text>
+        
+
+        <rect y="70" width="1670" height="36" fill="#334155"/>
+        <text x="60" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">COLUMN NAME</text>
+        <text x="270" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DATA TYPE</text>
+        <text x="460" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">CONSTRAINTS / KEYS</text>
+        <text x="680" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">NULLABLE</text>
+        <text x="780" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DEFAULT</text>
+        <text x="930" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DESCRIPTION &amp; BUSINESS LOGIC</text>
+        
+<rect y="106" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="129" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">id</text>
+<text x="270" y="129" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="114" width="104" height="20" rx="4" fill="#fef3c7"/>
+<text x="463" y="128" class="font-sans" font-size="11" font-weight="700" fill="#b45309">PK, AUTOINC</text>
+<text x="695" y="129" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="129" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="129" class="font-sans" font-size="13" fill="#334155">Unique session identifier</text>
+<rect y="142" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="165" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">request_id</text>
+<text x="270" y="165" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="150" width="96" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="164" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, UNIQUE</text>
+<text x="695" y="165" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="165" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="165" class="font-sans" font-size="13" fill="#334155">Parent accepted request ID referencing exchange_requests(id)</text>
+<rect y="178" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="201" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">scheduled_at</text>
+<text x="270" y="201" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="186" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="200" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="201" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="201" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="201" class="font-sans" font-size="13" fill="#334155">Date and time of meeting</text>
+<rect y="214" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="237" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">duration_minutes</text>
+<text x="270" y="237" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="222" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="236" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="237" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="237" class="font-mono" font-size="12" fill="#64748b">60</text>
+<text x="930" y="237" class="font-sans" font-size="13" fill="#334155">Planned meeting length in minutes (default 60)</text>
+<rect y="250" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="273" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">mode</text>
+<text x="270" y="273" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(20)</text>
+<rect x="455" y="258" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="272" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="273" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="273" class="font-mono" font-size="12" fill="#64748b">'online'</text>
+<text x="930" y="273" class="font-sans" font-size="13" fill="#334155">Delivery format: &#x27;online&#x27;, &#x27;in_person&#x27;, &#x27;hybrid&#x27;</text>
+<rect y="286" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="309" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">meeting_details</text>
+<text x="270" y="309" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(255)</text>
+<rect x="455" y="294" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="308" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="309" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="309" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="309" class="font-sans" font-size="13" fill="#334155">Video call URL (Meet/Zoom) or physical campus room</text>
+<rect y="322" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="345" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">notes</text>
+<text x="270" y="345" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">TEXT</text>
+<rect x="455" y="330" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="344" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="345" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="345" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="345" class="font-sans" font-size="13" fill="#334155">Session agenda, study materials, or preparation topics</text>
+<rect y="358" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="381" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">status</text>
+<text x="270" y="381" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">VARCHAR(20)</text>
+<rect x="455" y="366" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="380" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="381" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="381" class="font-mono" font-size="12" fill="#64748b">'scheduled'</text>
+<text x="930" y="381" class="font-sans" font-size="13" fill="#334155">Session state: &#x27;scheduled&#x27;, &#x27;completed&#x27;, &#x27;cancelled&#x27;</text>
+<rect y="394" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="417" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">created_at</text>
+<text x="270" y="417" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="402" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="416" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="417" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="417" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="417" class="font-sans" font-size="13" fill="#334155">Session booking timestamp (UTC)</text>
+<rect y="430" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="453" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">updated_at</text>
+<text x="270" y="453" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="438" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="452" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="453" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="453" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="453" class="font-sans" font-size="13" fill="#334155">Session modification timestamp (UTC, onupdate)</text>
+
+        <rect y="466" width="1670" height="38" rx="0 0 12 12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+        <text x="25" y="490" class="font-sans" font-size="12.5" font-weight="600" fill="#475569">💡 Unique Constraint: request_id is UNIQUE (1-to-1 relationship with accepted exchange requests).</text>
+        
+</g>
+<g transform="translate(40, 2983)">
+<rect width="1670" height="403" rx="12" fill="url(#cardGrad)" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadow)"/>
+
+        <rect width="1670" height="70" rx="12" fill="#1e293b"/>
+        <rect y="60" width="1670" height="10" fill="#1e293b"/>
+        <text x="25" y="33" class="font-mono" font-size="20" font-weight="700" fill="#38bdf8">7. ratings</text>
+        <text x="25" y="54" class="font-sans" font-size="13" fill="#cbd5e1">Mutual post-session peer ratings and qualitative reviews following completed sessions.</text>
+        
+
+        <rect y="70" width="1670" height="36" fill="#334155"/>
+        <text x="60" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">COLUMN NAME</text>
+        <text x="270" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DATA TYPE</text>
+        <text x="460" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">CONSTRAINTS / KEYS</text>
+        <text x="680" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">NULLABLE</text>
+        <text x="780" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DEFAULT</text>
+        <text x="930" y="93" class="font-sans" font-size="13" font-weight="700" fill="#f8fafc">DESCRIPTION &amp; BUSINESS LOGIC</text>
+        
+<rect y="106" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="129" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">id</text>
+<text x="270" y="129" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="114" width="104" height="20" rx="4" fill="#fef3c7"/>
+<text x="463" y="128" class="font-sans" font-size="11" font-weight="700" fill="#b45309">PK, AUTOINC</text>
+<text x="695" y="129" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="129" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="129" class="font-sans" font-size="13" fill="#334155">Unique evaluation record identifier</text>
+<rect y="142" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="165" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">session_id</text>
+<text x="270" y="165" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="150" width="88" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="164" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, INDEX</text>
+<text x="695" y="165" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="165" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="165" class="font-sans" font-size="13" fill="#334155">Completed session ID referencing exchange_sessions(id)</text>
+<rect y="178" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="201" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">reviewer_id</text>
+<text x="270" y="201" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="186" width="88" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="200" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, INDEX</text>
+<text x="695" y="201" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="201" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="201" class="font-sans" font-size="13" fill="#334155">Student submitting review referencing users(id)</text>
+<rect y="214" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="237" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">reviewee_id</text>
+<text x="270" y="237" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="222" width="88" height="20" rx="4" fill="#e0e7ff"/>
+<text x="463" y="236" class="font-sans" font-size="11" font-weight="700" fill="#4338ca">FK, INDEX</text>
+<text x="695" y="237" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="237" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="237" class="font-sans" font-size="13" fill="#334155">Student receiving review referencing users(id)</text>
+<rect y="250" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="273" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">score</text>
+<text x="270" y="273" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">INTEGER</text>
+<rect x="455" y="258" width="96" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="272" class="font-sans" font-size="11" font-weight="700" fill="#475569">CHECK 1..5</text>
+<text x="695" y="273" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="273" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="273" class="font-sans" font-size="13" fill="#334155">Integer rating between 1 and 5 stars (inclusive)</text>
+<rect y="286" width="1670" height="36" fill="#f8fafc" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="309" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">feedback</text>
+<text x="270" y="309" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">TEXT</text>
+<rect x="455" y="294" width="80" height="20" rx="4" fill="#f1f5f9"/>
+<text x="463" y="308" class="font-sans" font-size="11" font-weight="700" fill="#475569">NULLABLE</text>
+<text x="695" y="309" class="font-sans" font-size="13" font-weight="700" fill="#15803d">YES</text>
+<text x="780" y="309" class="font-mono" font-size="12" fill="#64748b">—</text>
+<text x="930" y="309" class="font-sans" font-size="13" fill="#334155">Qualitative peer feedback, testimonials &amp; remarks</text>
+<rect y="322" width="1670" height="36" fill="#ffffff" stroke="#e2e8f0" stroke-width="0.8"/>
+<text x="60" y="345" class="font-mono" font-size="14" font-weight="700" fill="#0f172a">created_at</text>
+<text x="270" y="345" class="font-mono" font-size="13" font-weight="600" fill="#0369a1">DATETIME</text>
+<rect x="455" y="330" width="80" height="20" rx="4" fill="#ffe4e6"/>
+<text x="463" y="344" class="font-sans" font-size="11" font-weight="700" fill="#be123c">NOT NULL</text>
+<text x="695" y="345" class="font-sans" font-size="13" font-weight="700" fill="#b91c1c">NO</text>
+<text x="780" y="345" class="font-mono" font-size="12" fill="#64748b">UTC_NOW</text>
+<text x="930" y="345" class="font-sans" font-size="13" fill="#334155">Rating submission timestamp (UTC)</text>
+
+        <rect y="358" width="1670" height="38" rx="0 0 12 12" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="0.8"/>
+        <text x="25" y="382" class="font-sans" font-size="12.5" font-weight="600" fill="#475569">💡 Constraints: uq_session_reviewer UNIQUE(session_id, reviewer_id); ck_rating_score_range CHECK(score BETWEEN 1 AND 5).</text>
+        
+</g>
+
+    <g transform="translate(40, 3416)">
+      <rect width="1670" height="55" rx="10" fill="#1e293b"/>
+      <text x="30" y="33" class="font-sans" font-size="13" fill="#94a3b8">SkillConnect Peer Skill Exchange Platform • MCA Semester 1 Project • Comprehensive Database Specification</text>
+      <text x="1430" y="33" class="font-sans" font-size="13" font-weight="600" fill="#38bdf8">Lossless Scalable Vector Graphic (SVG)</text>
+    </g>
+    
+</svg>

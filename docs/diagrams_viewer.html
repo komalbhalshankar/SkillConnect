@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillConnect — UML Vector Diagrams Viewer &amp; Downloader</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <style>
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif;
+    }
+    .header-bar {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border-bottom: 1px solid #334155;
+      padding: 1.5rem 0;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+    .diagram-card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 2.5rem;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+    .diagram-card:hover {
+      border-color: #0284c7;
+    }
+    .diagram-header {
+      background: #0f172a;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #334155;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+    .preview-container {
+      background: #ffffff;
+      padding: 1.5rem;
+      overflow: auto;
+      max-height: 800px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .preview-container img, .preview-container object {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      display: block;
+    }
+    .badge-vector {
+      background-color: #0284c7;
+      color: #ffffff;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    .nav-pills .nav-link {
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .nav-pills .nav-link.active {
+      background-color: #0284c7;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="header-bar mb-4">
+    <div class="container-fluid px-4">
+      <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        <div>
+          <h2 class="fw-bold mb-1"><i class="bi bi-diagram-3-fill text-info me-2"></i>SkillConnect — UML Vector Diagrams</h2>
+          <p class="text-secondary mb-0 small">MCA Semester 1 • Lossless Vector (SVG) Format — Zero Pixel Breakdown at Any Zoom Level</p>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="module_description.png" download="SkillConnect_Module_Description.png" class="btn btn-primary btn-sm">
+            <i class="bi bi-boxes me-1"></i> Modules PNG
+          </a>
+          <a href="database_er_diagram.png" download="SkillConnect_Database_ER_Diagram.png" class="btn btn-info btn-sm">
+            <i class="bi bi-diagram-2-fill me-1"></i> ER Diagram PNG
+          </a>
+          <a href="database_er_diagram.svg" download="SkillConnect_Database_ER_Diagram.svg" class="btn btn-outline-info btn-sm">
+            <i class="bi bi-vector-pen me-1"></i> ER Diagram SVG
+          </a>
+          <a href="SkillConnect_Data_Dictionary.pdf" download="SkillConnect_Data_Dictionary.pdf" class="btn btn-danger btn-sm">
+            <i class="bi bi-file-earmark-pdf-fill me-1"></i> Data Dict PDF
+          </a>
+          <a href="data_dictionary.png" download="SkillConnect_Data_Dictionary.png" class="btn btn-primary btn-sm">
+            <i class="bi bi-download me-1"></i> Data Dict PNG
+          </a>
+          <a href="data_dictionary.html" class="btn btn-outline-warning btn-sm">
+            <i class="bi bi-table me-1"></i> Data Dictionary Viewer
+          </a>
+          <a href="class_diagram.svg" download="SkillConnect_Class_Diagram.svg" class="btn btn-outline-info btn-sm">
+            <i class="bi bi-download me-1"></i> Class Diagram SVG
+          </a>
+          <a href="activity_diagram.svg" download="SkillConnect_Activity_Diagram.svg" class="btn btn-outline-info btn-sm">
+            <i class="bi bi-download me-1"></i> Activity Diagram SVG
+          </a>
+          <a href="use_case_diagram.svg" download="SkillConnect_UseCase_Diagram.svg" class="btn btn-outline-info btn-sm">
+            <i class="bi bi-download me-1"></i> Use Case SVG
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container-fluid px-4">
+    <!-- Notice Banner -->
+    <div class="alert alert-dark border-info bg-dark-subtle text-light mb-4 d-flex align-items-center" role="alert">
+      <i class="bi bi-info-circle-fill text-info fs-4 me-3"></i>
+      <div>
+        <strong>Lossless Vector Graphics:</strong> These diagrams are rendered in pure scalable vector format (<code>.svg</code>). You can zoom into any text, class method, or arrow up to 10,000% without experiencing any pixelation or blurriness. You can import them directly into Microsoft Word, PowerPoint, LibreOffice, or print them at full poster scale.
+      </div>
+    </div>
+
+    <!-- Diagram 1: Class Diagram -->
+    <div class="diagram-card" id="class-diagram">
+      <div class="diagram-header">
+        <div>
+          <span class="badge-vector me-2"><i class="bi bi-vector-pen me-1"></i>VECTOR SVG</span>
+          <h4 class="d-inline-block text-white mb-0 align-middle">1. UML Class Diagram</h4>
+          <span class="text-secondary ms-2 small d-none d-md-inline">• Domain Models &amp; Business Services</span>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="class_diagram.svg" target="_blank" class="btn btn-sm btn-secondary">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Open Raw SVG
+          </a>
+          <a href="class_diagram.svg" download="SkillConnect_Class_Diagram.svg" class="btn btn-sm btn-primary">
+            <i class="bi bi-download me-1"></i> Download Vector (.SVG)
+          </a>
+          <a href="class_diagram.png" download="SkillConnect_Class_Diagram.png" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-filetype-png me-1"></i> Download .PNG
+          </a>
+        </div>
+      </div>
+      <div class="preview-container">
+        <object data="class_diagram.svg" type="image/svg+xml" style="width: 100%; min-height: 800px;"></object>
+      </div>
+    </div>
+
+    <!-- Diagram 2: Activity Diagram -->
+    <div class="diagram-card" id="activity-diagram">
+      <div class="diagram-header">
+        <div>
+          <span class="badge-vector me-2"><i class="bi bi-vector-pen me-1"></i>VECTOR SVG</span>
+          <h4 class="d-inline-block text-white mb-0 align-middle">2. UML Activity Diagram</h4>
+          <span class="text-secondary ms-2 small d-none d-md-inline">• 3-Swimlane Skill Exchange Lifecycle &amp; Parallel Reviews</span>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="activity_diagram.svg" target="_blank" class="btn btn-sm btn-secondary">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Open Raw SVG
+          </a>
+          <a href="activity_diagram.svg" download="SkillConnect_Activity_Diagram.svg" class="btn btn-sm btn-primary">
+            <i class="bi bi-download me-1"></i> Download Vector (.SVG)
+          </a>
+          <a href="activity_diagram.png" download="SkillConnect_Activity_Diagram.png" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-filetype-png me-1"></i> Download .PNG
+          </a>
+        </div>
+      </div>
+      <div class="preview-container">
+        <object data="activity_diagram.svg" type="image/svg+xml" style="width: 100%; min-height: 850px;"></object>
+      </div>
+    </div>
+
+    <!-- Diagram 3: Use Case Diagram -->
+    <div class="diagram-card" id="usecase-diagram">
+      <div class="diagram-header">
+        <div>
+          <span class="badge-vector me-2"><i class="bi bi-vector-pen me-1"></i>VECTOR SVG</span>
+          <h4 class="d-inline-block text-white mb-0 align-middle">3. UML Use Case Diagram</h4>
+          <span class="text-secondary ms-2 small d-none d-md-inline">• Student &amp; Administrator Boundary Interactions</span>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="use_case_diagram.svg" target="_blank" class="btn btn-sm btn-secondary">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Open Raw SVG
+          </a>
+          <a href="use_case_diagram.svg" download="SkillConnect_UseCase_Diagram.svg" class="btn btn-sm btn-primary">
+            <i class="bi bi-download me-1"></i> Download Vector (.SVG)
+          </a>
+          <a href="use_case_diagram.png" download="SkillConnect_UseCase_Diagram.png" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-filetype-png me-1"></i> Download .PNG
+          </a>
+        </div>
+      </div>
+      <div class="preview-container">
+        <object data="use_case_diagram.svg" type="image/svg+xml" style="width: 100%; min-height: 700px;"></object>
+      </div>
+    </div>
+
+    <!-- Diagram 4: Database ER Schema Diagram -->
+    <div class="diagram-card" id="er-diagram">
+      <div class="diagram-header">
+        <div>
+          <span class="badge-vector me-2" style="background-color: #38bdf8; color: #0f172a;"><i class="bi bi-diagram-2-fill me-1"></i>ER DIAGRAM</span>
+          <h4 class="d-inline-block text-white mb-0 align-middle">4. Database Entity-Relationship (ER) Schema</h4>
+          <span class="text-secondary ms-2 small d-none d-md-inline">• 7 Normalized Tables, Foreign Keys &amp; Cardinality</span>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="database_er_diagram.svg" target="_blank" class="btn btn-sm btn-secondary">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Open Raw SVG
+          </a>
+          <a href="database_er_diagram.svg" download="SkillConnect_Database_ER_Diagram.svg" class="btn btn-sm btn-primary">
+            <i class="bi bi-download me-1"></i> Download Vector (.SVG)
+          </a>
+          <a href="database_er_diagram.png" download="SkillConnect_Database_ER_Diagram.png" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-filetype-png me-1"></i> Download .PNG
+          </a>
+        </div>
+      </div>
+      <div class="preview-container" style="background: #0b1120;">
+        <object data="database_er_diagram.svg" type="image/svg+xml" style="width: 100%; min-height: 800px;"></object>
+      </div>
+    </div>
+
+    <!-- Diagram 5: Database Data Dictionary -->
+    <div class="diagram-card" id="data-dictionary">
+      <div class="diagram-header">
+        <div>
+          <span class="badge-vector me-2"><i class="bi bi-database me-1"></i>DATA DICTIONARY</span>
+          <h4 class="d-inline-block text-white mb-0 align-middle">5. Database Data Dictionary &amp; Schema Spec</h4>
+          <span class="text-secondary ms-2 small d-none d-md-inline">• 7 Normalized Tables, 54 Attributes &amp; Integrity Constraints</span>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="SkillConnect_Data_Dictionary.pdf" download="SkillConnect_Data_Dictionary.pdf" class="btn btn-sm btn-danger">
+            <i class="bi bi-file-earmark-pdf-fill me-1"></i> PDF Document
+          </a>
+          <a href="data_dictionary.html" class="btn btn-sm btn-warning">
+            <i class="bi bi-table me-1"></i> Interactive Tables
+          </a>
+          <a href="data_dictionary.svg" target="_blank" class="btn btn-sm btn-secondary">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Open Raw SVG
+          </a>
+          <a href="data_dictionary.svg" download="SkillConnect_Data_Dictionary.svg" class="btn btn-sm btn-primary">
+            <i class="bi bi-download me-1"></i> Download Vector (.SVG)
+          </a>
+          <a href="data_dictionary.png" download="SkillConnect_Data_Dictionary.png" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-filetype-png me-1"></i> Download .PNG
+          </a>
+        </div>
+      </div>
+      <div class="preview-container">
+        <object data="data_dictionary.svg" type="image/svg+xml" style="width: 100%; min-height: 900px;"></object>
+      </div>
+    </div>
+
+    <!-- Diagram 6: System Module Architecture & Descriptions -->
+    <div class="diagram-card" id="module-description">
+      <div class="diagram-header">
+        <div>
+          <span class="badge-vector me-2" style="background-color: #818cf8; color: #0f172a;"><i class="bi bi-boxes me-1"></i>MODULE SPECIFICATION</span>
+          <h4 class="d-inline-block text-white mb-0 align-middle">6. System Module Architecture &amp; Descriptions</h4>
+          <span class="text-secondary ms-2 small d-none d-md-inline">• 6 Functional Modules, Blueprints, Services &amp; Verified Features</span>
+        </div>
+        <div class="d-flex gap-2 flex-wrap">
+          <a href="module_description.svg" target="_blank" class="btn btn-sm btn-secondary">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Open Raw SVG
+          </a>
+          <a href="module_description.svg" download="SkillConnect_Module_Description.svg" class="btn btn-sm btn-primary">
+            <i class="bi bi-download me-1"></i> Download Vector (.SVG)
+          </a>
+          <a href="module_description.png" download="SkillConnect_Module_Description.png" class="btn btn-sm btn-outline-light">
+            <i class="bi bi-filetype-png me-1"></i> Download .PNG
+          </a>
+        </div>
+      </div>
+      <div class="preview-container" style="background: #0b1120;">
+        <object data="module_description.svg" type="image/svg+xml" style="width: 100%; min-height: 850px;"></object>
+      </div>
+    </div>
+  </div>
+
+  <footer class="text-center py-4 text-secondary border-top border-secondary-subtle">
+    <small>SkillConnect — MCA Semester 1 Python Mini Project • All diagrams adhere to UML 2.5 standards.</small>
+  </footer>
+
+</body>
+</html>

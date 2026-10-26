@@ -8,9 +8,12 @@
 ## 1. Overview
 This UML Use Case Diagram models the functional interactions between the system actors and the **SkillConnect** platform. It uses clean, standard UML notation without unnecessary numbering prefixes.
 
+- **High-Resolution PNG:** [use_case_diagram.png](use_case_diagram.png) (Rendered visual diagram)
 - **Visual Vector Diagram:** [use_case_diagram.svg](use_case_diagram.svg)
 - **PlantUML Source:** [use_case_diagram.puml](use_case_diagram.puml)
 - **Mermaid Source:** [use_case_diagram.mmd](use_case_diagram.mmd)
+
+![SkillConnect UML Use Case Diagram](use_case_diagram.png)
 
 ```mermaid
 flowchart LR
