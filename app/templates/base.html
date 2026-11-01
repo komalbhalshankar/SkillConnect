@@ -31,6 +31,14 @@
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
+      {% if current_user.is_authenticated %}
+        <div class="d-lg-none d-flex align-items-center ms-2">
+          <span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 small text-truncate" style="max-width: 130px;" title="{{ current_user.name }}">
+            <i class="bi bi-person-fill me-1"></i>{{ current_user.name }}
+          </span>
+        </div>
+      {% endif %}
       
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav me-auto">
