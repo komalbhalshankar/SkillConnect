@@ -57,6 +57,25 @@ class ExchangeRequest(db.Model):
     def is_participant(self, user_id: int) -> bool:
         return self.sender_id == user_id or self.receiver_id == user_id
 
+    def __init__(
+        self,
+        sender_id=None,
+        receiver_id=None,
+        offered_skill_id=None,
+        requested_skill_id=None,
+        status='pending',
+        message=None,
+        **kwargs
+    ):
+        self.sender_id = sender_id
+        self.receiver_id = receiver_id
+        self.offered_skill_id = offered_skill_id
+        self.requested_skill_id = requested_skill_id
+        self.status = status
+        self.message = message
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
     def __repr__(self) -> str:
         return f"<ExchangeRequest id={self.id} sender={self.sender_id} receiver={self.receiver_id} status='{self.status}'>"
 
@@ -78,6 +97,27 @@ class ExchangeSession(db.Model):
     # Relationships
     request = db.relationship('ExchangeRequest', back_populates='session')
     ratings = db.relationship('Rating', back_populates='session', cascade='all, delete-orphan', lazy='selectin')
+
+    def __init__(
+        self,
+        request_id=None,
+        scheduled_at=None,
+        duration_minutes=60,
+        mode='online',
+        meeting_details=None,
+        notes=None,
+        status='scheduled',
+        **kwargs
+    ):
+        self.request_id = request_id
+        self.scheduled_at = scheduled_at
+        self.duration_minutes = duration_minutes
+        self.mode = mode
+        self.meeting_details = meeting_details
+        self.notes = notes
+        self.status = status
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
     @property
     def is_scheduled(self) -> bool:

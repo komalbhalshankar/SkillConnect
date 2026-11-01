@@ -26,5 +26,23 @@ class Rating(db.Model):
     reviewer = db.relationship('User', foreign_keys=[reviewer_id], back_populates='given_ratings')
     reviewee = db.relationship('User', foreign_keys=[reviewee_id], back_populates='received_ratings')
 
+    def __init__(
+        self,
+        session_id=None,
+        reviewer_id=None,
+        reviewee_id=None,
+        score=None,
+        feedback=None,
+        **kwargs
+    ):
+        self.session_id = session_id
+        self.reviewer_id = reviewer_id
+        self.reviewee_id = reviewee_id
+        self.score = score
+        self.feedback = feedback
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
     def __repr__(self) -> str:
         return f"<Rating id={self.id} session={self.session_id} reviewer={self.reviewer_id} score={self.score}>"
+

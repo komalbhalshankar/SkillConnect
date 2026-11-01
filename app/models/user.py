@@ -51,6 +51,27 @@ class User(UserMixin, db.Model):
         lazy='dynamic'
     )
 
+    def __init__(
+        self,
+        name: str = None,
+        email: str = None,
+        role: str = 'student',
+        college: str = None,
+        bio: str = None,
+        availability: str = None,
+        password_hash: str = None,
+        **kwargs
+    ):
+        self.name = name
+        self.email = email
+        self.role = role
+        self.college = college
+        self.bio = bio
+        self.availability = availability
+        self.password_hash = password_hash
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
     def set_password(self, password: str) -> None:
         """Hash and store password."""
         self.password_hash = generate_password_hash(password)

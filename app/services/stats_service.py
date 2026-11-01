@@ -155,18 +155,22 @@ class StatsService:
     @staticmethod
     def get_admin_stats() -> Dict[str, Any]:
         """
-        Aggregate global platform statistics for administrators.
+        Aggregate comprehensive global platform statistics and Chart.js payloads for administrators.
         """
         total_users = User.query.filter_by(role='student').count()
         total_admins = User.query.filter_by(role='admin').count()
         total_categories = SkillCategory.query.count()
         total_skills = Skill.query.count()
-        total_user_skills = UserSkill.query.count()
+        
+        total_teach_skills = UserSkill.query.filter_by(skill_type='teach').count()
+        total_learn_skills = UserSkill.query.filter_by(skill_type='learn').count()
+        total_user_skills = total_teach_skills + total_learn_skills
 
         total_requests = ExchangeRequest.query.count()
         pending_requests = ExchangeRequest.query.filter_by(status='pending').count()
         accepted_requests = ExchangeRequest.query.filter_by(status='accepted').count()
         rejected_requests = ExchangeRequest.query.filter_by(status='rejected').count()
+        cancelled_requests = ExchangeRequest.query.filter_by(status='cancelled').count()
 
         total_sessions = ExchangeSession.query.count()
         completed_sessions = ExchangeSession.query.filter_by(status='completed').count()
@@ -179,20 +183,46 @@ class StatsService:
             avg_result = db.session.query(db.func.avg(Rating.score)).scalar()
             avg_platform_rating = round(float(avg_result), 1) if avg_result else 0.0
 
+        chart_data = {
+            'requests': {
+                'labels': ['Pending', 'Accepted', 'Rejected', 'Cancelled'],
+                'data': [pending_requests, accepted_requests, rejected_requests, cancelled_requests],
+                'colors': ['#f59e0b', '#10b981', '#ef4444', '#94a3b8'],
+                'total': total_requests
+            },
+            'sessions': {
+                'labels': ['Scheduled', 'Completed', 'Cancelled'],
+                'data': [scheduled_sessions, completed_sessions, cancelled_sessions],
+                'colors': ['#0284c7', '#10b981', '#94a3b8'],
+                'total': total_sessions
+            },
+            'skills': {
+                'labels': ['Teach Portfolios', 'Learn Wishlists'],
+                'data': [total_teach_skills, total_learn_skills],
+                'colors': ['#10b981', '#0284c7'],
+                'total': total_user_skills
+            }
+        }
+
         return {
             'total_users': total_users,
             'total_admins': total_admins,
             'total_categories': total_categories,
             'total_skills': total_skills,
+            'total_teach_skills': total_teach_skills,
+            'total_learn_skills': total_learn_skills,
             'total_user_skills': total_user_skills,
             'total_requests': total_requests,
             'pending_requests': pending_requests,
             'accepted_requests': accepted_requests,
             'rejected_requests': rejected_requests,
+            'cancelled_requests': cancelled_requests,
             'total_sessions': total_sessions,
             'completed_sessions': completed_sessions,
             'scheduled_sessions': scheduled_sessions,
             'cancelled_sessions': cancelled_sessions,
             'total_ratings': total_ratings,
-            'avg_platform_rating': avg_platform_rating
+            'avg_platform_rating': avg_platform_rating,
+            'chart_data': chart_data
         }
+

@@ -85,3 +85,32 @@ class AuthService:
     @staticmethod
     def get_user_by_id(user_id: int) -> Optional[User]:
         return db.session.get(User, user_id)
+
+    @staticmethod
+    def delete_student(user_id: int, current_admin_id: int) -> Tuple[bool, Optional[str]]:
+        """
+        Delete a suspicious or fraudulent student account (Admin only).
+        Enforces security restrictions:
+        - Cannot delete oneself
+        - Cannot delete another administrator account
+        """
+        if user_id == current_admin_id:
+            return False, "Security restriction: You cannot delete your own administrator account."
+
+        user = db.session.get(User, user_id)
+        if not user:
+            return False, "Student account not found."
+
+        if user.is_admin:
+            return False, "Security restriction: Administrator accounts cannot be deleted through student moderation."
+
+        student_name = user.name
+        student_email = user.email
+        try:
+            db.session.delete(user)
+            db.session.commit()
+            return True, f"Student account '{student_name}' ({student_email}) has been permanently deleted from the platform."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Failed to delete student account: {str(e)}"
+

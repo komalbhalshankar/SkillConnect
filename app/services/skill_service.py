@@ -238,3 +238,60 @@ class SkillService:
         db.session.add(skill)
         db.session.commit()
         return skill, None
+
+    @staticmethod
+    def delete_category(category_id: int) -> Tuple[bool, Optional[str]]:
+        """
+        Delete a skill category (Admin only).
+        Guards against deletion if any skills in the category are used in exchange proposals.
+        """
+        cat = db.session.get(SkillCategory, category_id)
+        if not cat:
+            return False, "Category not found."
+
+        from app.models.exchange import ExchangeRequest
+        skill_ids = [s.id for s in cat.skills]
+        if skill_ids:
+            in_req = ExchangeRequest.query.filter(
+                (ExchangeRequest.offered_skill_id.in_(skill_ids)) |
+                (ExchangeRequest.requested_skill_id.in_(skill_ids))
+            ).first()
+            if in_req:
+                return False, f"Cannot delete category '{cat.name}' because its skills are linked to existing student exchange requests."
+
+        cat_name = cat.name
+        try:
+            db.session.delete(cat)
+            db.session.commit()
+            return True, f"Category '{cat_name}' and its associated skills have been deleted."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Failed to delete category: {str(e)}"
+
+    @staticmethod
+    def delete_standard_skill(skill_id: int) -> Tuple[bool, Optional[str]]:
+        """
+        Delete a standardized skill from taxonomy (Admin only).
+        Guards against deletion if referenced in exchange proposals or sessions.
+        """
+        skill = db.session.get(Skill, skill_id)
+        if not skill:
+            return False, "Skill not found."
+
+        from app.models.exchange import ExchangeRequest
+        in_req = ExchangeRequest.query.filter(
+            (ExchangeRequest.offered_skill_id == skill_id) |
+            (ExchangeRequest.requested_skill_id == skill_id)
+        ).first()
+        if in_req:
+            return False, f"Cannot delete skill '{skill.name}' because it is linked to active or historical exchange requests."
+
+        skill_name = skill.name
+        try:
+            db.session.delete(skill)
+            db.session.commit()
+            return True, f"Skill '{skill_name}' has been deleted from the taxonomy."
+        except Exception as e:
+            db.session.rollback()
+            return False, f"Failed to delete skill: {str(e)}"
+

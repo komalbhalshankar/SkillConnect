@@ -16,6 +16,13 @@ class SkillCategory(db.Model):
     # Relationships
     skills = db.relationship('Skill', back_populates='category', cascade='all, delete-orphan', lazy='selectin')
 
+    def __init__(self, name=None, description=None, icon='bi-tag', **kwargs):
+        self.name = name
+        self.description = description
+        self.icon = icon
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
     def __repr__(self) -> str:
         return f"<SkillCategory id={self.id} name='{self.name}'>"
 
@@ -31,6 +38,13 @@ class Skill(db.Model):
     # Relationships
     category = db.relationship('SkillCategory', back_populates='skills')
     user_skills = db.relationship('UserSkill', back_populates='skill', cascade='all, delete-orphan', lazy='dynamic')
+
+    def __init__(self, category_id=None, name=None, description=None, **kwargs):
+        self.category_id = category_id
+        self.name = name
+        self.description = description
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
     def __repr__(self) -> str:
         return f"<Skill id={self.id} name='{self.name}'>"
@@ -56,6 +70,23 @@ class UserSkill(db.Model):
     user = db.relationship('User', back_populates='user_skills')
     skill = db.relationship('Skill', back_populates='user_skills', lazy='joined')
 
+    def __init__(
+        self,
+        user_id=None,
+        skill_id=None,
+        skill_type='teach',
+        proficiency='intermediate',
+        notes=None,
+        **kwargs
+    ):
+        self.user_id = user_id
+        self.skill_id = skill_id
+        self.skill_type = skill_type
+        self.proficiency = proficiency
+        self.notes = notes
+        for k, v in kwargs.items():
+            setattr(self, k, v)
+
     @property
     def proficiency_weight(self) -> int:
         """Map text proficiency to numeric weight for comparison."""
@@ -64,3 +95,4 @@ class UserSkill(db.Model):
 
     def __repr__(self) -> str:
         return f"<UserSkill id={self.id} user_id={self.user_id} skill_id={self.skill_id} type='{self.skill_type}' prof='{self.proficiency}'>"
+

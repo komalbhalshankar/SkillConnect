@@ -6,6 +6,7 @@ ownership enforcement, and administrator category/skill curation.
 """
 import pytest
 from app.extensions import db
+from app.models.user import User
 from app.models.skill import SkillCategory, Skill, UserSkill
 from app.services.skill_service import SkillService
 
@@ -371,3 +372,89 @@ def test_explore_skills_catalog_public(client, sample_category, sample_skill):
     assert "Academic &amp; Professional Skill Catalog" in html or "Academic & Professional Skill Catalog" in html
     assert "Programming" in html
     assert "Python" in html
+
+def test_admin_dashboard_monitoring_view(admin_client, student_user):
+    """Admin dashboard renders platform monitoring metrics, student table, and charts."""
+    response = admin_client.get('/admin')
+    assert response.status_code == 200
+    html = response.get_data(as_text=True)
+    assert "Administrator Portal &amp; Monitoring" in html or "Administrator Portal & Monitoring" in html
+    assert "Active Students" in html
+    assert "Proposals State Machine" in html
+    assert student_user.name in html
+
+def test_admin_delete_suspicious_student(admin_client, app):
+    """Admin can delete a suspicious or fraudulent student account."""
+    with app.app_context():
+        bad_student = User(name='Fraud User', email='fraud@college.edu', role='student')
+        bad_student.set_password('pass123')
+        db.session.add(bad_student)
+        db.session.commit()
+        bad_id = bad_student.id
+
+    response = admin_client.post(f'/admin/users/{bad_id}/delete', follow_redirects=True)
+    assert response.status_code == 200
+    html = response.get_data(as_text=True)
+    assert "permanently deleted from the platform" in html
+
+    with app.app_context():
+        assert db.session.get(User, bad_id) is None
+
+def test_admin_cannot_delete_self_or_other_admin(admin_client, admin_user, app):
+    """Admin cannot delete their own account or another administrator account."""
+    with app.app_context():
+        other_admin = User(name='Other Admin', email='other.admin@college.edu', role='admin')
+        other_admin.set_password('pass123')
+        db.session.add(other_admin)
+        db.session.commit()
+        other_id = other_admin.id
+
+    # Attempt deleting self
+    res_self = admin_client.post(f'/admin/users/{admin_user.id}/delete', follow_redirects=True)
+    assert res_self.status_code == 200
+    assert "cannot delete your own administrator account" in res_self.get_data(as_text=True)
+
+    # Attempt deleting another admin
+    res_other = admin_client.post(f'/admin/users/{other_id}/delete', follow_redirects=True)
+    assert res_other.status_code == 200
+    assert "Administrator accounts cannot be deleted" in res_other.get_data(as_text=True)
+
+def test_admin_delete_skill_and_category(admin_client, app):
+    """Admin can safely delete an unused skill and category."""
+    with app.app_context():
+        cat = SkillCategory(name='Temporary Category', icon='bi-trash')
+        db.session.add(cat)
+        db.session.commit()
+        skill = Skill(category_id=cat.id, name='Temporary Skill')
+        db.session.add(skill)
+        db.session.commit()
+        cat_id = cat.id
+        skill_id = skill.id
+
+    # Delete skill
+    res_skill = admin_client.post(f'/admin/skills/{skill_id}/delete', follow_redirects=True)
+    assert res_skill.status_code == 200
+    assert "deleted from the taxonomy" in res_skill.get_data(as_text=True)
+
+    with app.app_context():
+        assert db.session.get(Skill, skill_id) is None
+
+    # Delete category
+    res_cat = admin_client.post(f'/admin/categories/{cat_id}/delete', follow_redirects=True)
+    assert res_cat.status_code == 200
+    assert "deleted" in res_cat.get_data(as_text=True)
+
+    with app.app_context():
+        assert db.session.get(SkillCategory, cat_id) is None
+
+def test_student_cannot_delete_students_or_taxonomy(auth_client, student_user, sample_skill, sample_category):
+    """Regular student cannot access delete endpoints (HTTP 403)."""
+    r1 = auth_client.post(f'/admin/users/{student_user.id}/delete')
+    assert r1.status_code == 403
+
+    r2 = auth_client.post(f'/admin/skills/{sample_skill.id}/delete')
+    assert r2.status_code == 403
+
+    r3 = auth_client.post(f'/admin/categories/{sample_category.id}/delete')
+    assert r3.status_code == 403
+
