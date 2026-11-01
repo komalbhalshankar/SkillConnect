@@ -11,6 +11,7 @@ SkillConnect is a web-based peer-to-peer student skill exchange platform built w
 3. **Skill Discovery and Matching (Phase 3):** Database-backed student search and filtering, deterministic rule-based reciprocal compatibility engine (40/40/10/10 formula), transparent score explanations, and profile inspection.
 4. **Skill Exchange and Session Management (Phase 4):** Proposal initiation, reciprocal skill validation, request state machine (`pending`, `accepted`, `rejected`, `cancelled`), learning session scheduling, and in-place session rescheduling.
 5. **Rating, Feedback and Dashboard (Phase 5):** Post-session evaluations, peer reputation star ratings (1–5 stars), qualitative written feedback, personalized student dashboard, and responsive Chart.js visual activity distributions.
+6. **Admin Portal & Moderation (Phase 6):** Protected institutional dashboard for college professors with platform KPIs, Chart.js analytics graphs, student moderation and fraud account removal with safe cascades, and category/skill taxonomy management.
 
 ---
 
@@ -165,7 +166,7 @@ When using `python run.py seed-demo`, the platform is instantly provisioned with
 
 | Role | Account Name | Email | Password | Primary Skills & Purpose |
 | :--- | :--- | :--- | :--- | :--- |
-| **Admin** | Prof. Sharma (Admin) | `admin@college.edu` | `Admin@123` | Platform governance, Category & Standard Skill creation |
+| **Admin** | Prof. Sharma (Admin) | `admin@college.edu` | `Admin@123` | Platform governance, Student Moderation & Fraud Removal, Visual Analytics Dashboard, Category & Skill Management |
 | **Student** | Aarav Sharma | `aarav@college.edu` | `Student@123` | **Teaches:** Python, Data Structures <br>**Learns:** UI/UX Design, Docker <br>*100% Reciprocal Match with Priya* |
 | **Student** | Priya Patel | `priya@college.edu` | `Student@123` | **Teaches:** UI/UX Design, Web Development <br>**Learns:** Python, Cloud Computing <br>*Has completed session & 5-star rating with Aarav* |
 | **Student** | Rohan Gupta | `rohan@college.edu` | `Student@123` | **Teaches:** SQL & Database Design, Machine Learning <br>**Learns:** Python, Data Structures <br>*One-way match with Aarav; accepted/scheduled proposal* |
@@ -188,7 +189,7 @@ To test the entire 5-module flow manually in 3 minutes:
 6. **Schedule Learning Session:** Click **Schedule Session**, pick an upcoming date/time, and provide meeting link details.
 7. **Complete & Rate:** Mark the session as **Completed**, then click **Rate Partner** to submit star ratings (1–5) and written feedback.
 8. **Verify Updated Profile & Dashboard:** View Aarav's updated average rating, review count, and dynamic Chart.js stats.
-9. **Admin Governance:** Log in as `admin@college.edu` (Password: `Admin@123`), visit [Admin Portal](http://127.0.0.1:5000/admin), and create a new skill category.
+9. **Admin Governance & Moderation:** Log in as `admin@college.edu` (Password: `Admin@123`), visit [Admin Dashboard](http://127.0.0.1:5000/admin/dashboard) to view live analytics (KPIs & Chart.js), search and moderate fraudulent student profiles with safe cascading deletion, and manage categories/skills.
 
 ---
 
@@ -200,7 +201,7 @@ All 5 modules plus administrative governance and multi-user integration flows ar
 python -m pytest -v
 ```
 
-### Verified Test Suite Summary (91/91 Passing — 100% Pass Rate):
+### Verified Test Suite Summary (96/96 Passing — 100% Pass Rate):
 
 - **End-to-End Integration Flows (`tests/test_e2e_flow.py` — 2 tests):**
   - Multi-user student lifecycle: registration, profile completion, skill listing, discovery, 100% reciprocal matching, proposal creation, acceptance, session scheduling, completion, bilateral ratings, and dashboard verification.
@@ -216,7 +217,7 @@ python -m pytest -v
   - Unique email database constraints.
   - `SkillCategory` and `Skill` model relationships.
   - Safe database initialization CLI (`flask init-db`) and administrator creation CLI (`flask create-admin`).
-- **Skill Management (`tests/test_skills.py` — 19 tests):**
+- **Skill Management & Admin Moderation (`tests/test_skills.py` — 24 tests):**
   - Adding skills to Teach and Learn portfolios with proficiency and notes.
   - Associating same skill in both Teach and Learn lists.
   - Preventing duplicate skill addition under the same skill type.
@@ -225,8 +226,11 @@ python -m pytest -v
   - Updating skill type, proficiency, and notes.
   - Deleting skills from portfolio.
   - Cross-user ownership protection (HTTP 403 Forbidden on unauthorized edit/delete).
-  - Admin category and skill creation via portal.
-  - Student RBAC restrictions on admin skill routes (HTTP 403 Forbidden).
+  - Admin category and standard skill creation via portal.
+  - Admin category deletion with cascading safety.
+  - Admin standard skill deletion with active exchange request safeguards.
+  - Admin student account moderation and safe cascading purge.
+  - Student RBAC restrictions on admin routes (HTTP 403 Forbidden).
   - CLI skill seeding command (`flask seed-skills`).
   - Public skill catalog browser (`/skills/explore`).
 - **Skill Discovery & Matching (`tests/test_matching.py` — 12 tests):**
@@ -323,4 +327,4 @@ python -m pytest -v
 | **Phase 3** | Skill Management (Module 2) & Skill Discovery and Matching (Module 3) | **Completed & Verified** (49/49 Tests Passed) |
 | **Phase 4** | Skill Exchange and Session Management (Module 4) | **Completed & Verified** (72/72 Tests Passed) |
 | **Phase 5** | Rating, Feedback and Dashboard (Module 5) | **Completed & Verified** (89/89 Tests Passed) |
-| **Phase 6** | Final Verification, E2E Integration, Demo Seeding & Release Readiness | **Completed & Verified** (91/91 Tests Passed) |
+| **Phase 6** | Admin Moderation, Visual Analytics Dashboard, E2E Integration & Release Readiness | **Completed & Verified** (96/96 Tests Passed) |
