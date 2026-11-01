@@ -2,7 +2,7 @@
 **Academic Level:** MCA Semester 1 — Python Mini Project  
 **System Boundary:** `SkillConnect Platform`  
 **Pattern:** UML 2.5 Activity Diagrams with Partitions (Swimlanes), Decision Nodes, and State Progression  
-**Current Baseline:** Fully implemented & verified (91/91 unit/integration tests passing)
+**Current Baseline:** Fully implemented & verified (96/96 unit/integration tests passing)
 
 ---
 

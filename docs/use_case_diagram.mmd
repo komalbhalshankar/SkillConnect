@@ -35,8 +35,9 @@ flowchart LR
         %% Administration
         UC_AdminLogin(["Log In as Administrator"])
         UC_AdminPortal(["Access Protected Admin Portal"])
-        UC_AdminStats(["View Platform Statistics"])
-        UC_ManageTaxonomy(["Manage Skill Categories & Skills"])
+        UC_AdminStats(["View Platform Statistics & Charts"])
+        UC_ManageTaxonomy(["Manage & Delete Categories & Skills"])
+        UC_ModerateStudents(["Moderate & Delete Fraudulent Students"])
     end
 
     %% Student Connections
@@ -68,6 +69,8 @@ flowchart LR
     Admin --> UC_AdminPortal
     Admin --> UC_AdminStats
     Admin --> UC_ManageTaxonomy
+    Admin --> UC_ModerateStudents
     UC_AdminPortal -.->|&lt;&lt;include&gt;&gt;| UC_AdminLogin
     UC_AdminStats -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal
     UC_ManageTaxonomy -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal
+    UC_ModerateStudents -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal

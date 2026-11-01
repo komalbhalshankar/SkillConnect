@@ -56,8 +56,9 @@ rectangle "SkillConnect — Student Skill Exchange Platform" as SystemBoundary {
   ' --- Administration ---
   usecase "Log In as Administrator" as UC_AdminLogin
   usecase "Access Protected Admin Portal" as UC_AdminPortal
-  usecase "View Platform Statistics" as UC_AdminStats
-  usecase "Manage Skill Categories & Skills" as UC_ManageTaxonomy
+  usecase "View Analytics Charts & KPIs" as UC_AdminStats
+  usecase "Manage & Delete Categories/Skills" as UC_ManageTaxonomy
+  usecase "Moderate & Delete Fraudulent Students" as UC_ModerateStudents
 }
 
 ' ==========================================
@@ -95,9 +96,11 @@ admin --> UC_AdminLogin
 admin --> UC_AdminPortal
 admin --> UC_AdminStats
 admin --> UC_ManageTaxonomy
+admin --> UC_ModerateStudents
 
 UC_AdminPortal ..> UC_AdminLogin : <<include>>
 UC_AdminStats ..> UC_AdminPortal : <<include>>
 UC_ManageTaxonomy ..> UC_AdminPortal : <<include>>
+UC_ModerateStudents ..> UC_AdminPortal : <<include>>
 
 @enduml

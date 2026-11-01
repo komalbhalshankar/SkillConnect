@@ -2,7 +2,7 @@
 **Academic Level:** MCA Semester 1 — Python Mini Project  
 **System Boundary:** `SkillConnect Platform`  
 **Pattern:** Layered MVC Architecture with Service Layer & SQLAlchemy ORM  
-**Current Baseline:** Fully implemented & verified (91/91 unit/integration tests passing)
+**Current Baseline:** Fully implemented & verified (96/96 unit/integration tests passing)
 
 ---
 
@@ -139,6 +139,7 @@ classDiagram
         +authenticate_user(email, password) User
         +update_profile(user_id, name, college, bio, availability) tuple
         +change_password(user_id, old_pw, new_pw) tuple
+        +delete_student(user_id) tuple
     }
 
     class SkillService {
@@ -150,6 +151,8 @@ classDiagram
         +remove_user_skill(user_skill_id, user_id) tuple
         +update_user_skill(user_skill_id, user_id, proficiency, notes) tuple
         +search_students(query, skill_id, category_id, skill_type) list
+        +delete_category(category_id) tuple
+        +delete_standard_skill(skill_id) tuple
     }
 
     class MatchingService {
@@ -177,7 +180,7 @@ classDiagram
 
     class StatsService {
         +get_student_dashboard_stats(user_id) dict
-        +get_admin_platform_stats() dict
+        +get_admin_stats() dict
     }
 
     %% ==========================================

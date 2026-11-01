@@ -3,7 +3,7 @@
 **Project:** SkillConnect — Peer-to-Peer Student Skill Exchange Platform  
 **Academic Program:** MCA Semester 1 Mini Project  
 **Architecture:** Layered MVC with Flask Blueprints, Service Layer & SQLAlchemy 3NF Models  
-**Test Suite:** 91 / 91 Verified Tests Passing (100%)  
+**Test Suite:** 96 / 96 Verified Tests Passing (100%)  
 
 ---
 
@@ -102,16 +102,17 @@
 
 ---
 
-### Module 06: Administration & Platform Governance
-- **Tier:** Governance & System Maintenance Tier
-- **Routing Endpoints:** `/admin`, `/admin/categories`, `/admin/skills`, `/admin/stats`
+### Module 06: Administration & Platform Moderation
+- **Tier:** Governance & Moderation Tier
+- **Routing Endpoints:** `/admin/dashboard`, `/admin/student/<id>/delete`, `/admin/category/<id>/delete`, `/admin/skill/<id>/delete`
 - **Controller Blueprint:** `app/routes/admin.py`
-- **Service Layer:** Administrative route controllers, CLI subroutines (`app/cli.py`)
-- **Entities & Models:** All Models (`User`, `SkillCategory`, `Skill`, `ExchangeRequest`, etc.)
+- **Service Layer:** `AuthService.delete_student`, `SkillService.delete_category`, `SkillService.delete_standard_skill`, `StatsService.get_admin_stats`, CLI subroutines
+- **Entities & Models:** All Models (`User`, `SkillCategory`, `Skill`, `ExchangeRequest`, `ExchangeSession`, `Rating`)
 - **Core Capabilities:**
-  - Dedicated administrative dashboard protected by `@admin_required` authorization guard.
-  - System-wide telemetry metrics (user enrollments, exchange volumes, session completion rates).
-  - Skill taxonomy management (creating, editing, and categorizing canonical skills).
-  - Quality moderation and curation of student-proposed unlisted skills.
-  - CLI operations: `seed-skills` (idempotent population), `create-admin` (bootstrap administrator), `reset-db`.
-- **Test Verification:** 100% Passed (CLI & RBAC Tests).
+  - Dedicated institutional dashboard protected by `@admin_required` authorization guard.
+  - Interactive visual analytics telemetry: 4 KPI metric cards and 3 Chart.js graphs (Category skill breakdown, Exchange request status breakdown, Rating score distribution).
+  - Student moderation & fraud account removal with safe cascading deletion of associated requests, sessions, ratings, and portfolios.
+  - Skill taxonomy governance with category deletion and standard skill deletion guarded by exchange request integrity checks.
+  - Live search and query filtering across all enrolled student accounts.
+  - Automated CLI operations: `seed-demo`, `create-admin`, `seed-skills`, `init-db`.
+- **Test Verification:** 100% Passed (24 Skill/Admin Tests, 96/96 Total Tests Passing).

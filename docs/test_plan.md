@@ -18,7 +18,7 @@
 **Test Run Date:** October 18, 2026  
 **Environment:** Python 3.14.7 / pytest 9.1.1 / Flask Test Client  
 **Execution Command:** `python -m pytest -v`  
-**Overall Result:** **91 Passed, 0 Failed, 0 Errors (100% Pass Rate)**
+**Overall Result:** **96 Passed, 0 Failed, 0 Errors (100% Pass Rate)**
 
 | Test Suite File | Test Function | Verified Behavior | Status |
 | :--- | :--- | :--- | :---: |
@@ -113,17 +113,22 @@
 | `tests/test_ratings.py` | `test_dashboard_route_view` | `/dashboard` renders dynamic metric cards and Chart.js canvases | **PASSED** |
 | `tests/test_ratings.py` | `test_profile_reviews_section_view` | `/profile` displays received peer reviews section | **PASSED** |
 | `tests/test_ratings.py` | `test_student_detail_reviews_view` | Peer profile displays star rating and reviews received | **PASSED** |
+| `tests/test_skills.py` | `test_admin_delete_category` | Admin deletes category; cascaded child skills removed; flash confirmed | **PASSED** |
+| `tests/test_skills.py` | `test_admin_delete_skill_success` | Admin deletes unused standard skill safely | **PASSED** |
+| `tests/test_skills.py` | `test_admin_delete_skill_blocked_if_in_exchange` | System blocks skill deletion if active in exchange requests | **PASSED** |
+| `tests/test_skills.py` | `test_admin_delete_student_account` | Admin moderates student; cascaded requests, sessions, skills & ratings removed | **PASSED** |
+| `tests/test_skills.py` | `test_admin_delete_student_cannot_delete_self` | Admin account cannot delete own administrator profile | **PASSED** |
 
 ---
 
 ## 3. Test Coverage Summary
 
-- **Total Test Cases:** 91
-- **Passing Rate:** 100% (91/91)
+- **Total Test Cases:** 96
+- **Passing Rate:** 100% (96/96)
 - **Regressions Introduced:** 0
 - **Modules Covered:**
   - Module 1: User Authentication and Profile (14 tests)
-  - Module 2: Skill Management (19 tests)
+  - Module 2 & 6: Skill Management & Admin Moderation (24 tests)
   - Module 3: Skill Discovery and Matching (12 tests)
   - Module 4: Skill Exchange and Session Management (23 tests)
   - Module 5: Rating, Feedback and Dashboard (17 tests)

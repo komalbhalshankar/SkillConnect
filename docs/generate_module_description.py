@@ -115,23 +115,23 @@ MODULES = [
     },
     {
         "num": "MODULE 06",
-        "title": "Administration & Governance",
+        "title": "Administration & Moderation",
         "accent": "#fb7185",
         "accent_bg": "rgba(251, 113, 133, 0.15)",
         "accent_border": "rgba(251, 113, 133, 0.4)",
         "badge": "Governance Tier",
-        "endpoint": "/admin • CLI Tooling",
-        "service": "AdminController, CLI Commands",
-        "models": "All Database Entities",
-        "desc": "Provides administrative control, platform-wide audit metrics, taxonomy curation, and automated system management.",
+        "endpoint": "/admin/dashboard • /admin/student/<id>/delete",
+        "service": "AuthService, SkillService, StatsService",
+        "models": "User, SkillCategory, Skill, All Entities",
+        "desc": "Provides administrative control, visual telemetry charts, student fraud moderation with safe cascades, and taxonomy curation.",
         "features": [
-            "Restricted administrative dashboard with @admin_required RBAC",
-            "System-wide telemetry: user counts, active swaps, ratings",
-            "Skill taxonomy curation (create, update, view categories)",
-            "Platform skill catalog moderation & quality control",
-            "Automated CLI management: seed-skills, create-admin, reset-db"
+            "Institutional dashboard with 4 live KPI cards & 3 Chart.js graphs",
+            "Student moderation & fraud account removal with safe cascading delete",
+            "Skill category & standard skill deletion with active swap guards",
+            "Search and query filtering across all enrolled student accounts",
+            "Protected by @admin_required RBAC & automated CLI management"
         ],
-        "test_status": "100% Tested (CLI & RBAC Tests)"
+        "test_status": "100% Tested (24 Skill/Admin Tests, 96 Total)"
     }
 ]
 
@@ -306,7 +306,7 @@ def generate_svg():
 
       <rect x="135" y="0" width="125" height="36" rx="6" fill="#1e293b" stroke="#34d399" stroke-width="1"/>
       <text x="197.5" y="15" text-anchor="middle" font-size="8.5" font-weight="700" fill="#34d399">VERIFIED TESTS</text>
-      <text x="197.5" y="29" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">91 / 91 Passed</text>
+      <text x="197.5" y="29" text-anchor="middle" font-size="11" font-weight="700" fill="#ffffff">96 / 96 Passed</text>
 
       <rect x="270" y="0" width="125" height="36" rx="6" fill="#1e293b" stroke="#c084fc" stroke-width="1"/>
       <text x="332.5" y="15" text-anchor="middle" font-size="8.5" font-weight="700" fill="#c084fc">MODULE COUNT</text>

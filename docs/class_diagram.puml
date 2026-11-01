@@ -128,6 +128,7 @@ package "Services (Business Logic Layer)" #EFF6FF {
     + authenticate_user(...)
     + update_profile(...)
     + change_password(...)
+    + delete_student(user_id: int): tuple
   }
 
   class SkillService <<service>> {
@@ -138,6 +139,8 @@ package "Services (Business Logic Layer)" #EFF6FF {
     + add_user_skill(...)
     + remove_user_skill(...)
     + search_students(...)
+    + delete_category(category_id: int): tuple
+    + delete_standard_skill(skill_id: int): tuple
   }
 
   class MatchingService <<service>> {

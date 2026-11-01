@@ -253,33 +253,35 @@
 
   <!-- AuthService -->
   <g id="class-AuthService" transform="translate(60, 900)" filter="url(#shadow)">
-    <rect width="260" height="190" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect width="260" height="205" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
     <rect width="260" height="32" rx="6" fill="#16a34a"/>
     <text x="130" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
     <text x="130" y="27" class="class-name" text-anchor="middle">AuthService</text>
     <line x1="0" y1="32" x2="260" y2="32" stroke="#16a34a" stroke-width="1.8"/>
-    <text x="12" y="56" class="service-method">+ register_user(...) : tuple</text>
-    <text x="12" y="82" class="service-method">+ authenticate_user(...) : User</text>
-    <text x="12" y="108" class="service-method">+ update_profile(...) : tuple</text>
-    <text x="12" y="134" class="service-method">+ change_password(...) : tuple</text>
-    <text x="12" y="162" class="comment-text">Manages credentials, hashing,</text>
-    <text x="12" y="177" class="comment-text">role verification &amp; session auth</text>
+    <text x="12" y="54" class="service-method">+ register_user(...) : tuple</text>
+    <text x="12" y="76" class="service-method">+ authenticate_user(...) : User</text>
+    <text x="12" y="98" class="service-method">+ update_profile(...) : tuple</text>
+    <text x="12" y="120" class="service-method">+ change_password(...) : tuple</text>
+    <text x="12" y="142" class="service-method">+ delete_student(user_id) : tuple</text>
+    <text x="12" y="168" class="comment-text">Credentials, RBAC, student moderation</text>
+    <text x="12" y="184" class="comment-text">&amp; safe cascading profile deletion</text>
   </g>
 
   <!-- SkillService -->
   <g id="class-SkillService" transform="translate(345, 900)" filter="url(#shadow)">
-    <rect width="265" height="215" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
+    <rect width="265" height="225" rx="6" fill="#ffffff" stroke="#16a34a" stroke-width="1.8"/>
     <rect width="265" height="32" rx="6" fill="#16a34a"/>
     <text x="132" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
     <text x="132" y="27" class="class-name" text-anchor="middle">SkillService</text>
     <line x1="0" y1="32" x2="265" y2="32" stroke="#16a34a" stroke-width="1.8"/>
-    <text x="12" y="54" class="service-method">+ get_all_categories() : list</text>
-    <text x="12" y="76" class="service-method">+ get_skills_by_category(...) : list</text>
-    <text x="12" y="98" class="service-method">+ get_user_skills(...) : list</text>
-    <text x="12" y="120" class="service-method">+ add_user_skill(...) : tuple</text>
-    <text x="12" y="142" class="service-method">+ remove_user_skill(...) : tuple</text>
-    <text x="12" y="164" class="service-method">+ update_user_skill(...) : tuple</text>
-    <text x="12" y="186" class="service-method">+ search_students(...) : list</text>
+    <text x="12" y="52" class="service-method">+ get_all_categories() : list</text>
+    <text x="12" y="72" class="service-method">+ get_skills_by_category(...) : list</text>
+    <text x="12" y="92" class="service-method">+ get_user_skills(...) : list</text>
+    <text x="12" y="112" class="service-method">+ add_user_skill(...) : tuple</text>
+    <text x="12" y="132" class="service-method">+ remove_user_skill(...) : tuple</text>
+    <text x="12" y="152" class="service-method">+ delete_category(c_id) : tuple</text>
+    <text x="12" y="172" class="service-method">+ delete_standard_skill(s_id) : tuple</text>
+    <text x="12" y="192" class="service-method">+ search_students(...) : list</text>
   </g>
 
   <!-- MatchingService -->
@@ -336,10 +338,10 @@
     <text x="120" y="15" class="stereotype" fill="#dcfce7" text-anchor="middle">&lt;&lt;service&gt;&gt;</text>
     <text x="120" y="27" class="class-name" text-anchor="middle">StatsService</text>
     <line x1="0" y1="32" x2="240" y2="32" stroke="#16a34a" stroke-width="1.8"/>
-    <text x="10" y="55" class="service-method">+ get_student_stats(u_id) : dict</text>
-    <text x="10" y="80" class="service-method">+ get_admin_stats() : dict</text>
-    <text x="10" y="108" class="comment-text">Computes platform totals, activity</text>
-    <text x="10" y="124" class="comment-text">summaries &amp; categorical breakdowns</text>
+    <text x="10" y="52" class="service-method">+ get_student_stats(u_id) : dict</text>
+    <text x="10" y="74" class="service-method">+ get_admin_stats() : dict</text>
+    <text x="10" y="98" class="comment-text">Computes platform totals, Chart.js</text>
+    <text x="10" y="114" class="comment-text">payloads &amp; category distributions</text>
   </g>
 
 </svg>

@@ -49,9 +49,9 @@ All five core modules for Version 1.0 are fully implemented, verified, and opera
 | **Module 4: Exchange & Session** | Exchange proposals, State machine, Session scheduling & lifecycle | Phase 4 | **Implemented & Verified** | 100% (23 Unit & Integration tests) |
 | **Module 5: Rating & Dashboard** | Post-session reviews, Star ratings, Dynamic Dashboard, Chart.js feeds | Phase 5 | **Implemented & Verified** | 100% (17 Unit & Integration tests) |
 | **End-to-End Integration** | Multi-user student lifecycle handoffs & Admin governance workflows | Phase 6 | **Implemented & Verified** | 100% (2 E2E Integration tests) |
-| **Administration** | Safe CLI admin creation (`create-admin`), `@admin_required`, Category/Skill CRUD | Phase 2 & 3 | **Implemented & Verified** | 100% (CLI & RBAC) |
+| **Administration & Moderation** | Student moderation & deletion, Category/Skill CRUD & safety, Telemetry Charts | Phase 6 | **Implemented & Verified** | 100% (24 Skill/Admin tests) |
 
-**Total Verified Tests:** 91 tests passing (100% pass rate).
+**Total Verified Tests:** 96 tests passing (100% pass rate).
 
 ---
 

@@ -1,7 +1,7 @@
 # SkillConnect — UML Use Case Diagram Specification
 **Academic Level:** MCA Semester 1 — Python Mini Project  
 **System Boundary:** `SkillConnect System`  
-**Current Status:** Phase 6 Final Verification Baseline (Modules 1, 2, 3, 4, and 5 fully implemented, end-to-end verified, 91/91 tests passing)
+**Current Status:** Phase 6 Final Verification Baseline (Modules 1, 2, 3, 4, 5, and 6 fully implemented, end-to-end verified, 96/96 tests passing)
 
 ---
 
@@ -53,8 +53,9 @@ flowchart LR
         %% Administration
         UC_AdminLogin(["Log In as Administrator"])
         UC_AdminPortal(["Access Protected Admin Portal"])
-        UC_AdminStats(["View Platform Statistics"])
-        UC_ManageTaxonomy(["Manage Skill Categories & Skills"])
+        UC_AdminStats(["View Platform Statistics & Charts"])
+        UC_ManageTaxonomy(["Manage & Delete Categories & Skills"])
+        UC_ModerateStudents(["Moderate & Delete Fraudulent Students"])
     end
 
     %% Student Connections
@@ -86,9 +87,11 @@ flowchart LR
     Admin --> UC_AdminPortal
     Admin --> UC_AdminStats
     Admin --> UC_ManageTaxonomy
-    UC_AdminPortal -.->|&lt;&lt;include&gt;&gt;| UC_AdminLogin
-    UC_AdminStats -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal
-    UC_ManageTaxonomy -.->|&lt;&lt;include&gt;&gt;| UC_AdminPortal
+    Admin --> UC_ModerateStudents
+    UC_AdminPortal -.->|<<include>>| UC_AdminLogin
+    UC_AdminStats -.->|<<include>>| UC_AdminPortal
+    UC_ManageTaxonomy -.->|<<include>>| UC_AdminPortal
+    UC_ModerateStudents -.->|<<include>>| UC_AdminPortal
 ```
 
 ---
@@ -98,7 +101,7 @@ flowchart LR
 1. **Student Actor (Primary Actor):**
    The registered peer learner/teacher. Every student can declare skills to teach and skills to learn under a unified profile, search peers, discover bilateral matches, send requests, schedule sessions, rate peers after completed sessions, and view personalized dashboard analytics.
 2. **Administrator Actor (Secondary Actor):**
-   The college department coordinator or system moderator. Responsible for role-protected oversight, platform usage statistics, and curating official skill categories and skills.
+   The college professor, department coordinator, or system moderator. Responsible for role-protected platform oversight, live telemetry visual charts, student moderation (purging fraudulent student profiles with cascading safety), and curating/deleting skill categories and standard skills.
 
 ---
 
@@ -124,7 +127,8 @@ flowchart LR
 | **Rating & Dashboard** | Rate Completed Exchange | Student | *&lt;&lt;extend&gt;&gt;* Evaluates completed sessions (1–5 stars). | **Phase 5 (Implemented & Tested)** |
 | | Submit Written Feedback | Student | *&lt;&lt;include&gt;&gt;* Submits review comments. | **Phase 5 (Implemented & Tested)** |
 | | View Dashboard & Analytics | Student | Displays summaries and Chart.js activity charts. | **Phase 5 (Implemented & Tested)** |
-| **Administration** | Log In as Administrator | Admin | Authenticates as admin. | **Phase 2 (Implemented & Tested)** |
-| | Access Admin Portal | Admin | Role-protected admin dashboard. | **Phase 2 (Implemented & Tested)** |
-| | View Platform Statistics | Admin | Reviews platform-wide usage metrics. | **Phase 5 (Implemented & Tested)** |
-| | Manage Categories & Skills | Admin | Curates official categories and skills taxonomy. | **Phase 3 (Implemented & Tested)** |
+| **Administration & Moderation** | Log In as Administrator | Admin | Authenticates as administrator. | **Phase 2 (Implemented & Tested)** |
+| | Access Admin Portal | Admin | Role-protected institutional admin dashboard. | **Phase 2 (Implemented & Tested)** |
+| | View Visual Analytics & KPIs | Admin | Reviews 4 KPI cards and 3 Chart.js graphs. | **Phase 6 (Implemented & Tested)** |
+| | Manage & Delete Taxonomy | Admin | Creates and deletes categories and standard skills. | **Phase 6 (Implemented & Tested)** |
+| | Moderate Students & Accounts | Admin | Searches students and deletes fraud accounts with safe cascade. | **Phase 6 (Implemented & Tested)** |
